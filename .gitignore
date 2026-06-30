@@ -1,0 +1,18 @@
+# dependencies
+collector/node_modules/
+node_modules/
+
+# scraper artifacts
+collector/cache/
+collector/logs/
+collector/.profile/
+
+# enumeration intermediates (URLは data/disc-urls.json に集約済み)
+data/url-batches/
+
+# translation intermediates (訳文は data/questions.json に集約)
+data/ja-input/
+data/ja-output/
+
+# build
+app/dist/

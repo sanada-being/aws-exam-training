@@ -1,0 +1,46 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel2: #334155;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --correct: #22c55e;
+  --wrong: #ef4444;
+  --border: #334155;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", Meiryo, sans-serif;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+a { color: var(--accent); }
+
+.center {
+  display: flex;
+  min-height: 60vh;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}

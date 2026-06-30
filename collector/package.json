@@ -1,0 +1,14 @@
+{
+  "name": "aws-exam-collector",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ExamTopics SAA-C03 collector prototype (Playwright)",
+  "scripts": {
+    "probe": "node probe.mjs",
+    "scrape": "node scrape.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.61.1"
+  }
+}
