@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Question } from "../types";
 import { QuestionView } from "../components/QuestionView";
+import { Explanation } from "../components/Explanation";
 import { useStore } from "../store/useStore";
 
 export function Quiz({ queue, onExit }: { queue: Question[]; onExit: () => void }) {
@@ -46,6 +47,7 @@ export function Quiz({ queue, onExit }: { queue: Question[]; onExit: () => void 
           if (c) setCorrectCount((n) => n + 1);
         }}
         onNext={() => setIdx((i) => i + 1)}
+        renderExplanation={() => <Explanation question={q} />}
       />
     </div>
   );

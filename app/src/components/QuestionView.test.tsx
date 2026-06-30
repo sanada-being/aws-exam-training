@@ -49,4 +49,11 @@ describe("QuestionView", () => {
     render(<QuestionView question={single} onResult={() => {}} onNext={() => {}} />);
     expect(screen.getByRole("button", { name: "採点する" })).toBeDisabled();
   });
+
+  it("原文(EN)トグルで英語表示に切り替わる", async () => {
+    render(<QuestionView question={single} onResult={() => {}} onNext={() => {}} />);
+    expect(screen.queryByText("EN text")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "原文(EN)" }));
+    expect(screen.getByText("EN text")).toBeInTheDocument();
+  });
 });

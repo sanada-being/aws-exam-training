@@ -125,3 +125,18 @@ a { color: var(--accent); }
 
 .done { text-align: center; padding-top: 32px; }
 .done .btn { margin-top: 16px; }
+
+.qhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px; }
+.btn.small { padding: 6px 10px; border-radius: 9px; font-size: 0.85rem; }
+.btn.lang { margin-left: auto; }
+
+/* 解説（投票分布） */
+.explanation { margin-top: 16px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+.explanation h3 { margin: 0 0 10px; font-size: 0.95rem; }
+.votebar { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.votekey { flex: 0 0 auto; width: 44px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.votetrack { flex: 1 1 auto; height: 14px; background: var(--panel2); border-radius: 999px; overflow: hidden; }
+.votefill { display: block; height: 100%; background: var(--muted); }
+.votefill.adopted { background: var(--correct); }
+.votenum { flex: 0 0 auto; width: 86px; text-align: right; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
+.conf { margin-top: 10px; font-size: 0.85rem; }

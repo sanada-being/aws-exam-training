@@ -15,6 +15,7 @@ export interface QuestionViewProps {
 export function QuestionView({ question, onResult, onNext, renderExplanation }: QuestionViewProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [graded, setGraded] = useState(false);
+  const [showEn, setShowEn] = useState(false);
   const adopted = useMemo(() => normalizeKeys(question.adoptedAnswer), [question]);
   const multi = question.isMultipleAnswer || adopted.length > 1;
   const need = requiredCount(question.adoptedAnswer);
@@ -23,6 +24,7 @@ export function QuestionView({ question, onResult, onNext, renderExplanation }: 
   useEffect(() => {
     setSelected([]);
     setGraded(false);
+    setShowEn(false);
   }, [question.id]);
 
   const correct = graded ? gradeAnswer(selected, adopted) : null;
@@ -51,8 +53,19 @@ export function QuestionView({ question, onResult, onNext, renderExplanation }: 
 
   return (
     <div className="qview">
-      <p className="qtext">{question.question.ja ?? question.question.en}</p>
-      {multi && <p className="hint">（{need}つ選択）</p>}
+      <div className="qhead">
+        {multi && <span className="hint">（{need}つ選択）</span>}
+        <button
+          type="button"
+          className="btn ghost small lang"
+          onClick={() => setShowEn((v) => !v)}
+        >
+          {showEn ? "日本語" : "原文(EN)"}
+        </button>
+      </div>
+      <p className="qtext">
+        {showEn ? question.question.en : (question.question.ja ?? question.question.en)}
+      </p>
 
       <div role="list">
         {question.options.map((o) => (
@@ -66,7 +79,7 @@ export function QuestionView({ question, onResult, onNext, renderExplanation }: 
             disabled={graded}
           >
             <span className="optkey">{o.key}</span>
-            <span className="opttext">{o.ja ?? o.en}</span>
+            <span className="opttext">{showEn ? o.en : (o.ja ?? o.en)}</span>
           </button>
         ))}
       </div>
