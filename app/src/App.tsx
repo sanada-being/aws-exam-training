@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import type { Question } from "./types";
 import { loadQuestions } from "./data/loader";
-import { orderQuestions, type QuizMode } from "./domain/selection";
+import { buildQueue, type QuizMode } from "./domain/selection";
 import { Home } from "./screens/Home";
 import { Quiz } from "./screens/Quiz";
+import { useStore } from "./store/useStore";
 
 export default function App() {
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [queue, setQueue] = useState<Question[] | null>(null);
+  const records = useStore((s) => s.records);
 
   useEffect(() => {
     loadQuestions()
@@ -23,7 +25,7 @@ export default function App() {
   return (
     <Home
       questions={questions}
-      onStart={(mode: QuizMode) => setQueue(orderQuestions(questions, mode))}
+      onStart={(mode: QuizMode) => setQueue(buildQueue(questions, mode, records))}
     />
   );
 }

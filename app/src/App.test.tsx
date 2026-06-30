@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Home } from "./screens/Home";
+import { useStore } from "./store/useStore";
 import type { Question } from "./types";
 
 const sample: Question[] = [
@@ -32,5 +33,14 @@ describe("Home", () => {
     render(<Home questions={sample} onStart={onStart} />);
     await userEvent.click(screen.getByRole("button", { name: "順番に学習" }));
     expect(onStart).toHaveBeenCalledWith("sequential");
+  });
+
+  it("4つの出題モードを表示し、未解答時は苦手復習が無効", () => {
+    useStore.getState().resetProgress();
+    render(<Home questions={sample} onStart={() => {}} />);
+    expect(screen.getByRole("button", { name: /順番に学習/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /ランダム出題/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /未回答のみ/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /苦手を復習/ })).toBeDisabled();
   });
 });
