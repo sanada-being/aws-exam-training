@@ -56,4 +56,19 @@ describe("QuestionView", () => {
     await userEvent.click(screen.getByRole("button", { name: "原文(EN)" }));
     expect(screen.getByText("EN text")).toBeInTheDocument();
   });
+
+  it("ブックマークボタンで onToggleBookmark が呼ばれる", async () => {
+    const onToggle = vi.fn();
+    render(
+      <QuestionView
+        question={single}
+        onResult={() => {}}
+        onNext={() => {}}
+        bookmarked={false}
+        onToggleBookmark={onToggle}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "ブックマーク" }));
+    expect(onToggle).toHaveBeenCalled();
+  });
 });

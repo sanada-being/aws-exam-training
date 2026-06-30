@@ -23,7 +23,7 @@ const sample: Question[] = [
 describe("Home", () => {
   it("総問数と開始ボタンを表示する", () => {
     render(<Home questions={sample} onStart={() => {}} />);
-    expect(screen.getByText(/全/)).toHaveTextContent("全 1 問");
+    expect(screen.getByText(/\/ 1 解答/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "順番に学習" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ランダム出題" })).toBeInTheDocument();
   });
@@ -42,5 +42,25 @@ describe("Home", () => {
     expect(screen.getByRole("button", { name: /ランダム出題/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /未回答のみ/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /苦手を復習/ })).toBeDisabled();
+  });
+
+  it("解答するとダッシュボードに解答数・正答率が反映される", () => {
+    useStore.getState().resetProgress();
+    useStore.getState().recordAnswer("saa-c03-0001", true, 1);
+    render(<Home questions={sample} onStart={() => {}} />);
+    expect(screen.getByTestId("answered")).toHaveTextContent("1");
+    expect(screen.getByTestId("accuracy")).toHaveTextContent("100%");
+  });
+
+  it("セッションがあれば続きからボタンを表示", () => {
+    render(
+      <Home
+        questions={sample}
+        onStart={() => {}}
+        onResume={() => {}}
+        resumeInfo={{ index: 2, total: 10 }}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /続きから（3 \/ 10）/ })).toBeInTheDocument();
   });
 });
