@@ -6,11 +6,20 @@ import { Home } from "./screens/Home";
 import { Quiz } from "./screens/Quiz";
 import { useStore } from "./store/useStore";
 
+interface ActiveQueue {
+  items: Question[];
+  index: number;
+  correct: number;
+}
+
 export default function App() {
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [queue, setQueue] = useState<Question[] | null>(null);
+  const [queue, setQueue] = useState<ActiveQueue | null>(null);
+
   const records = useStore((s) => s.records);
+  const session = useStore((s) => s.session);
+  const startSession = useStore((s) => s.startSession);
 
   useEffect(() => {
     loadQuestions()
@@ -20,12 +29,42 @@ export default function App() {
 
   if (error) return <div className="center">読み込みエラー: {error}</div>;
   if (!questions) return <div className="center">読み込み中…</div>;
-  if (queue) return <Quiz queue={queue} onExit={() => setQueue(null)} />;
+
+  if (queue) {
+    return (
+      <Quiz
+        queue={queue.items}
+        initialIndex={queue.index}
+        initialCorrect={queue.correct}
+        onExit={() => setQueue(null)}
+      />
+    );
+  }
+
+  const start = (mode: QuizMode) => {
+    const items = buildQueue(questions, mode, records);
+    if (items.length === 0) return;
+    startSession(items.map((q) => q.id));
+    setQueue({ items, index: 0, correct: 0 });
+  };
+
+  const resume = () => {
+    if (!session) return;
+    const map = new Map(questions.map((q) => [q.id, q]));
+    const items = session.queueIds
+      .map((id) => map.get(id))
+      .filter((q): q is Question => Boolean(q));
+    setQueue({ items, index: session.index, correct: session.correct });
+  };
+
+  const canResume = !!session && session.index < session.queueIds.length;
 
   return (
     <Home
       questions={questions}
-      onStart={(mode: QuizMode) => setQueue(buildQueue(questions, mode, records))}
+      onStart={start}
+      onResume={canResume ? resume : undefined}
+      resumeInfo={canResume ? { index: session!.index, total: session!.queueIds.length } : undefined}
     />
   );
 }

@@ -10,9 +10,19 @@ export interface QuestionViewProps {
   onNext: () => void;
   /** 解説スロット（#6で投票分布などを差し込む）。 */
   renderExplanation?: (correct: boolean) => React.ReactNode;
+  /** ブックマーク状態とトグル（任意）。 */
+  bookmarked?: boolean;
+  onToggleBookmark?: () => void;
 }
 
-export function QuestionView({ question, onResult, onNext, renderExplanation }: QuestionViewProps) {
+export function QuestionView({
+  question,
+  onResult,
+  onNext,
+  renderExplanation,
+  bookmarked,
+  onToggleBookmark,
+}: QuestionViewProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [graded, setGraded] = useState(false);
   const [showEn, setShowEn] = useState(false);
@@ -62,6 +72,17 @@ export function QuestionView({ question, onResult, onNext, renderExplanation }: 
         >
           {showEn ? "日本語" : "原文(EN)"}
         </button>
+        {onToggleBookmark && (
+          <button
+            type="button"
+            className="btn ghost small"
+            aria-pressed={!!bookmarked}
+            aria-label="ブックマーク"
+            onClick={onToggleBookmark}
+          >
+            {bookmarked ? "★" : "☆"}
+          </button>
+        )}
       </div>
       <p className="qtext">
         {showEn ? question.question.en : (question.question.ja ?? question.question.en)}
