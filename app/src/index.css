@@ -195,7 +195,8 @@ a { color: var(--accent); }
 .result > .btn.primary { width: 100%; margin-top: 16px; }
 
 .done { text-align: center; padding-top: 32px; }
-.done .btn { margin-top: 16px; }
+.doneactions { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.doneactions .btn { width: 100%; }
 
 .qhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px; }
 .btn.small { padding: 6px 10px; border-radius: 9px; font-size: 0.85rem; }
