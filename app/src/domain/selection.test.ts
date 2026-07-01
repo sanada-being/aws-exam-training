@@ -57,6 +57,14 @@ describe("buildQueue", () => {
         .sort(),
     ).toEqual([1, 2, 3]);
   });
+  it("limit で先頭N問に制限", () => {
+    expect(buildQueue([q(1), q(2), q(3)], "sequential", {}, Math.random, 2).map((x) => x.questionNumber)).toEqual([
+      1, 2,
+    ]);
+  });
+  it("limitがプールより大きければ全件", () => {
+    expect(buildQueue([q(1), q(2)], "sequential", {}, Math.random, 10)).toHaveLength(2);
+  });
 });
 
 describe("modeCount", () => {

@@ -19,6 +19,8 @@ export function Home({
   filter,
   onFilterChange,
   onOpenSettings,
+  count,
+  onCountChange,
 }: {
   questions: Question[];
   onStart: (mode: QuizMode) => void;
@@ -27,6 +29,8 @@ export function Home({
   filter: Filter;
   onFilterChange: (f: Filter) => void;
   onOpenSettings?: () => void;
+  count: number | null; // null = 全問
+  onCountChange: (c: number | null) => void;
 }) {
   const records = useStore((s) => s.records);
   const bookmarks = useStore((s) => s.bookmarks);
@@ -117,8 +121,22 @@ export function Home({
             要確認のみ
           </button>
         </div>
+        <div className="chips countchips">
+          {[10, 20, 30, 40, 50, null].map((c) => (
+            <button
+              key={c ?? "all"}
+              type="button"
+              className={`chip${count === c ? " on" : ""}`}
+              aria-pressed={count === c}
+              onClick={() => onCountChange(c)}
+            >
+              {c === null ? "全問" : `${c}問`}
+            </button>
+          ))}
+        </div>
         <p className="filterinfo">
           対象 <strong data-testid="pool">{pool.length}</strong> 問
+          {count !== null && <span className="muted">（{Math.min(count, pool.length)}問出題）</span>}
           {isFilterActive(filter) && (
             <button
               type="button"

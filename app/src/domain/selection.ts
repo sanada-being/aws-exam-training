@@ -30,15 +30,18 @@ export function modeCount(questions: Question[], mode: QuizMode, records: Record
   return selectByMode(questions, mode, records).length;
 }
 
-/** 出題キューを構築（抽出→並べ替え）。random以外は問題番号順。 */
+/** 出題キューを構築（抽出→並べ替え→任意で先頭N問に制限）。random以外は問題番号順。 */
 export function buildQueue(
   questions: Question[],
   mode: QuizMode,
   records: Records,
   rng: () => number = Math.random,
+  limit?: number,
 ): Question[] {
   const subset = selectByMode(questions, mode, records);
-  return mode === "random"
-    ? shuffle(subset, rng)
-    : [...subset].sort((a, b) => a.questionNumber - b.questionNumber);
+  const ordered =
+    mode === "random"
+      ? shuffle(subset, rng)
+      : [...subset].sort((a, b) => a.questionNumber - b.questionNumber);
+  return limit && limit > 0 ? ordered.slice(0, limit) : ordered;
 }

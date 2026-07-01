@@ -21,6 +21,7 @@ export default function App() {
   const [queue, setQueue] = useState<ActiveQueue | null>(null);
   const [filter, setFilter] = useState<Filter>(emptyFilter);
   const [showSettings, setShowSettings] = useState(false);
+  const [count, setCount] = useState<number | null>(null);
 
   useAutoSync();
 
@@ -53,7 +54,7 @@ export default function App() {
 
   const start = (mode: QuizMode) => {
     const pool = applyFilters(questions, filter, bookmarks);
-    const items = buildQueue(pool, mode, records);
+    const items = buildQueue(pool, mode, records, Math.random, count ?? undefined);
     if (items.length === 0) return;
     startSession(items.map((q) => q.id));
     setQueue({ items, index: 0, correct: 0 });
@@ -79,6 +80,8 @@ export default function App() {
       filter={filter}
       onFilterChange={setFilter}
       onOpenSettings={() => setShowSettings(true)}
+      count={count}
+      onCountChange={setCount}
     />
   );
 }

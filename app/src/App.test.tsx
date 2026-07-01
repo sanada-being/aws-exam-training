@@ -40,6 +40,8 @@ function renderHome(props: Partial<Parameters<typeof Home>[0]> = {}) {
       onStart={() => {}}
       filter={emptyFilter}
       onFilterChange={() => {}}
+      count={null}
+      onCountChange={() => {}}
       {...props}
     />,
   );
@@ -99,5 +101,17 @@ describe("Home", () => {
     renderHome({ onOpenSettings });
     await userEvent.click(screen.getByRole("button", { name: "設定・同期" }));
     expect(onOpenSettings).toHaveBeenCalled();
+  });
+
+  it("出題数チップで onCountChange が呼ばれる", async () => {
+    const onCountChange = vi.fn();
+    renderHome({ onCountChange });
+    await userEvent.click(screen.getByRole("button", { name: "10問" }));
+    expect(onCountChange).toHaveBeenCalledWith(10);
+  });
+
+  it("出題数指定時に出題数の表示が出る（プール上限でクリップ）", () => {
+    renderHome({ count: 10 }); // sample=2問なので min(10,2)=2
+    expect(screen.getByText(/2問出題/)).toBeInTheDocument();
   });
 });
