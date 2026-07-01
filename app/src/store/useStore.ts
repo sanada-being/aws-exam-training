@@ -25,6 +25,12 @@ interface State {
   endSession: () => void;
 }
 
+/** 現在の進捗スナップショット（同期・エクスポートで使う）。 */
+export function getSnapshot(): ProgressSnapshot {
+  const s = useStore.getState();
+  return { records: s.records, bookmarks: s.bookmarks };
+}
+
 export const useStore = create<State>()(
   persist(
     (set) => ({

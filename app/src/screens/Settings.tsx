@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useStore } from "../store/useStore";
+import { useStore, getSnapshot } from "../store/useStore";
 import { useSync } from "../store/useSync";
 import { createGist, fetchGist, updateGist, buildPayload } from "../data/gist";
 import { formatSyncTime, syncStatusLabel } from "../domain/syncFormat";
@@ -9,18 +9,13 @@ export function Settings({ onBack }: { onBack: () => void }) {
   const [importText, setImportText] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
 
-  const snapshot = () => {
-    const s = useStore.getState();
-    return { records: s.records, bookmarks: s.bookmarks };
-  };
-
   const busy = () => useSync.getState().setStatus("syncing");
 
   async function handleCreate() {
     if (!sync.token) return setMsg("先にトークンを入力してください");
     try {
       busy();
-      const id = await createGist(sync.token, buildPayload(snapshot(), Date.now()));
+      const id = await createGist(sync.token, buildPayload(getSnapshot(), Date.now()));
       sync.setGistId(id);
       sync.setEnabled(true);
       useSync.getState().markSynced(Date.now());
@@ -50,7 +45,7 @@ export function Settings({ onBack }: { onBack: () => void }) {
     if (!sync.token || !sync.gistId) return setMsg("トークンと同期コードが必要です");
     try {
       busy();
-      await updateGist(sync.token, sync.gistId, buildPayload(snapshot(), Date.now()));
+      await updateGist(sync.token, sync.gistId, buildPayload(getSnapshot(), Date.now()));
       useSync.getState().markSynced(Date.now());
       setMsg("保存しました");
     } catch (e) {
@@ -60,7 +55,7 @@ export function Settings({ onBack }: { onBack: () => void }) {
   }
 
   function handleExport() {
-    navigator.clipboard?.writeText(JSON.stringify(buildPayload(snapshot(), Date.now())));
+    navigator.clipboard?.writeText(JSON.stringify(buildPayload(getSnapshot(), Date.now())));
     setMsg("進捗JSONをコピーしました（バックアップ用）");
   }
 
