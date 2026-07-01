@@ -3,6 +3,7 @@ import { useStore } from "../store/useStore";
 import { useSync } from "../store/useSync";
 import { createGist, fetchGist, updateGist, buildPayload } from "../data/gist";
 import { formatSyncTime, syncStatusLabel } from "../domain/syncFormat";
+import { AccountSection } from "./AccountSection";
 
 export function Settings({ onBack }: { onBack: () => void }) {
   const sync = useSync();
@@ -169,6 +170,9 @@ export function Settings({ onBack }: { onBack: () => void }) {
           {msg}
         </p>
       )}
+
+      <hr className="sep" />
+      <AccountSection />
     </div>
   );
 }

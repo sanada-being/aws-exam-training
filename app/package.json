@@ -16,6 +16,7 @@
     "build:data": "node scripts/build-data.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zustand": "^5.0.2"

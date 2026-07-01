@@ -93,6 +93,9 @@ a { color: var(--accent); }
 .backup summary { cursor: pointer; color: var(--muted); }
 .backup .btn { margin: 8px 0; }
 .syncmsg { margin-top: 12px; padding: 10px; border-radius: 10px; background: var(--panel); border: 1px solid var(--border); word-break: break-all; }
+.sep { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+.account h2 { font-size: 1.05rem; }
+.account code { background: var(--panel); padding: 1px 5px; border-radius: 5px; }
 .dashboard {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
