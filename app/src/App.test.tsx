@@ -93,4 +93,11 @@ describe("Home", () => {
     renderHome({ filter: { ...emptyFilter, needsReviewOnly: true } });
     expect(screen.getByTestId("pool")).toHaveTextContent("1");
   });
+
+  it("設定ボタンで onOpenSettings が呼ばれる", async () => {
+    const onOpenSettings = vi.fn();
+    renderHome({ onOpenSettings });
+    await userEvent.click(screen.getByRole("button", { name: "設定・同期" }));
+    expect(onOpenSettings).toHaveBeenCalled();
+  });
 });

@@ -5,7 +5,9 @@ import { buildQueue, type QuizMode } from "./domain/selection";
 import { applyFilters, emptyFilter, type Filter } from "./domain/filter";
 import { Home } from "./screens/Home";
 import { Quiz } from "./screens/Quiz";
+import { Settings } from "./screens/Settings";
 import { useStore } from "./store/useStore";
+import { useAutoSync } from "./hooks/useAutoSync";
 
 interface ActiveQueue {
   items: Question[];
@@ -18,6 +20,9 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [queue, setQueue] = useState<ActiveQueue | null>(null);
   const [filter, setFilter] = useState<Filter>(emptyFilter);
+  const [showSettings, setShowSettings] = useState(false);
+
+  useAutoSync();
 
   const records = useStore((s) => s.records);
   const bookmarks = useStore((s) => s.bookmarks);
@@ -32,6 +37,8 @@ export default function App() {
 
   if (error) return <div className="center">読み込みエラー: {error}</div>;
   if (!questions) return <div className="center">読み込み中…</div>;
+
+  if (showSettings) return <Settings onBack={() => setShowSettings(false)} />;
 
   if (queue) {
     return (
@@ -71,6 +78,7 @@ export default function App() {
       resumeInfo={canResume ? { index: session!.index, total: session!.queueIds.length } : undefined}
       filter={filter}
       onFilterChange={setFilter}
+      onOpenSettings={() => setShowSettings(true)}
     />
   );
 }

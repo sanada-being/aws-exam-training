@@ -18,6 +18,7 @@ export function Home({
   resumeInfo,
   filter,
   onFilterChange,
+  onOpenSettings,
 }: {
   questions: Question[];
   onStart: (mode: QuizMode) => void;
@@ -25,6 +26,7 @@ export function Home({
   resumeInfo?: { index: number; total: number };
   filter: Filter;
   onFilterChange: (f: Filter) => void;
+  onOpenSettings?: () => void;
 }) {
   const records = useStore((s) => s.records);
   const bookmarks = useStore((s) => s.bookmarks);
@@ -45,7 +47,19 @@ export function Home({
 
   return (
     <div className="home">
-      <h1>AWS SAA 問題集</h1>
+      <div className="topbar">
+        <h1>AWS SAA 問題集</h1>
+        {onOpenSettings && (
+          <button
+            type="button"
+            className="btn ghost small"
+            onClick={onOpenSettings}
+            aria-label="設定・同期"
+          >
+            ⚙ 同期
+          </button>
+        )}
+      </div>
 
       <section className="dashboard" aria-label="学習状況">
         <div className="stat">

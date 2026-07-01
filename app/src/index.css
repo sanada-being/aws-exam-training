@@ -67,6 +67,27 @@ a { color: var(--accent); }
 
 /* ホーム */
 .home h1 { margin-bottom: 4px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+/* 設定・同期 */
+.settings h2 { font-size: 1.1rem; margin: 12px 0 8px; }
+.settings .small { font-size: 0.85rem; }
+.field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+.field span { font-size: 0.85rem; color: var(--muted); }
+.field input, .settings textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+.syncbtns { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.backup { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px; }
+.backup summary { cursor: pointer; color: var(--muted); }
+.backup .btn { margin: 8px 0; }
+.syncmsg { margin-top: 12px; padding: 10px; border-radius: 10px; background: var(--panel); border: 1px solid var(--border); word-break: break-all; }
 .dashboard {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
