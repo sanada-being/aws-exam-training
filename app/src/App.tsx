@@ -8,6 +8,7 @@ import { Quiz } from "./screens/Quiz";
 import { Settings } from "./screens/Settings";
 import { useStore } from "./store/useStore";
 import { useAutoSync } from "./hooks/useAutoSync";
+import { useAccountSync } from "./hooks/useAccountSync";
 
 interface ActiveQueue {
   items: Question[];
@@ -24,6 +25,7 @@ export default function App() {
   const [count, setCount] = useState<number | null>(null);
 
   useAutoSync();
+  useAccountSync();
 
   const records = useStore((s) => s.records);
   const bookmarks = useStore((s) => s.bookmarks);
