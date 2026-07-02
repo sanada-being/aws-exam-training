@@ -201,7 +201,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, E。\n\nデータメッシュは「分散したドメインがデータを所有しつつ、中央でガバナンス/アクセス制御を統一する」構成です。カタログとETLにGlueを使う前提で、ストレージ/分析とガバナンスを補完します。\n- B: S3をデータレイクのストレージ、Athenaをサーバーレス分析に使うのはデータメッシュの標準構成に合致。\n- E: Lake Formationは、Glue Data Catalog上のデータに対する集中的なアクセス制御(行・列・タグベース)とガバナンスを提供し、要件の「集中ガバナンス」を満たす。\n\n誤答:\n- A: AuroraやRedshiftプロビジョンドクラスターはレイク中心のメッシュ構成に必須ではなく、集中ガバナンス要件を満たさない。\n- C: DataBrewはノーコードのデータ準備(クレンジング)ツールであり、ガバナンス/アクセス制御の機能はない。\n- D: RDS+EMRはガバナンスとアクセス制御の集中管理を提供しない。\n\nポイント: メッシュのガバナンス層=Lake Formation、ストレージ=S3、サーバーレス分析=Athenaという役割分担を押さえる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -379,7 +379,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n共通コードを複数のLambda関数で共有するには、Lambda layerにパッケージ化し各関数にアタッチするのが定石です。スクリプト更新時はレイヤーの新バージョンを発行して関数の参照を更新するだけで済み、各関数の再デプロイ/手動更新の手間を大幅に削減できます。\n\n誤答:\n- A: 「実行コンテキストオブジェクトにポインタを保存」は正規の仕組みではなく、共有更新を自動化できない。\n- C: 環境変数にS3ポインタを置く方式は、実行時にS3からスクリプトを取得する追加ロジックが必要で運用が煩雑。レイヤーの方が標準的で簡潔。\n- D: エイリアスはバージョン管理/トラフィック振り分けの機能であり、共通コードの共有には無関係。\n\nポイント: Lambdaの共通依存/共通コード共有=Lambda layer。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -524,7 +524,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nソースがGlueクローラー(SQL Server)→Glue ETLで変換→S3ロード、というオール Glue のパイプラインをオーケストレーションするには、AWS Glue workflowsが最もコスト効率的です。Glue内蔵機能で追加サービス料金がかからず、クローラーとジョブを1つのワークフローとして連携/トリガー実行できます。\n\n誤答:\n- A: Step Functionsは汎用オーケストレーションで可能だが、Glue完結の構成では追加サービスとなりコスト面で不利。\n- C: Glue StudioはETLジョブを作成する開発UIであり、オーケストレーションツールではない。\n- D: MWAA(Airflow)は常時稼働の環境コストが高く、この用途にはオーバースペックでコスト非効率。\n\nポイント: Glueリソースだけのオーケストレーションで最安=Glue workflows。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -658,7 +658,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAthenaで「クエリ処理とクエリ履歴」をユーザー/チーム/アプリ単位で分離するにはAthena workgroupsを使います。ワークグループごとにクエリ実行環境と履歴が分離され、ワークグループにタグを付け、タグ条件のIAMポリシーで誰がどのワークグループを使えるかを制御できます。\n\n誤答:\n- A: S3バケットポリシーはデータへのアクセス制御であり、Athenaのクエリ実行/履歴の分離はできない。\n- C: 「ロールをAthenaに関連付ける」という仕組みは存在せず、クエリ履歴の分離要件を満たさない。\n- D: Glue Data Catalogリソースポリシーはメタデータ(テーブル)へのアクセス制御であり、クエリ処理/履歴の分離には対応しない。\n\nポイント: Athenaの利用分離・履歴分離・コスト上限管理=workgroup。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -803,7 +803,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n開始/終了時刻の制約がなく遅延を許容できるバッチには、Glueジョブの FLEX 実行クラスが最もコスト効率的です。FLEXは余剰キャパシティを利用するため実行料金が安く、開始タイミングが保証されない代わりに低コストで実行できます。\n\n誤答:\n- B: GlueジョブにSpotインスタンスタイプを直接選ぶ設定はなく、コスト最適化はFLEXで行う。\n- C: STANDARD実行クラスは即時/専用リソースで、FLEXより高コスト。時間制約のない今回は不要。\n- D: GlueVersionを最新にしてもコスト削減にはつながらない(ランタイムのバージョン選択にすぎない)。\n\nポイント: 時間制約なしのバッチGlueジョブの節約=FLEX execution class。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -1003,7 +1003,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nAthenaのクエリを高速化する鍵は「列指向フォーマット+圧縮」です。非圧縮CSVをApache Parquet(+Snappy圧縮)に変換すると、列指向のため特定列のみを選択するクエリでスキャン量が激減し、圧縮でデータサイズも縮小するため、パフォーマンスとコスト(スキャン量課金)の両方が改善します。\n\n誤答:\n- A: JSONは行指向で列選択の恩恵がなく、CSVからの改善効果は限定的。\n- B: CSVをSnappy圧縮してもサイズは減るが行指向のままで、列選択の高速化効果が得られない。\n- D: gzip圧縮も同様に行指向のままで、列プルーニングによる高速化は得られない。\n\nポイント: Athena高速化=Parquet/ORC等の列指向+圧縮+(必要ならパーティション化)。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -1208,7 +1208,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n最低レイテンシーでリアルタイム表示するには、ストリームをそのままストリーム処理し、S3を経由しない経路が必要です。Amazon Managed Service for Apache Flinkでセンサーデータを処理し、Flinkコネクタで時系列DBのTimestreamに書き込み、Grafanaでリアルタイムダッシュボードを描画するのが最速です。\n\n誤答:\n- B: S3オブジェクト作成イベント→Lambda→Auroraはバッチ的で、S3書き込みを挟むためレイテンシーが大きい。\n- C: FlinkからData Firehose経由でTimestreamに送る経路はFirehoseのバッファリングによる遅延が加わり、直接書き込みより遅い。\n- D: Glue bookmarksはS3等の増分バッチ処理用で「リアルタイム読み取り」はできず、S3経由のため低レイテンシー要件を満たさない。\n\nポイント: 最低レイテンシーのストリーム分析=Managed Service for Apache Flinkで直接処理し、S3バッファを挟まない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -1375,7 +1375,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nGlueクローラーの正しい設定は、(1)最小権限の AWSGlueServiceRole ポリシーを持つIAMロールをアタッチ、(2)S3ソースパスをデータストアに指定、(3)日次スケジュール、(4)出力先としてData Catalog のデータベース名を指定、です。クローラーの出力はData Catalogのテーブル(データベース内)であり、S3の出力パスではありません。\n\n誤答:\n- A: AmazonS3FullAccessは過剰権限で最小権限に反し、さらに「出力をS3パスに設定」はクローラーの出力先(=Catalogデータベース)として誤り。\n- C: AmazonS3FullAccessは過剰権限。またクローラーにDPUを割り当てる概念はなく設定が不適切。\n- D: DPU割り当ての誤りに加え、出力先をS3パスにするのも誤り(Data Catalogへ登録されない)。\n\nポイント: クローラー=Data Catalogにテーブルを作る。ロールはAWSGlueServiceRole、出力はデータベース名指定。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -1575,7 +1575,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nオンプレからS3への安全かつ増分同期を、スケジュール実行で自動化する用途にはAWS DataSyncが最適です。増分転送(変更分のみ)、暗号化転送、スケジュール実行、複数形式ファイルの扱いを標準機能で提供し、運用効率が最も高いです。\n\n誤答:\n- B: GlueはETLサービスで、大容量ファイルの増分ファイル転送/同期を自動化する用途には不向き。\n- C: Direct Connectは専用線(ネットワーク接続)であり、それ自体が転送/同期の自動化を行うわけではない。\n- D: S3 Transfer Accelerationは長距離アップロードの高速化機能で、増分検出やスケジュール同期の自動化は提供しない。\n\nポイント: オンプレ→S3の増分・定期同期=DataSync。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -1793,7 +1793,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, D。\n\nGlue ETLで RDS/MongoDB→変換→Redshift を1時間ごとに実行する構成を、最小の運用オーバーヘッドで実現します。\n- A: Glue triggerをスケジュール(1時間ごと)に設定すれば、追加サービスなしで定期実行できる。\n- D: Glue connectionsを使えば、各データソースとRedshiftへの接続(認証/ネットワーク)をGlueジョブから安全に確立でき、管理が簡潔。\n\n誤答:\n- B: DataBrewはノーコードのデータ準備ツール。既にGlue ETLジョブを構築している要件では追加不要で、オーバーヘッドを増やす。\n- C: LambdaでETLをスケジュール起動するのは、Glueのネイティブトリガーがあるのに対し追加の管理が必要で不利。\n- E: Redshift Data APIはクエリをプログラム実行するためのAPIだが、Glueのネイティブなconnection経由ロードの方がETL統合として運用が簡潔。\n\nポイント: Glue完結の定期ETL=Glue trigger(スケジュール)+Glue connections。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -1938,7 +1938,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nプロビジョンドRedshiftクラスター(RA3)でコンカレンシースケーリングを有効にするには、WLM(ワークロード管理)のキューレベルで設定します。同時実行数が増えたときに追加クラスターを自動起動して読み取り(および対応する書き込み)のバースト需要を処理します。\n\n誤答:\n- A: Redshift Serverlessは別デプロイ形態で、既存のプロビジョンドクラスターの要件に合わない。\n- C: 「クラスター作成時の設定」にコンカレンシースケーリングのオン/オフ項目はなく、WLMキューで制御する。\n- D: 日次使用量クォータはコンカレンシースケーリングの利用時間の課金上限管理であり、有効化の方法ではない。\n\nポイント: プロビジョンドRedshiftのコンカレンシースケーリング有効化=WLMキュー単位で設定。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -2166,7 +2166,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, B。\n\n各クエリが15分を超える可能性があるため、Lambdaの15分実行上限内でクエリ完了を待つ構成は不適切です。start_query_executionは非同期でクエリを起動するだけなので、以下の組み合わせが最適です。\n- A: Lambda+Boto3のstart_query_executionでAthenaクエリを非同期起動する(Lambda自体はすぐ終了)。\n- B: Step FunctionsでLambda起動ステート+Waitステート(get_query_executionでポーリング)を作り、完了後に次のクエリへ進める。サーバーレスで待機中のコストがかからず安価。\n\n誤答:\n- C: Glue Pythonシェルでのクエリ起動もStep Functionsのサーバーレス待機よりコスト効率で劣る。\n- D: Glue Pythonシェルでsleepしながらポーリングする方式は、ジョブが待機中も課金され続けコスト非効率。\n- E: MWAA+AWS Batchは常時稼働環境や追加サービスのコストが高く、この用途には過剰。\n\nポイント: 長時間Athenaの安価なオーケストレーション=Step FunctionsのWaitステートでポーリング(Lambdaで非同期起動)。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -2371,7 +2371,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nApache Pig/Oozie/Spark/HBase/Flink を使うペタバイト級・数秒処理のワークロードをそのまま移行するにはAmazon EMRが適しています。EMRはこれらHadoop/Sparkエコシステムのフレームワークを幅広くサポートし、大規模データの高性能処理を維持できます(EMR Serverlessでサーバーレス運用も可能)。\n\n誤答:\n- A: GlueはSparkベースETLは可能だがPig/Oozie/HBase/Flinkといった多様なフレームワークをフルにはサポートせず、既存ワークロードの互換移行に不向き。\n- C: Lambdaは短時間・小規模処理向けで、ペタバイト級の分散処理には不適。\n- D: RedshiftはDWHであり、Hadoopエコシステムのフレームワーク実行環境ではない。\n\nポイント: Hadoop/Spark/HBase/Flink等の多フレームワーク大規模処理=EMR。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -2581,7 +2581,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nデータのプロファイリングとPII難読化を最小の運用負荷で行うには、AWS Glue Studioの組み込み Detect PII 変換を使ってPIIを識別・難読化し、Step Functionsでレイクへの取り込みをオーケストレーションします。Detect PIIは検出と難読化(マスキング等)を一体で提供します。\n\n誤答:\n- A: KinesisFirehoseのLambda変換でPII検出/難読化を自作するのは実装/運用の負荷が高い。\n- C: Glue Data Qualityはデータ品質ルール(検証)のための機能で、PIIの難読化を行う役割ではない。Detect PIIが難読化を担うため、Data Qualityルールの追加は不要で誤り。\n- D: DynamoDBに一旦取り込みLambdaで難読化する構成は追加コンポーネントが多く運用負荷が高い。\n\nポイント: PIIの検出+難読化=Glue Studioの Detect PII transform(Data Qualityは品質検証用で別物)。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -2786,7 +2786,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nGlueとEMRという異なるサービスをまたぐETLを自動オーケストレーションするには、AWS Step Functions tasksが最も運用オーバーヘッドが小さい選択です。Step FunctionsはGlue/EMR/Lambda等と直接統合(サービス統合)し、サーバーレスでワークフローを制御でき、エラー処理/リトライも組み込みです。\n\n誤答:\n- A: Glue workflowsはGlueリソース(クローラー/ジョブ)の連携用で、EMRを含む異種サービスのオーケストレーションには適さない。\n- C: Lambdaで全オーケストレーションを自作するとコードとエラー処理の管理負荷が高い。\n- D: MWAA(Airflow)は環境が常時稼働で運用/コスト負荷が高く、サーバーレスなStep Functionsより不利。\n\nポイント: Glue+EMR等の異種サービス横断オーケストレーション=Step Functions(サービス統合)。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -2991,7 +2991,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nアクセス頻度の逓減に合わせた最小コストのライフサイクル設計です。0〜6か月は高頻度アクセスなのでS3 Standard、6か月〜2年は月1〜2回なのでS3 Standard-IA、2年超は年1〜2回とほぼアーカイブなのでS3 Glacier Deep Archiveに移行するのが最安です。高可用性要件のため、単一AZのOne Zone-IAは選べません。\n\n誤答:\n- A: One Zone-IAは単一AZで高可用性要件を満たさない。\n- B: 2年超をGlacier Flexible RetrievalにするとDeep Archiveより高コスト。年1〜2回の稀なアクセスならDeep Archiveが最安。\n- D: One Zone-IAは高可用性要件に反する。\n\nポイント: 高可用性維持ならStandard-IA(複数AZ)、超低頻度の長期保管はDeep Archiveが最安。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -3196,7 +3196,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nETLクラスターのコンピューティングを消費せず、重要タスクを中断せずにデータを共有するにはAmazon Redshift data sharingを使い、BIクラスターをETLクラスター(プロデューサー)のコンシューマーとして設定します。データはコピーされず、ライブに読み取れ、クエリはコンシューマー側の計算リソースで実行されるためプロデューサーの負荷を最小化できます。\n\n誤答:\n- B: マテリアライズドビュー作成とETLクラスターへの直接アクセスは、ETLクラスターの計算リソースを消費し、重要タスクへ影響する可能性がある。\n- C: データベースビューへの直接アクセスも、クエリがETLクラスター上で実行されリソースを消費する。\n- D: 毎週S3へアンロード+Redshift Spectrumはデータのコピーとアンロード処理が発生し、リアルタイム性/運用効率でdata sharingに劣る。\n\nポイント: クラスター間のライブ共有・計算分離=Redshift data sharing(producer/consumer)。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -3319,7 +3319,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n1回限りのアドホック分析で、DynamoDB / RDS / Redshift / S3 という複数ソースを結合するなら、Athena Federated Query が最もコスト効率が良い。各ソース用の Data Source Connector(Lambda ベース)を使い、データを移動せずにその場で SQL 結合でき、クエリ実行分のみ課金される。サーバーやクラスターの管理も不要。\n\n- A: プロビジョニング型 EMR クラスターは起動・運用コストが高く、1回限りのジョブには過剰。Spark 開発の手間も大きい。\n- B: 全ソースを S3 にコピーしてから Athena、という前処理(ETL/コピー)が必要で、1回限りには手間とストレージコストが無駄。\n- D: Redshift Spectrum は S3 上の外部データをクエリする機能であり、DynamoDB や RDS を直接クエリする用途ではない。前提が誤り。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -3505,7 +3505,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, D。\n\n長時間実行される信頼性重視の EMR ワークロードをコスト最適化するベストプラクティス。\n- B: ストレージとコンピュートを分離し、永続データは Amazon S3(EMRFS)に置く。HDFS はクラスター終了でデータが失われるが、S3 なら耐久性が高く、クラスターを一時停止/縮小してもデータが残るため信頼性・コスト両面で有利。\n- D: Graviton(ARM)インスタンスは x86 に比べ同等性能を低価格・高い価格性能比で提供し、パフォーマンスを維持しつつコストを下げられる。\n\n- A: HDFS を永続ストアにするとクラスターを常時稼働させる必要があり、コスト増・耐久性低下。\n- C: x86 は Graviton より価格性能比で劣る。\n- E: プライマリ(マスター)ノードに Spot を使うと中断時にクラスター全体が失われ、信頼性が損なわれる。Spot はタスクノードに使うのが定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -3720,7 +3720,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n毎秒数 GB のストリームを Kinesis Data Streams から Redshift に取り込み、既存 BI でほぼリアルタイムに分析するには、Amazon Redshift streaming ingestion を使う。Redshift に外部スキーマを作成して Kinesis stream をマッピングし、ストリームを読む materialized view を作って auto refresh に設定すれば、S3 ステージングや COPY のパイプラインを組まずに済み運用オーバーヘッドが最小。\n\n- A: Kinesis から S3 へステージングし COPY する構成は追加のパイプラインと遅延を生む。「即座に利用可能」も streaming ingestion より劣る。\n- B: Kinesis Data Streams に直接 SQL を発行することはできず、「ストリーム直上の materialized view」という前提が誤り。手動リフレッシュも運用負荷。\n- D: Firehose→S3→COPY の構成はマイクロバッチで遅延が増え、コンポーネントが多く運用オーバーヘッドが大きい。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -3862,7 +3862,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, B。\n\nGlue ジョブが長時間化しダッシュボードのクエリが遅い問題への対処。\n- A: S3 データを年/月/日でパーティション化すると、Glue も Athena/QuickSight も必要なパーティションだけをスキャンでき、処理量が減って高速化・コスト削減になる。\n- B: worker type をスケールアップ(例: G.1X→G.2X)して Glue の DPU/メモリを増やすと、Spark 処理の並列度・処理能力が上がりジョブ時間を短縮できる。\n\n- C: 「DynamicFrame スキーマクラスに変換」はパフォーマンス改善策として意味をなさない造語的選択肢。\n- D: 実行頻度を半分にしてもジョブ1回あたりの実行時間や遅延は改善しない(むしろ1回の処理量が増える)。\n- E: IAM で全 S3 機能へのアクセスを許可してもパフォーマンスは向上せず、最小権限にも反する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -4018,7 +4018,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n大量のファイルコレクションを反復し、各要素に同じ変換を並行適用するには Step Functions の Map ステートを使う。Map は配列の各項目に対して同一の処理を動的に(項目数が可変でも)並列実行でき、大量ファイルのファンアウト処理に最適(Distributed Map ならさらに大規模並列)。\n\n- A: Parallel ステートは「異なる複数のブランチ」を固定数だけ同時実行するもので、可変数の同一処理には不向き。\n- B: Choice は条件分岐用。\n- D: Wait は指定時間/時刻まで待機するだけ。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -4236,7 +4236,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C, D。\n\nプライベートサブネット内 RDS に、Lambda からインターネットを経由せずプライベート接続する構成。\n- C: Lambda を VPC(DB と同じ VPC/サブネット)に配置すると、VPC 内部のプライベート IP 経由で DB に到達でき、パブリックインターネットを使わない。\n- D: 同一 self-referencing(自己参照)セキュリティグループを Lambda と DB 両方にアタッチし、DB ポートを許可すると、そのグループのメンバー間通信が許可される。最小構成で運用オーバーヘッドが低い。\n\n- A: パブリックアクセス有効化は要件(インターネットを使わない)に反する。\n- B: セキュリティグループのソースに「Lambda 関数」を直接指定することはできず表現が不正確。self-referencing ルール(D)の方が適切。\n- E: ネットワーク ACL はステートレスかつ IP/CIDR ベースで、self-referencing(セキュリティグループ参照)ルールを持てない。前提が誤り。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -4419,7 +4419,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAPI Gateway から時折呼び出され、結果を返す Python コードには AWS Lambda が最適。サーバー管理不要で、呼び出し時のみ課金、API Gateway と Lambda proxy integration で結果を直接返せる。低頻度呼び出しのコールドスタートを避けたいなら provisioned concurrency で応答を安定化でき、運用オーバーヘッドが最小。\n\n- A/C: ECS/EKS はコンテナ基盤の管理が必要で、時折の軽量スクリプトには過剰かつ運用負荷が高い。\n- D: EventBridge で5分ごとに空呼び出しして温める方式は、余計な実行コストと仕組みが発生する。provisioned concurrency を使う B の方がクリーンで運用負荷が低い。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -4542,7 +4542,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nCloudWatch Logs のクロスアカウント配信の正しい構成。\n- 送信先の Kinesis Data Stream は受信側(セキュリティ用アカウント)に作成する。\n- そのアカウントで、CloudWatch Logs がストリームへ put できる IAM ロールと信頼ポリシーを用意する。\n- subscription filter はログの発生元(本番用アカウント)側に作成し、ログをクロスアカウントで宛先 stream へ送る。\n\n- A/C: 宛先 stream を本番用(送信元)アカウントに置くのは配信方向が逆。\n- B: subscription filter をセキュリティ用アカウント側に作るのは誤り。フィルターはログソースのある本番用アカウントに置く必要がある。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -4747,7 +4747,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n毎日フルスナップショット(JSON)が届き、そこから変更分を CDC として取り込む要件。Apache Hudi / Iceberg / Delta Lake などの open table format を使えば、スナップショットを S3 データレイクに MERGE(upsert: 新規は insert、既存は update)でき、変更検出とマージをネイティブに扱えて最もコスト効率が良い。\n\n- A: Lambda で自前 diff を実装するのは、数十 TB のファイルではメモリ/時間の制約・開発運用コストが大きく現実的でない。\n- B/D: いったん RDS/Aurora MySQL に取り込んで DMS で CDC する構成は、中間 DB の運用コストが発生し、フルスナップショット→データレイクという流れに対して過剰。open table format の直接マージの方が安価。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -4965,7 +4965,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, C。\n\nパーティション数が多すぎて Athena のクエリプランニング(パーティション取得)が遅い問題の対策。\n- A: AWS Glue partition index を作成し partition filtering を有効にすると、Glue Data Catalog からのパーティション取得が索引で高速化され、プランニング時間が短縮される。\n- C: Athena partition projection を使うと、Glue にパーティションを問い合わせず S3 プレフィックスの規則からパーティションを計算するため、大量パーティションでもメタデータ取得のボトルネックを解消できる。\n\n- B: bucketing はデータのスキャン/結合効率の話で、パーティション取得(プランニング)時間の短縮策ではない。\n- D: Parquet 変換はスキャン量・実行時間の改善策で、プランニング時間の問題には直接効かない。\n- E: 小オブジェクト結合はスモールファイル問題の対策で、パーティション数過多による plan 時間短縮には寄与しない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5099,7 +5099,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n最大30分の time-based / windowed 集計をリアルタイムに、高耐障害性・低運用負荷で行うなら Amazon Managed Service for Apache Flink。マネージドで自動スケール・チェックポイントによる耐障害性を備え、複数種の集計やウィンドウ処理を SQL/Flink で宣言的に実装できる。\n\n- A/C: Lambda に集計ロジックを書く方式は、状態管理・ウィンドウ管理・耐障害性を自前で実装する必要があり運用負荷と実装難度が高い。\n- B: 同じ Managed Flink だが「時折重複を含むデータの分析」が目的で、要件の『最大30分のウィンドウにわたる時間ベース分析』を正しく表していない。D の記述が要件に一致する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5211,7 +5211,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\ngp2→gp3 は Elastic Volumes によりオンラインでボリュームタイプを変更できる。既存ボリュームのタイプを gp3 に変更し、必要なサイズ/IOPS/スループットを指定するだけで、デタッチや EC2 停止なしに移行でき、データ損失や中断を招かず運用オーバーヘッドが最小。\n\n- A: スナップショット→新規 gp3 作成→付け替えは、デタッチ/アタッチが必要で中断とデータ整合の手間が生じる。\n- B: 新ボリュームへ手動でデータを段階転送→付け替えは不要に複雑。\n- D: DataSync はファイル/オブジェクト転送サービスで EBS ボリュームタイプ変更の用途に不適切。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5416,7 +5416,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n移行完了までの日次エクスポートで、複数テーブルの SQL 結合結果を Parquet で S3 に出す最も効率的な方法。SQL Server 側に結合を表すビューを作り、AWS Glue ジョブでそのビューを直接読み取って Parquet で S3 に書き出し、日次スケジュールする。Glue は JDBC 接続と Parquet 出力をネイティブに扱え、追加の変換ステップが不要。\n\n- B: CSV 出力→S3 イベント→Lambda で Parquet 変換、という多段パイプラインは部品が多く運用効率が悪い。\n- C: Glue crawler はデータカタログのスキーマ検出用であり、SQL Server の「ビュー」をクロールする必要はなく、余計なステップ。ジョブでビューを直接読めばよい。\n- D: Lambda で JDBC 接続し Parquet 変換する自前実装は、実行時間/メモリ制約と開発負荷があり、Glue に比べ効率が悪い。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5539,7 +5539,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nRedshift のクエリオプティマイザーが、パフォーマンス問題を示唆する条件(欠落した統計、ネステッドループ結合、過大なブロードキャスト、ソートなしスキャンなど)を検出したときに記録するのが STL_ALERT_EVENT_LOG。長時間クエリの兆候分析に使う。\n\n- A: STL_USAGE_CONTROL は使用制限に関するもので用途が異なる。\n- C: STL_QUERY_METRICS はクエリのリソース使用メトリクスを記録するが、オプティマイザーの警告(異常)ログではない。\n- D: STL_PLAN_INFO は実行プランの情報を提供するが、パフォーマンス問題の警告を記録するものではない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5662,7 +5662,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n15列中1〜2列だけをよくクエリするなら、列指向の Apache Parquet に変換して取り込むのが最もコスト効率が良い。Athena は必要な列だけを読むため(列プルーニング)、スキャン量が激減し課金(スキャンバイト数)を大幅に削減できる。圧縮も効く。\n\n- A: CSV のまま取り込むと Athena が毎回全列・全行をスキャンし、コストが高い。\n- B: JSON は行指向で冗長、列単位クエリでコスト削減できない。\n- C: Avro も行指向で、列サブセットのクエリでは Parquet ほどスキャン削減できない。分析クエリには列指向が最適。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5793,7 +5793,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, D。\n\nリージョン(部門)ごとに従業員レコードへのアクセスを制限する要件は AWS Lake Formation で最小運用負荷に実現できる。\n- B: S3 パスを Lake Formation の data location として登録し、Lake Formation にデータへのアクセス管理を委ねる。\n- D: Lake Formation の fine-grained access control(行/列レベル)を有効にし、data filter でリージョンに基づく行フィルタを定義して各 HR ロールに付与する。IAM ポリシーを個別管理するより一元的で運用が容易。\n\n- A: 「データフィルターで S3 パスをロケーション登録」という表現が不正確。登録(B)とフィルタ付与(D)は別ステップ。\n- C: IAM ロールに直接『データフィルター』を追加することはできない。行/列フィルタは Lake Formation の機能。\n- E: リージョンごとに S3 バケットを分けて IAM で制御する方式は、バケット/ポリシーが増え運用オーバーヘッドが大きい。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -5967,7 +5967,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, D。\n\nStep Functions が EMR ジョブを実行できない原因の切り分け。\n- B: ステートマシンの実行ロールに、EMR クラスター/ジョブの作成・実行に必要な IAM 権限、および EMR ジョブが使う S3 バケットへのアクセス権限が揃っているか確認する。権限不足は実行失敗の典型原因。\n- D: EMR クラスターの security group や VPC 設定を確認する。VPC Flow Logs でトラフィックがデータソースに到達できているか、SG がデータソースの必要ポートへの接続を許可しているかを検証する。ネットワーク到達性の問題も典型原因。\n\n- A: CloudFormation で自動化し人手承認を挟むのは原因特定ではなく別の運用変更。\n- C: EMR on EKS への作り替えは原因調査ではなくアーキテクチャ変更。\n- E: リトライ間隔調整や SNS 設定はエラーハンドリングの改善であって、実行できない根本原因の特定手段ではない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -6172,7 +6172,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nEC2 インスタンスストアはインスタンスに物理接続された一時ストレージで、インスタンスの停止/終了(terminate)でデータが消失する。永続化には、独立したライフサイクルを持つ Amazon EBS ボリュームをアタッチし、そこにアプリケーションデータを格納する。EBS はインスタンス終了後も残せる(既定でルート以外のボリュームは削除されない設定にできる)ため要件を満たす。\n\n- A: インスタンスストアのみにデータを置くと、インスタンス終了でデータが消失する。不適。\n- B: ルート EBS にデータを置くと永続化自体は可能だが、既定設定ではルートボリュームは終了時に削除される(DeleteOnTermination=true)。デフォルト設定のままだと終了時にデータが消える。不適。\n- D: 永続化したいデータを、揮発性のインスタンスストアボリュームに置いている。EBS はブート用途で追加が逆。不適。\n\nポイント: インスタンスストア=一時/揮発、EBS=永続(独立ライフサイクル)。永続化が必要なデータは EBS に置く。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -6366,7 +6366,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAthena で SQL の代わりに Apache Spark を使うには、Spark 対応の Athena ワークグループを作成する。Athena for Apache Spark はワークグループ単位で有効化し、ノートブックで PySpark 分析を実行できる。\n\n- A: クエリ設定は出力先や暗号化などの実行設定で、Spark エンジンを有効化する仕組みではない。不適。\n- C: データソース(Federated Query のコネクタ等)は接続先を増やす機能で、Spark 実行とは無関係。不適。\n- D: クエリエディタは SQL を書いて実行する UI。Spark エンジンの選択は行えない。不適。\n\nポイント: Athena のエンジン(SQL / Apache Spark)は ワークグループで選択する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -6549,7 +6549,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n新しいパーティションが追加された瞬間に Data Catalog を同期し最小レイテンシーにするには、S3 にデータを書き込むコード内から Boto3 の Glue create_partition API を直接呼び出す。書き込みと同時にパーティション登録されるため遅延がほぼゼロ。\n\n- A: 毎朝の Glue crawler は最大1日分の遅延が発生。低レイテンシー要件に反する。不適。\n- B: 1日2回の手動 CreatePartition は遅延が大きく運用負荷も高い。不適。\n- D: MSCK REPAIR TABLE は Athena のコマンドであり Glue コンソールから実行するものではない。かつ全パーティションを再スキャンするためコスト/遅延が大きい。不適。\n\nポイント: Hive スタイルパーティション(year=/month=/day=)の同期は、crawler(スケジュール)/ MSCK REPAIR(一括) / create_partition API(即時) の使い分け。最小レイテンシーなら書き込み時の API 呼び出し。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -6672,7 +6672,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nSaaS アプリケーションからデータを取り込み S3 に保存する用途は Amazon AppFlow が最適。Salesforce、Google Analytics、SAP などの SaaS と AWS 間のデータフローをノーコードで構築でき、運用オーバーヘッドが最小。S3 に取り込んだ後 Redshift で分析できる。\n\n- A: Amazon MSK は Kafka ベースのストリーミング基盤。クラスタ管理やプロデューサ実装が必要で SaaS 連携には不向き、オーバーヘッド大。不適。\n- C: Glue Data Catalog はメタデータカタログであり、データ取り込み(インジェスト)は行わない。不適。\n- D: Amazon Kinesis はストリーミングデータ取り込み向けで、SaaS API からのフェッチには適さず実装負荷が高い。不適。\n\nポイント: SaaS ⇔ AWS のマネージドなデータ連携は AppFlow が定番。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -6877,7 +6877,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nsales_data の year カラムが日付型(timestamp/date)である場合、WHERE year = 2023 は数値 2023 と一致せず一部の行が漏れる。extract(year FROM ...) で日付から年を取り出して比較すれば、2023 年の全レコードが対象になる。\n\n- A: count(*) は件数を数えるだけで、売上金額 sum の集計要件を満たさない。不適。\n- C: HAVING sum(sales_amount) > 0 はむしろ結果を絞り込み、0以下の製品を除外してしまう。問題悪化。不適。\n- D: GROUP BY を削除すると製品別の集計ができなくなる。不適。\n\nポイント: Athena(Presto/Trino)で日付列から年を抽出するには extract(year FROM col) や year(col) を使う。型の不一致によるフィルタ漏れに注意。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -7060,7 +7060,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nRedshift のマテリアライズドビューの自動リフレッシュは、Query Editor v2 から SQL を使って設定できる。CREATE/ALTER MATERIALIZED VIEW ... AUTO REFRESH YES を実行するだけで、Redshift が自動でスケジュール・更新する。追加コンポーネント不要で最小の労力。\n\n- A: Apache Airflow は環境の構築・DAG 管理が必要で労力が大きい。不適。\n- B: Lambda UDF はスカラー値変換用であり、マテリアライズドビューの更新オーケストレーションには使えない。不適。\n- D: Glue ワークフローは外部で更新をトリガーする構成で、Redshift ネイティブの自動リフレッシュより手間が多い。不適。\n\nポイント: Redshift マテリアライズドビューは AUTO REFRESH で完全自動更新できる。外部オーケストレーションは不要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -7199,7 +7199,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nLambda 関数と Glue ジョブを順に実行するパイプラインのオーケストレーションは AWS Step Functions が最適。多数の AWS サービスとネイティブ統合しており、ステートマシンで Lambda → Glue ジョブの順次実行、リトライやエラーハンドリングをサーバーレスで定義できる。管理オーバーヘッド最小。\n\n- B: EC2 上の Airflow は自前でインフラ管理が必要でオーバーヘッド大。不適。\n- C: Glue ワークフローは Glue のジョブ/クローラー/トリガー中心で、Lambda を直接オーケストレーションする用途には向かない。不適。\n- D: EKS 上の Airflow はさらに運用が複雑。不適(MWAA でも Step Functions より重い)。\n\nポイント: 少数の AWS サービス(Lambda/Glue)の順次実行はサーバーレスの Step Functions。Airflow は複雑な依存や Python 中心の大規模 DAG 向け。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -7349,7 +7349,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n構造化(RDS/Redshift)と半構造化(S3 の JSON/XML)を横断してメタデータを一元管理し、変更を検出して定期更新するには、AWS Glue Data Catalog を中央リポジトリとし Glue crawler を各データストアに接続してスケジュール実行する。crawler がスキーマ変更を自動検出しカタログを更新するため運用オーバーヘッド最小。\n\n- A: Aurora + 自作 Lambda はカタログ構築・変更検出ロジックを自前実装する必要があり運用負荷が高い。不適。\n- C: DynamoDB + 自作 Lambda も同様に独自実装が必要でオーバーヘッド大。不適。\n- D: RDS/Redshift のスキーマを手動抽出する運用が加わり、S3 のみ crawler という混在構成で手間が増える。全ソースで crawler を使う B の方が低オーバーヘッド。不適。\n\nポイント: マネージドなデータカタログ+スキーマ変更の自動検出は Glue Data Catalog + crawler が標準解。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -7559,7 +7559,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n負荷が予測可能(毎週月曜早朝にピーク、週末は低い)なので、AWS Application Auto Scaling でスケジュールドスケーリングを設定し、ピーク時のみ高いプロビジョンドキャパシティ、オフピークは低いキャパシティにする。予測可能な負荷にはプロビジョンド+スケジュールが最もコスト効率が良い。\n\n- A: 常時ピーク相当のキャパシティを確保するとオフピークの無駄が大きくコスト高。不適。\n- B: テーブル分割はアプリ改修が必要で複雑、キャパシティ配分の問題は本質的に解決しない。不適。\n- D: オンデマンドは変動/予測困難なワークロード向け。予測可能な負荷では単価が高くなりコスト効率で劣る。不適。\n\nポイント: DynamoDB のキャパシティは、予測可能な負荷=プロビジョンド(+スケジュールドスケーリング)、予測困難/スパイキー=オンデマンド。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -7731,7 +7731,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nHive メタストア(データカタログ)をサーバーレスかつ低コストで永続化するには、AWS Glue Data Catalog を EMR の外部メタストアとして使用する。Glue Data Catalog はサーバーレスで管理不要、EMR の Hive/Spark からそのまま利用でき、既存 Hive メタストアの内容を移行できる。\n\n- A: DMS で Hive メタストアを S3 に移すのは用途違いで、DMS は DB 移行ツール。構成も複雑。不適。\n- C: Aurora MySQL に外部メタストアを置く方式はサーバーレス要件に反し、DB の運用・コストが発生する。不適。\n- D: EMR 上の Hive メタストアはクラスタ依存で永続的でなく(クラスタ終了で失われうる)、サーバーレスでもない。不適。\n\nポイント: EMR のメタストアをサーバーレスで永続化するなら Glue Data Catalog を外部メタストアに指定するのが定番。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -7870,7 +7870,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n1ノードだけ CPU 90% 超で他は 15% 未満というのは、キー分散でデータが1ノードに偏っている(データスキュー)状態。分散キーを、カーディナリティが高く均等に分散する(最大の次元を持つ)列に変更すれば、5ノードにデータとクエリ負荷が均等分散される。ノード数も維持できる。\n\n- A: ソートキーはブロック単位のスキャン効率(ゾーンマップ)向上のためで、ノード間のデータ分散には影響しない。不適。\n- C: ra3.16xlarge へのアップグレードはコスト増で、かつノード数維持の要件はあるがスキュー自体は解消せず本質的解決でない。不適。\n- D: Redshift の分散にプライマリキーは関係しない(Redshift の PK は情報提供的で強制されない)。不適。\n\nポイント: Redshift のノード間負荷分散は分散キー(distribution key)/分散スタイルで決まる。偏りにはカーディナリティの高い列を分散キーに。ソートキーはスキャン最適化用で役割が異なる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8064,7 +8064,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nデバイスアップグレードでスキーマが変わる可能性がある JSON IoT データを、コスト効率よくカタログ化・インデックス化するには、Glue Data Catalog を作成し Glue Schema Registry でスキーマ進化を管理、Glue ワークロードでデータを取り込む。分析部門はカタログでインデックス化できる。\n\n- B: Redshift プロビジョンドクラスターは常時課金でコスト高、Spectrum+ストアドプロシージャは構成が重い。コスト効率で劣る。不適。\n- C: Athena ワークグループ+Spark は探索はできるが、要件の中心である「データカタログの作成」に直接応えておらず、カタログ管理としては A が適切。不適。\n- D: Redshift Data API + Lambda UDF + Step Functions は構成が過剰に複雑で、Redshift Serverless への取り込みも含めオーバーヘッド/コストが大きい。不適。\n\nポイント: 変化するスキーマの管理には Glue Schema Registry、メタデータの一元管理には Glue Data Catalog。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8242,7 +8242,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nS3 バケットへの「書き込み(オブジェクトレベルの操作)」を別バケットにログ記録するには、AWS CloudTrail のデータイベントのトレイルを使う。データイベントは S3 のオブジェクトレベル API(PutObject 等)を記録でき、書き込み専用(WriteOnly)+空プレフィックスで全書き込みを対象にし、ログ用 S3 バケットへ配信する。マネージドで運用作業最小。\n\n- A: Lambda + Kinesis Data Firehose の自作パイプラインは実装/運用が多く重い。不適。\n- B: 管理イベントのトレイルはバケットの設定変更などコントロールプレーン操作を記録し、オブジェクトへの書き込み(データプレーン)は記録しない。不適。\n- C: Lambda による自作ロギングは運用作業が増える。CloudTrail データイベントの方が低運用。不適。\n\nポイント: S3 のオブジェクト操作(読み書き)を監査するのは CloudTrail データイベント。バケット自体の操作は管理イベント。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8354,7 +8354,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nEMR と Athena の両方から参照できる中央メタデータリポジトリで、Hive のメタデータをインポートしたい場合は AWS Glue Data Catalog を使う。Glue Data Catalog は Hive メタストア互換で、EMR/Athena/Redshift Spectrum から共通利用でき、サーバーレスで開発作業が最小。\n\n- A: Apache Ranger はアクセス制御の仕組みでメタデータリポジトリではない。不適。\n- B: EMR クラスター上の Hive メタストアはクラスタ依存で永続性・共有性に劣り、Athena との共有に手間がかかる。不適。\n- D: RDS for MySQL 上のメタストアは自前で構築・運用が必要で開発作業が増える。不適。\n\nポイント: EMR/Athena 共通の中央メタストアは Glue Data Catalog(Hive 互換・サーバーレス)。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8477,7 +8477,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nS3 データレイクで行レベル・列レベルのアクセス制御を、Athena / Redshift Spectrum / EMR(Hive)など複数エンジン横断で一元管理するには AWS Lake Formation を使う。Lake Formation は行/列/セル単位のきめ細かいアクセス制御を提供し、対応する分析サービスに一貫して適用できるため運用オーバーヘッド最小。\n\n- A: S3 アクセスポリシー(バケット/IAM ポリシー)ではオブジェクト単位までで、行/列レベルの制御はできない。不適。\n- B: EMR + Apache Ranger は EMR 中心の制御で、Athena/Redshift Spectrum を横断してカバーできず運用も複雑。不適。\n- C: データレイクストレージに Redshift を使うのは前提に合わず、構成も複雑。不適。\n\nポイント: S3 データレイクのきめ細かい(行/列)アクセス制御と複数分析エンジンへの一元適用は Lake Formation。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8608,7 +8608,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C, E。\n\nAthena のクエリ性能とコストを最適化する定番策の組み合わせ。\n- C: S3 バケットを Athena 実行と同じ AWS リージョンに置くと、リージョン跨ぎの遅延やデータ転送を避けられ性能・コストが向上する。\n- E: .csv を列指向の Apache Parquet に変換すると、述語プッシュダウンと列プルーニングで必要なデータブロックのみ読み取れ、スキャン量が激減してクエリが高速・低コストになる。\n\n- A: キー先頭にランダム文字列を足すのは旧世代の S3 プレフィックス対策で、現在の S3 は自動でスケールするため不要。Athena の性能改善策でもない。不適。\n- B: 同一アカウントであることは性能に直結せず、クロスアカウントでもクエリ可能。主要な最適化ではない。不適。\n- D: JSON も行指向でスキャン量削減にならず、むしろ列指向の Parquet より非効率。不適。\n\nポイント: Athena 最適化の王道は 列指向フォーマット(Parquet/ORC)+圧縮+パーティション、そして 同一リージョン配置。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8766,7 +8766,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, D。\n\nRDS for MySQL の高 CPU 使用率を下げる有効策の組み合わせ。\n- A: Performance Insights で CPU を消費している重いクエリを特定し、そのクエリ(や実行計画)を最適化すれば根本的に CPU 負荷を下げられる。\n- D: より大きなインスタンスサイズにスケールアップして CPU リソースを増やせば、使用率を下げられる(書き込み主体でリードレプリカが効きにくいワークロードにも有効)。\n\n- B: テーブルやインデックスを追加すると、書き込み主体のワークロードではインデックス維持コストで書き込み負荷がむしろ増える可能性がある。不適。\n- C: 週1回の再起動は一時的で CPU 使用率の根本原因を解決しない。不適。\n- E: キャッシングは読み取り負荷の軽減策。本ワークロードは主に書き込みで読み取りはわずかなため効果が小さい。不適。\n\nポイント: DB の CPU 対策は まず Performance Insights で重いクエリを特定・最適化、足りなければ 縦のスケールアップ。読み取り軽減策(キャッシュ/レプリカ)は書き込み主体では効きにくい。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -8938,7 +8938,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nインターリーブソートキーは複数列を均等に重み付けするため、更新・削除を繰り返すとソート順の偏り(スキュー)が生じます。VACUUM REINDEX は、インターリーブソートキー列の値分布を再分析してキーを再構築したうえで、テーブルの再ソートと削除済み行の領域回収も行います。つまり「ディスク容量の回収」と「ソートキー列の分析」の両要件を満たします。\n\n- A(VACUUM FULL): 領域回収と再ソートは行うが、インターリーブソートキーの分布再分析(reindex)は行わないため、インターリーブキーの偏りは解消されない。\n- B(VACUUM DELETE ONLY): 削除済み行の領域回収のみで再ソートやキー分析を行わない。\n- D(VACUUM SORT ONLY): 再ソートのみで、削除行の領域回収を行わずディスク容量が回収されない。\n\nポイント: インターリーブソートキーのメンテナンスには専用の VACUUM REINDEX を使う。通常のコンパウンドソートキーなら VACUUM FULL で十分。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9072,7 +9072,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n要件は「ほぼリアルタイム取り込み」「永続ストア」「ネストされたJSON保存」「10ミリ秒未満の低レイテンシークエリ」「最小運用オーバーヘッド」。Amazon Kinesis Data Streams でセンサーデータをストリーミング取り込みし、Amazon DynamoDB に保存すればマネージドで運用負荷が低く、DynamoDB はネストされたJSON(document型)を保存でき、一桁ミリ秒のクエリレイテンシーを提供します。\n\n- A(セルフホスト Kafka + S3): Kafka の自己管理は運用オーバーヘッドが大きく、S3 はミリ秒未満のポイントクエリには不向き(Athena は秒単位)。\n- B(Lambda + S3): S3 は10ミリ秒未満のクエリレイテンシー要件を満たせない。\n- D(SQS + Glue + RDS): SQS はストリーム処理向けでなく、Glue バッチ経由の RDS ロードはほぼリアルタイム性と低レイテンシー要件に合わず運用も複雑。\n\nポイント: 一桁ミリ秒のキー/ドキュメントアクセスは DynamoDB、ストリーミング取り込みは Kinesis Data Streams が定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9173,7 +9173,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n要件は S3 データレイクの PII を、ユーザーグループごとに必要な列/行だけに制限し、最小の労力で実現すること。AWS Lake Formation の data filters(列レベル・行レベル・セルレベルフィルタ)を IAM ロールに紐づけて権限を集中管理し、各ユーザーを適切なロールに割り当て、Amazon Athena でクエリすれば、細粒度アクセス制御をマネージドに実現できます。\n\n- B(QuickSight 列レベルセキュリティ): QuickSight 上の可視化には効くが、生データ(Athena/S3 経由の直接アクセス)自体のガバナンスにならず、要件の「生データへのアクセス制御」を満たさない。\n- C(カスタムUI + Cognito): 自前のクエリビルダー構築が必要で「最小の労力」に反する。\n- D(IAM + アイデンティティベースポリシーで列レベル制御): IAM ポリシーだけでは S3 データレイクの列レベル制御を実現できず、多数のポリシーを手作業で維持する必要があり労力が大きい。\n\nポイント: データレイクの細粒度(列/行/セル)アクセス制御は Lake Formation の集中権限管理が最適。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9386,7 +9386,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, D。\n\n要件は「S3 に届く複数形式(.csv/JSON/Parquet)ファイルを処理して Redshift の各テーブルにロード」「スキーマ変更があっても正しく動く」。スキーマ変化に対応するには、まず AWS Glue crawler でスキーマを検出/更新し、その完了後に Glue job を実行する構成が必要です。B と D はいずれも「Glue workflow で crawler → job を順に実行する」パターンで、B はスケジュール(EventBridge で15分ごと)、D は S3 到着イベントで起動します。どちらも crawler がスキーマ変更を吸収します。\n\n- A(Glue job を単独実行): crawler を挟まないためスキーマ変更を検出・追随できない。\n- C(Lambda→crawler、別Lambda→job): 動作しうるが、2つの Lambda と EventBridge を組み合わせる分オーケストレーションが煩雑で、Glue workflow を使う B/D より劣る(この設問の正解パターンから外れる)。\n- E(Glue→Kinesis Data Firehose→Redshift): 10MB〜20GB のバッチファイルを Firehose の小パーティションで送るのは不適切で複雑。crawler もなくスキーマ変更に非対応。\n\nポイント: スキーマ変化対応は「crawler で Data Catalog を更新→job 実行」の順序が肝。オーケストレーションは Glue workflow で crawler と job を連結する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9558,7 +9558,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nデータは Glue ジョブで1日1回しか更新されず、BI アプリは1時間ごとに同じ SQL を投げます。Amazon Athena の query result reuse(クエリ結果の再利用)を有効にすると、指定した最大有効期間内は前回のクエリ結果を再利用し、S3 を再スキャンしないためスキャン量課金が発生しません。追加インフラ不要・運用オーバーヘッド最小でコストを最適化できます。\n\n- A(Glacier Deep Archive へ移動): Athena はアーカイブ階層を直接クエリできず、クエリ自体が失敗する。コスト最適化の観点も的外れ。\n- C(ElastiCache 追加): 追加インフラのコストと運用が発生し「追加インフラなし」要件に反する。\n- D(Parquet 化): スキャン量削減には有効だが、変換のための Glue ジョブ改修/運用が増え、更新頻度が低い本ケースでは result reuse ほど効果的・低労力ではない。\n\nポイント: 更新頻度が低く同一クエリが繰り返される場合、Athena の query result reuse がスキャン課金をゼロにできる最短手。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9681,7 +9681,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nクラスターを増強せずクエリ性能を最適化したい状況。更新頻度が低い小さいテーブル(ディメンションテーブルなど)に ALL 分散方式を使うと、テーブル全体が全ノードに複製されるため、大きいテーブルとの結合時にデータの再分散(ブロードキャスト)が不要になり結合が高速化します。プライマリ/フォーリンキーを定義するとオプティマイザがより良い実行計画を立てられます。\n\n- A(全テーブル EVEN 継続): EVEN は結合最適化に寄与せず性能改善にならない。\n- B(大きいテーブルに ALL): 大きいテーブルを全ノード複製するとストレージを圧迫し非現実的。ALL は小さいテーブル向け。\n- D(全テーブルに分散/ソート/パーティションキーの組み合わせ): Redshift のテーブルに「パーティションキー」という概念はなく(パーティションは Spectrum の外部テーブル)、全テーブル一律指定は最適でない。\n\nポイント: ALL 分散は更新が少ない小さいテーブル、KEY 分散は結合キーの大きいテーブル、EVEN は結合しないテーブルに使い分ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9831,7 +9831,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n住所の複数列(Door_No, Street_Name, City, Zip_Code)を1つの列にまとめたい、かつ最小コーディング。AWS Glue DataBrew の NEST_TO_MAP 変換は、複数列をキーと値のペア(map/構造)としてまとめ、1つの列に格納できます。ノーコードのレシピ操作で実現でき、コーディングが最小です。\n\n- A(NEST_TO_ARRAY): 値を配列としてまとめるため、キー(列名)と値のペアで住所を表現する要件に合わない。\n- C(PIVOT): 行を列に転置する変換で、複数列を1列に集約する目的とは異なる。\n- D(Lambda + Python dict): 自前のコード実装が必要で「最小コーディング」に反する。\n\nポイント: DataBrew の nest 変換は、複数列→単一列(array/map)への集約に使う。キー名を保持したいなら NEST_TO_MAP。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -9954,7 +9954,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n要件は「暗号化で保護」「特定の従業員だけがアクセスできる鍵」「最小の労力」。SSE-KMS を使うと S3 がマネージドに暗号化を行い、KMS キーのキーポリシー/IAM ポリシーで復号権限を特定の従業員(プリンシパル)に限定できます。鍵管理は KMS に任せられ、運用労力が小さいです。\n\n- A(CloudHSM): 高度な鍵管理は可能だが、暗号化/復号処理を自前で呼び出す実装とクラスター運用が必要で労力が大きい。\n- B(SSE-C): 顧客が鍵を自前で保持・管理し、リクエストごとに鍵を渡す必要があり運用負荷が高い。アクセス制御も自前管理。\n- D(SSE-S3): S3 管理鍵はユーザーがアクセス制御できず、「特定の従業員だけがアクセスできる鍵」という要件を満たせない(鍵へのアクセスを IAM で制限できない)。\n\nポイント: 「誰が復号できるかを制御したい」なら SSE-KMS。SSE-S3 は鍵制御不可、SSE-C/CloudHSM は運用負荷大。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -10159,7 +10159,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n数千バケット・ペタバイト規模で、アクセスパターンが予測不能・変動し、全データをミリ秒で取得する必要があり、運用オーバーヘッドを最小化したい。S3 Intelligent-Tiering(デフォルトアクセスティア)は、アクセス頻度に応じて Frequent/Infrequent(必要なら Archive Instant Access)へ自動階層化し、いずれもミリ秒アクセスを維持しつつコストを自動最適化します。ライフサイクル設計や監視が不要で運用負荷が最小です。\n\n- A/B(Storage Lens + ライフサイクルポリシー): 手動でメトリクスを分析しポリシーを継続調整する必要があり運用負荷が高い。アクセスパターンが予測不能な本ケースに不向き。さらに B は S3 Glacier へ移すとミリ秒取得要件に反する。\n- C(Intelligent-Tiering + Deep Archive Access ティア有効化): Deep Archive Access ティアはミリ秒取得ができず(復元に時間がかかる)、全データのミリ秒取得要件に反する。\n\nポイント: アクセスパターンが不明/変動し、かつ即時アクセスを保ちたいなら Intelligent-Tiering のデフォルトティア。Archive/Deep Archive アクセスティアは即時取得が不要な場合のみ。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -10268,7 +10268,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D, E。\n\nハードコードされた認証情報を安全に扱うベストプラクティスは、AWS Secrets Manager にシークレットを保存し(D)、Glue ジョブの実行 IAM ロールにそのシークレットへの読み取り権限を付与する(E)ことです。ジョブは実行時に Secrets Manager から動的に認証情報を取得でき、スクリプトへのハードコードやローテーションの手間が解消します。\n\n- A(Glue ジョブパラメーター): ジョブパラメーターは暗号化・厳密なアクセス制御・ローテーションを備えず、機密の認証情報保存には不適切。\n- B(S3 の設定ファイルに保存): 平文の認証情報を S3 に置くのは安全な保管とはいえず、シークレット管理のベストプラクティスに反する。\n- C(S3 設定ファイルから読み取り): B と同じ理由で不適切。\n\nポイント: 認証情報は Secrets Manager(または Parameter Store の SecureString)で集中管理し、最小権限の IAM ロールでアクセスさせる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -10402,7 +10402,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n月1回だけ重い分析を実行し、それ以外はクラスターを削除している=常時稼働は不要。Amazon Redshift Serverless を使えば、クエリ実行時のみ自動でコンピュートが起動・スケールし、アイドル時は課金されません。クラスターの作成/削除やアンロード/バックアップの手動管理が不要になり、運用オーバーヘッドが最小になります。\n\n- A(Step Functions で一時停止/再開): プロビジョンドクラスターの管理が残り、一時停止中もストレージ課金が続く。Serverless より運用負荷が高い。\n- C(AWS CLI): クラスターの作成/削除を自前スクリプトで自動化するだけで、インフラ管理そのものは残る。\n- D(CloudFormation テンプレート): プロビジョニングの自動化はできても、クラスターのライフサイクル管理やコンピュート管理の負荷は解消しない。\n\nポイント: 断続的・不定期なワークロードで常時稼働が無駄な場合は Redshift Serverless。使った分だけ課金でインフラ管理が不要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -10530,7 +10530,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n.xls ファイルに対し「名+姓の列を連結」「重複しない顧客数を算出」を最小運用作業で行う。AWS Glue DataBrew はノーコードで .xls を読み込め、レシピで列連結を行い、COUNT_DISTINCT 集計関数で一意顧客数を算出できます。コード記述もクラスター管理も不要で運用作業が最小です。\n\n- A(Glue ノートブックで Spark ジョブ): Spark コードの記述が必要で運用作業が多い。\n- B(Glue crawler + Athena): Athena は .xls を直接クエリできず(CSV/JSON/Parquet等が対象)、事前変換が必要になり適さない。\n- C(EMR Serverless + Spark): Spark ジョブの実装が必要で、ノーコードの DataBrew より作業量が多い。\n\nポイント: ノーコードのデータ準備・簡易集計は DataBrew。Excel の読み込みや列変換、COUNT_DISTINCT などをGUIで完結できる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -10642,7 +10642,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nKinesis Data Streams のデータを Redshift Serverless に取り込み、ストリーミングデータと前日データの両方をほぼリアルタイム分析したい。Amazon Redshift の streaming ingestion 機能を使うと、Kinesis Data Streams(や MSK)から Redshift のマテリアライズドビューへ直接・低レイテンシーで取り込めます。中間の S3 や Firehose が不要で運用オーバーヘッドが最小、かつ既存の前日データと同じウェアハウス上で結合分析できます。\n\n- A(Firehose 経由で Redshift): バッファリングによる遅延が生じ、Firehose という追加コンポーネントの管理も必要でストリーミング取り込みより劣る。\n- C(S3 経由 COPY): バッチロードとなりほぼリアルタイム要件を満たさず、パイプラインの運用も増える。\n- D(Aurora↔Redshift zero-ETL): ソースは Kinesis Data Streams であり Aurora ではないため、この統合は適用できない。\n\nポイント: Kinesis/MSK から Redshift への低レイテンシー取り込みは Redshift streaming ingestion(マテリアライズドビュー)が最短。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -10816,7 +10816,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C, D。\n\nQuickSight が Athena 経由で S3 データを可視化する際の「権限」エラーの原因として妥当なのは、QuickSight サービスロールに (C) S3 バケットへのアクセス権がない、(D) S3 データを復号する権限(KMS 暗号化オブジェクトの kms:Decrypt など)がない、の2つです。QuickSight は自身のサービスロールで S3 を読み・復号する必要があります。\n\n- A(QuickSight と Athena 間に接続がない): QuickSight は Athena をネイティブのデータソースとしてサポートしており、「接続の有無」は権限エラーの原因ではない。\n- B(Athena テーブルが未カタログ化): これはデータ/メタデータの問題であり、権限不足エラーの原因ではない。\n- E(QuickSight に IAM ロールが割り当てられていない): QuickSight は既定でサービスロール/管理下のロールを使用するため、これが今回の権限エラーの主因とはされない(正解は C/D)。\n\nポイント: QuickSight+Athena+S3 の権限は、QuickSight サービスロールに対する S3 読み取りと(暗号化時の)KMS 復号権限の付与が要点。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11026,7 +11026,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n複数の異種データソース(S3 の JSON/CSV、RDS SQL Server、DynamoDB、Redshift)を SQL に似た構文で横断クエリしたい、最小運用オーバーヘッド。AWS Glue crawler でスキーマを Glue Data Catalog に登録し、Amazon Athena(federated query 対応)でクエリします。構造化データには SQL、ネストされた JSON には PartiQL を使えます。Athena はサーバーレスで運用負荷が最小です。\n\n- B(Redshift Spectrum): Redshift クラスター前提で、多様なソースへのフェデレーテッドクエリの手軽さや運用面で Athena に劣る。\n- C(JSON を Parquet/CSV に変換): 追加の Glue 変換ジョブとデータ複製が必要で運用オーバーヘッドが増える。PartiQL で直接扱えば変換は不要。\n- D(Lake Formation でデータレイク化 + 全変換): 全ソースを Parquet に変換・集約する大掛かりな構築が必要で最小オーバーヘッドに反する。\n\nポイント: 異種ソースのサーバーレス横断クエリは Athena(federated query)。ネスト JSON には PartiQL を用いる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11231,7 +11231,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nSageMaker Studio から AWS Glue interactive sessions を使うには、SageMaker の実行ロールが Glue のロールを引き受けられ、かつ Glue と SageMaker のサービスプリンシパルがそのロールを AssumeRole できる信頼関係が必要です。B は、信頼ポリシーで AWS Glue と SageMaker の両サービスプリンシパルに sts:AssumeRole を許可するもので、アクセス拒否の根本原因(ロールの引き受け許可の欠如)を解決します。\n\n- A(AWSGlueServiceRole をIAMユーザーに付与): 必要なのはユーザーへの権限追加ではなく、サービス間のロール引き受け(信頼関係)の設定。\n- C(AmazonSageMakerFullAccess): 広範な権限を付与するが、Glue interactive sessions のためのロール引き受け信頼関係を確立しないため根本解決にならない(最小権限にも反する)。\n- D(sts:AddAssociation): そのような STS アクションは存在せず無効。正しいのは sts:AssumeRole。\n\nポイント: Studio × Glue interactive sessions は、Glue/SageMaker サービスプリンシパルに sts:AssumeRole を許可する信頼ポリシーが鍵。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11343,7 +11343,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n多様なソース(SAP HANA, SQL Server, MongoDB, Kafka, DynamoDB)からスキーマ未定義/変化するデータを、検出しつつ抽出・変換して S3 へロードし、15分 SLA を満たし、運用オーバーヘッドを最小化したい。AWS Glue は crawler でスキーマを自動検出して Data Catalog に登録し、サーバーレスの Spark ジョブで ETL を実行できます。フルマネージドでスケジューリングも容易、多数のコネクタを持ち、短間隔ジョブで SLA を満たせます。\n\n- A(Amazon EMR + Spark): クラスターのプロビジョニング/管理が必要で運用オーバーヘッドが大きく、スキーマ検出も自前実装が必要。\n- C(Lambda で PySpark): Lambda は Spark 実行環境ではなく、1TB規模の分散 ETL に不向き(実行時間/メモリ制限)。\n- D(Redshift ストアドプロシージャ + Spectrum): Redshift は多様なソースからのスキーマ検出付き取り込みに適さず、Spectrum は S3 上の外部テーブルをクエリする仕組みで ETL ロード手段ではない。\n\nポイント: サーバーレスでスキーマ検出(crawler)＋分散 ETL(Spark)を一体で提供するのは AWS Glue。多ソース・スキーマ変化・低運用の定番。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11477,7 +11477,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nS3 Object Lambda は、S3 GET リクエストの応答をアプリケーションに返す前に Lambda 関数で加工できる機能で、元データを1つ保持したまま、アクセスするアプリケーションごとに動的に PII をマスキングできます。データの複製が不要なため運用オーバーヘッドが最小です。\n\n- A: データセットの複数コピーを作成・維持する必要があり、ストレージコストと同期・整合性管理の運用負荷が大きい。「動的なマスキング」ではなく静的な複製。\n- C: Glue でアプリごとに変換し複数コピーを作る点は A と同様で、ジョブ管理とコピー維持の負荷が高い。動的マスキングにならない。\n- D: API Gateway + カスタムオーソライザーで S3 を読むのは自前実装が多く構成が複雑。動的マスキングを別途 REST 呼び出しで行うのも運用負荷が大きい。\n\nポイント: 「元データ1つ + アクセス元ごとに動的にビューを変える」用途は S3 Object Lambda が定石。複製方式はコスト・整合性で不利。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11682,7 +11682,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n毎日到着する 100 MB 未満の小さな .csv を処理する軽量 ETL には、AWS Glue Python シェルジョブ + pandas が最もコスト効率的です。Python シェルジョブは 1 DPU（または 0.0625 DPU）で起動でき、Spark クラスターを立ち上げる必要がありません。小規模データに Spark は過剰です。\n\n- A: EKS 上でカスタム Python アプリを常時運用するのはクラスター管理コストと運用負荷が高い。\n- B: EMR クラスターの PySpark は大規模分散処理向けで、小さいファイルにはクラスター維持コストが割高。\n- C: Glue PySpark ジョブは最小 2 DPU で Spark を起動するため、100 MB 未満の処理にはオーバースペックでコスト高。\n\nポイント: データ規模が小さければ Python シェル(pandas)、大規模・分散が必要なら Glue PySpark / EMR。サイズに応じた選択がコスト最適化の鍵。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11794,7 +11794,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nALTER TABLE ... ADD PARTITION は、パーティションのメタデータを Data Catalog に直接追加する DDL で、S3 上のフォルダ/ファイルをスキャンしません。各パーティションの値と LOCATION を明示するため、要件どおり2つのパーティションを効率的に登録できます。\n\n- B: MSCK REPAIR TABLE は S3 のパーティション構成を全スキャンして自動検出するため、「スキャンせずに」という要件に反する。\n- C: REPAIR TABLE は Athena の有効な構文ではない（正しくは MSCK REPAIR TABLE）。\n- D: MODIFY PARTITION は既存パーティションの変更用構文で、新規追加には使えない。加えて LOCATION のパスも Hive 形式(order_date=...)になっていない。\n\nポイント: パーティション追加は「全スキャンする MSCK REPAIR」か「明示追加する ADD PARTITION」。スキャン回避・大量パーティション時は ADD PARTITION（または Glue クローラー/パーティションプロジェクション）が有利。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11884,7 +11884,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nSnappy 圧縮の Apache Parquet は列指向フォーマットで、Athena が必要な列のみ読み取れるためスキャン量とクエリ時間を削減し、圧縮によりストレージコストも下げられます。Snappy は分割可能で読み取り時の展開が高速なため、分析クエリに最適です。\n\n- A: zip 圧縮 .csv は行指向で列プルーニングが効かず、zip は分割不可のため並列読み取りもできない。クエリ効率が悪い。\n- B: bzip2 圧縮 JSON も行指向でスキーマ解析コストが高く、bzip2 は圧縮率は高いが CPU 負荷が大きくクエリが遅い。\n- D: Apache Avro は行指向フォーマットで、分析(列選択)クエリには Parquet/ORC ほど効率的でない。\n\nポイント: Athena の分析最適化は「列指向(Parquet/ORC) + 分割可能な軽量圧縮(Snappy)」が定石。行指向(CSV/JSON/Avro)はスキャン量が増える。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -11985,7 +11985,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n既存のオンプレ Airflow を Amazon MWAA（マネージド Airflow）へ移行すれば、DAG や既存の SQL データ品質チェックタスクをほぼそのまま流用でき、リファクタリング量が最小になります。インフラ管理は AWS が担うためマネージド要件も満たします。\n\n- A: Outposts + EC2 移行はインフラを自前管理し続けることになり、AWS マネージドサービス化にならない。負荷が大きい。\n- B: カスタム AMI で EC2 に Airflow を載せるのは自己管理であり、マネージドサービスの利点が得られない。\n- D: Step Functions への変換と SQL チェックの Lambda 再実装は、パイプライン全体の書き換えが必要でリファクタリング量が最大。\n\nポイント: 既存 Airflow 資産を活かすなら MWAA が最短。オーケストレーションを一から作り直す場合のみ Step Functions を検討する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12162,7 +12162,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nEMR パイプラインのオーケストレーションでは AWS Step Functions が最もコスト効率的です。EMR ステップの実行・待機・条件分岐・エラーハンドリングをネイティブに統合でき、サーバーレスで実行分の従量課金のみ、常時稼働コストがかかりません。\n\n- A: EventBridge はイベント駆動・スケジュール起動には向くが、複数ステップの依存関係を持つワークフローのオーケストレーション自体は担えない。\n- B: MWAA は柔軟だが Airflow 環境を常時稼働させる必要があり、固定コストが発生してコスト効率で劣る。\n- D: Glue Workflows は Glue ジョブ/クローラーのオーケストレーション向けで、EMR の制御には適さない。\n\nポイント: サーバーレスで多ステップ・状態管理のオーケストレーションが必要なら Step Functions。常時稼働の Airflow(MWAA)は高機能だがコスト高。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12279,7 +12279,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAWS Glue クローラーを使えば、ALB アクセスログのスキーマを自動判定し、パーティションのメタデータを Glue Data Catalog に書き込めます。クローラーをスケジュール実行すれば新規パーティションの追加も自動化でき、運用の手間が最小でパーティション化によるスキャン削減が実現します。\n\n- A: Glue ジョブでスキーマ判定・パーティション登録を自前実装するのはコードとメンテナンスの負荷が高い。クローラーの方が容易。\n- C: Lambda で全ログを Parquet 変換する方式は変換パイプラインの実装・運用負荷が大きく、「最小の手間」に反する。\n- D: Hive のバケット化 + Lambda 変換は実装が複雑で、パーティション化に比べ手間が大きい。\n\nポイント: Athena のパフォーマンス改善はまずパーティション化。スキーマ自動判定 + パーティション登録は Glue クローラーが最も手軽。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12445,7 +12445,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nS3 File Gateway のファイルアップロード完了は EventBridge のイベントとして検知でき、そのイベントで Glue ワークフローを直接起動できます。ファイル転送完了に確実に反応し、コードを書かずに構成できるため運用オーバーヘッドが最小です。\n\n- A: 過去実績から推定した時刻でスケジュール起動する方式は、転送遅延時に取りこぼしや空振りが起き信頼性が低い。\n- C: 手動起動は自動化要件を満たさず、運用負荷が高い。\n- D: S3 オブジェクト作成イベントで Lambda を挟んで Glue を呼ぶのは、Lambda の実装・保守が加わり B より手間が多い。また多数ファイルで個別に発火し制御しにくい。\n\nポイント: 「イベント → Glue ワークフロー起動」は EventBridge で直接連携するのが最小構成。Lambda を挟むのは追加ロジックが要る場合のみ。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12662,7 +12662,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A、C。\n\n要件は「PostgreSQL のライブデータ、Redshift の現在データ、S3 の履歴データを組み合わせて分析」かつ「Redshift には直近15か月のみ保持」です。\n\n- A: Redshift Federated Query は Aurora/RDS PostgreSQL に対して直接クエリでき、ライブトランザクションデータを ETL を待たずに参照できる。\n- C: UNLOAD で15か月超のデータを毎月 S3 に退避し Redshift から削除、S3 の履歴を Redshift Spectrum で参照する。これで Redshift のストレージコストを抑えつつ履歴も分析対象にできる。\n\n誤答:\n- B: Redshift Spectrum は S3 上の外部データをクエリする機能で、PostgreSQL への直接クエリには使えない（それは Federated Query）。\n- D: S3 Glacier Flexible Retrieval はアーカイブ階層で即時クエリできず、Redshift Spectrum から直接分析クエリを実行できない。取り出しに時間がかかる。\n\nポイント: 外部 RDB へのライブクエリ = Federated Query、S3 上データのクエリ = Redshift Spectrum。両者の使い分けが鍵。Spectrum は Glacier ではなく S3 標準/IA 等のクエリ可能ストレージが前提。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12774,7 +12774,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nWriteThroughputExceeded と「一部シャードだけ過負荷」はホットパーティション（キーの偏り）が原因です。施設 ID をパーティションキーにすると特定施設のデータが同一シャードに集中します。ランダムに生成したキーに変更すれば、レコードが全シャードに均等分散し、スループット超過が解消します。\n\n- B: シャード数を増やしてもキーが偏っていれば特定シャードへの集中は続き、根本解決にならない（かつコスト増）。\n- C: プロデューサー側でのアーカイブは分散の偏りを解決しない。\n- D: パーティションキーを取得日に変えると、同じ日のデータが1シャードに集中し、むしろホットパーティションが悪化する。\n\nポイント: Kinesis Data Streams のシャード偏りはパーティションキーのカーディナリティ/均等性が原因。均等分散にはランダム性の高いキーを使う。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12875,7 +12875,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nEXPLAIN ANALYZE SELECT ... は、実行計画に加えて実際にクエリを実行し、各オペレーションの実行統計（コスト・行数・時間など）を返します。実行計画と各オペレーションの計算コストの両方を知りたいという要件に合致します。\n\n- A: EXPLAIN SELECT ... は実行計画のみを表示し、実際の実行コスト(統計)は得られない。\n- B: EXPLAIN ANALYZE FROM sales; は SELECT 句が欠落しており構文エラー。\n- D: EXPLAIN FROM sales; も SELECT 句が無く構文として不正。\n\nポイント: Athena/Presto では EXPLAIN = 計画のみ、EXPLAIN ANALYZE = 計画 + 実測統計。コスト内訳を見たいなら ANALYZE。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -12965,7 +12965,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nSplunk へほぼリアルタイムで送るには、Kinesis Data Firehose を使うのが最も運用オーバーヘッドが小さい方法です。Firehose は Splunk をネイティブの配信先としてサポートし、バッファリング・再試行・変換をマネージドで行います。CloudWatch Logs のサブスクリプションフィルターで Firehose へ直接流し込めるため、追加コードが不要です。\n\n- A: Kinesis Data Streams は Splunk へのマネージド配信をサポートせず、送信用のコンシューマを自前実装する必要がある。\n- C: サブスクリプションフィルターで直接 Firehose に送れるのに Lambda を挟むのは不要な実装・運用負荷。\n- D: Data Streams + Lambda は Splunk への配信を自前で作ることになり最も手間が多い。\n\nポイント: 「マネージドで宛先(Splunk/S3/Redshift/OpenSearch)へ配信」は Firehose。CloudWatch Logs → Firehose はサブスクリプションフィルターで直結できる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13077,7 +13077,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n列レベルの詳細なアクセス制御を Athena/Glue Data Catalog に対して行うには AWS Lake Formation が最適です。Lake Formation は IAM プリンシパル（ユーザー/ロール）単位でデータベース・テーブル・列・行レベルの権限を集中管理でき、Athena クエリに透過的に適用されます。\n\n- B: Glue テーブルへの IAM リソースベースポリシーは列レベルの粒度を持たず、細かなアクセス管理は困難。\n- C: IAM アイデンティティベースポリシーもテーブル/API 単位が基本で、列レベル制御は実現しにくい。\n- D: AWS RAM はリソース共有の仕組みで、列レベルのデータアクセス管理には対応しない。\n\nポイント: データレイクの列/行レベルのきめ細かいガバナンスは Lake Formation。素の IAM では列レベル制御ができない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13189,7 +13189,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAWS Glue のジョブブックマークを有効にすると、Glue が処理済みデータの状態を保持し、次回実行時は新規（増分）データのみを処理します。DynamicFrame ベースの S3 読み取りでネイティブにサポートされ、追加コードがほぼ不要なため要件に最適です。\n\n- A: S3 のファイルステータスを DynamoDB に自前で記録・照合する方式は実装コードが多く手間が大きい。\n- C: ジョブメトリクスは監視用で、増分処理を制御する機能ではない。\n- D: 処理済みオブジェクトを削除すると元データが失われ、他アプリの再処理や監査ができなくなる。危険で不適切。\n\nポイント: Glue の増分処理はジョブブックマークが標準機能。自前で処理済み管理を作る必要はない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13339,7 +13339,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nフローログを Apache Parquet 形式で直接 S3 に発行し Athena で分析するのが最もコスト効率的です。VPC Flow Logs は S3 への Parquet 出力をネイティブサポートしており、列指向 + 圧縮でスキャン量とストレージコストを大幅に削減できます。\n\n- A: CloudWatch Logs への保存は取り込み・保管コストが割高で、Athena で直接クエリするには追加のエクスポートが必要。\n- B: OpenSearch クラスターは常時稼働のコストが高く、コスト最適化要件に反する。\n- C: テキスト形式で S3 に出すと Athena のスキャン量が増え、Parquet に比べクエリコストが高い。\n\nポイント: 大量ログの低コスト分析は「S3 + Parquet + Athena」。フローログは直接 Parquet 出力できるので変換パイプラインも不要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13451,7 +13451,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n店舗位置テーブルは小さく更新頻度も低い「ディメンションテーブル」です。分散スタイルを ALL 分散にすると、テーブルの完全なコピーが各コンピュートノードに配置され、結合時のブロードキャスト（ノード間データ転送）が不要になります。小さいテーブルなので複製のストレージオーバーヘッドも小さく、コスト効率よくクエリが高速化します。\n\n- B: KEY 分散はテーブルを結合キーで分散するが、小さいディメンションテーブルでは結合時に再分散/ブロードキャストが発生しうる。ALL の方が適切。\n- C: ソートキーの追加はスキャン範囲の絞り込みには有効だが、ブロードキャスト自体は解消しない。\n- D: ノードサイズのアップグレードはコスト増を招くだけで、ブロードキャストという根本問題を解決しない。\n\nポイント: Redshift の分散スタイルは、小さく頻繁に結合されるディメンションは ALL、大きなファクトは KEY(または EVEN)。ブロードキャスト削減の定石は ALL 分散。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13585,7 +13585,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nRedshift の ~ は POSIX 正規表現マッチ演算子です。'^(San|El)*' は行頭(^)にアンカーし、San または El(| は論理和)で始まる文字列にマッチします。city_name が \"San\"/\"El\" で始まる行を抽出する要件を満たします。\n\n- A: 先頭が $ になっているが $ は行末アンカーであり、行頭指定として誤り。\n- C: $ による行末アンカーに加え、& は正規表現の論理和ではない（正しくは |）。「San かつ El」で始まることは不可能。\n- D: ^ は正しいが & を使っており、「San かつ El で始まる」という成立し得ない条件になる。\n\nポイント: POSIX 正規表現では行頭 = ^、行末 = $、選択(OR) = |。「〜で始まる」は ^ でアンカーし | で候補を並べる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13686,7 +13686,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nDMS の CDC でソース側の遅延を切り分けるには、CloudWatch メトリクスの CDCLatencySource を確認する。これはソースからレプリケーションインスタンスまでのキャプチャ遅延を示し、値が高ければ PostgreSQL 側（トランザクションログ読み取り）がボトルネックだと特定できる。CDCLatencyTarget と比較することでソース／ターゲットどちらが原因かを判定できる。\n\n- A: CDCIncomingChanges は取り込み中の変更イベント数を示すメトリクスで、量の指標。レイテンシー（遅延時間）の原因特定には使えない。\n- B: 論理レプリケーションの設定確認は CDC を成立させる前提条件であり、既にタスクは稼働中。遅延の原因特定にはならない。\n- C: エンドポイントのログでエラーメッセージを見るのは障害・接続エラーの調査。レイテンシーの発生源をソースと断定する用途には不向き。\n\nポイント: DMS のレイテンシー切り分けは CDCLatencySource（ソース起因）と CDCLatencyTarget（ターゲット起因）の2メトリクスを使い分ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -13896,7 +13896,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n最小レイテンシーで S3 に配信するには、Kinesis Data Streams に取り込み、KCL（Kinesis Client Library）を使うコンシューマーアプリで短いバッファ（5秒）で S3 に書き出す。Firehose を介さないため、Firehose のバッファリング下限（60秒/最小1MiB）の制約を受けず、より低レイテンシーで配信できる。\n\n- A: Firehose のデフォルトバッファ間隔（300秒）は大きく、レイテンシーが最大になる。要件（最小レイテンシー）に反する。\n- B: シャード数の指定はスループット（並列度）の話で、配信レイテンシーの最小化とは直接関係しない。また Data Streams 単体は S3 へ直接配信できず、配信手段が示されていない。\n- D: Managed Service for Apache Flink + Firehose は処理層が増え、Firehose のバッファも介するためレイテンシーが増える。過剰な構成。\n\nポイント: Firehose は簡便だがバッファリング下限があり準リアルタイム止まり。より低レイテンシーが必要なら KCL 等のカスタムコンシューマーで直接処理する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14027,7 +14027,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, D。\n\n2つの変換要件を最もコスト効率よく満たす組み合わせ:\n- A: 毎日到着する多様な形式の 300GB データはスキーマが変わり得るため、Glue クローラーでスキーマをスキャン・識別して Data Catalog を最新化する。サーバーレスで日次実行に適する。\n- D: 日次データ変換とテラバイト級アーカイブの一度限りの変換の両方を Amazon EMR で実行する。大規模データ変換に対しスポット等を活用してコスト効率よく処理でき、MWAA の DAG からオーケストレーションできる。\n\n- B: Athena はスキーマ検出ツールではなくクエリエンジン。スキーマ識別（クロール）の用途には Glue クローラーが適切。\n- C: Redshift は分析用データウェアハウスで、多様な形式ファイルの汎用 ETL 変換基盤としては最適ではなくコスト面でも不利。\n- E: SageMaker は ML 用途で、大規模データ変換の実行基盤としては目的外。変換は EMR が適切。\n\nポイント: スキーマ検出＝Glue クローラー、任意フォーマットの大規模バッチ変換＝EMR、という役割分担を押さえる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14128,7 +14128,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nデータの正確性・一貫性のために独自の検証ルールを実装するなら、AWS Glue Data Quality でカスタムのルールセット（DQDL で定義）を作成する。列の値域・一意性・完全性など業務固有のチェックを定義でき、Glue ETL に組み込んで自動評価できる。\n\n- A: ジョブブックマークは処理済みデータの追跡（増分処理）機能で、データ品質検証とは無関係。\n- C: 「組み込み変換」で標準的な品質検証を行うという表現は不正確。特定の検証ルールを実装する要件には、カスタムルールセットの作成が適切。\n- D: Data Catalog はスキーマ／メタデータの集中管理であり、値の正確性・一貫性を検証する仕組みではない。\n\nポイント: 業務固有の検証ルール＝Glue Data Quality のルールセット（DQDL）。カタログはメタデータ管理、ブックマークは増分処理。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14338,7 +14338,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n時折の監査でしかクエリしないなら、保管コストを最優先にする。データを Amazon S3 Glacier Flexible Retrieval に置けば長期アーカイブとして最安クラスで保管でき、Glacier Select で gzip 等のオブジェクトから必要データを SQL 抽出できるため、都度クエリ要件も満たせる。\n\n- B: S3 標準に置いて S3 Select はクエリは容易だが、標準ストレージ料金が継続的に発生し、まれなアクセスにはコスト過多。\n- C: 同じく S3 標準保管で、Athena はテーブル／クエリ課金も加わる。頻度が低い監査用途には保管コストが割高。\n- D: Glacier Instant Retrieval は Flexible より即時取得できる分ストレージ単価が高い。アクセスが「時折」なら Flexible の方がコスト効率が良い。\n\nポイント: アクセス頻度が低いほど Glacier 系（Flexible/Deep Archive）で保管コストを下げる。Glacier Select は Glacier 上のオブジェクトを直接 SQL 抽出できる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14493,7 +14493,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nRedshift のストアドプロシージャを毎日自動実行する最も手軽でコスト効率の良い方法は、クエリエディタ v2 のスケジュール機能を使うこと。EventBridge スケジュールと連携して追加のコンピュートを持たずに定期実行でき、運用オーバーヘッドが最小。\n\n- A: Lambda で cron を組む構成は Lambda 関数の作成・管理が必要で、クエリエディタ v2 のスケジュールに比べ余分な運用が発生する。\n- B: EC2 スポットインスタンスを立てて Data API を呼ぶのは、常時／起動管理が必要でサーバーレスの選択肢より高コスト・高オーバーヘッド。\n- D: Glue Python シェルジョブでプロシージャを呼ぶのも追加のジョブ管理と課金が発生し、ネイティブなスケジュール機能より非効率。\n\nポイント: Redshift の SQL 定期実行はクエリエディタ v2 のスケジュール（内部で EventBridge Scheduler + Data API）が最小構成。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14613,7 +14613,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, E。\n\n数百人が使うダッシュボードを、日次更新でスケーラブルかつ低コストに実現する組み合わせ:\n- B: S3 のクリックストリームデータは Amazon Athena（サーバーレス）でクエリする。専用クラスタ不要でスキャン量課金のためコスト効率が良い。\n- E: QuickSight は SPICE にデータを取り込み、日次更新（スケジュールリフレッシュ）を設定する。SPICE はインメモリで多数ユーザーの同時アクセスに高速・スケーラブルに応答でき、都度クエリのコストも抑えられる。\n\n- A: Redshift クラスタを常時稼働させるのは、日次更新ダッシュボード用途にはコスト過多。サーバーレスな Athena が適切。\n- C: S3 analytics はストレージクラス分析の機能で、クリックストリームの分析クエリ用途ではない。\n- D: QuickSight のダイレクトクエリは参照のたびにソースへクエリが飛び、数百ユーザー規模では負荷・コストが増える。SPICE の方がスケーラブル。\n\nポイント: サーバーレス分析＝Athena、多ユーザー高速ダッシュボード＝QuickSight SPICE（スケジュール更新）。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14725,7 +14725,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nオンプレミスとクラウドの両方で使え、ポータビリティとオープンソースを重視するなら Apache Airflow が最適。クラウドではマネージド版の Amazon MWAA を使い、オンプレミスでは同じ OSS の Airflow を動かせるため、DAG（ワークフロー定義）をそのまま移植できる。\n\n- A: AWS Data Exchange はサードパーティデータの購読・提供サービスで、ワークフローオーケストレーションではない。\n- B: SWF は AWS 独自のマネージドサービスで、オンプレミスで同一 OSS を動かすポータビリティがない。\n- D: AWS Glue は AWS 上の ETL サービスで、オンプレミス環境で同じものを動かせずオープンソースのポータビリティ要件を満たさない。\n\nポイント: ハイブリッド＋OSS ポータビリティ＝Apache Airflow。クラウド側は MWAA、オンプレは素の Airflow で DAG を共通化できる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14848,7 +14848,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nNoSQL、高い OLTP スループット、シングルミリ秒（さらに DAX で1桁ミリ秒未満）、グローバルな高可用性をフルマネージド・最小運用で満たすのは Amazon DynamoDB。Global Tables でマルチリージョン、オンデマンド／Auto Scaling でスループットも自動対応する。\n\n- A: Amazon Keyspaces は Cassandra 互換で選択肢になり得るが、既存が汎用 NoSQL であればグローバル・低レイテンシー OLTP のデファクトは DynamoDB。Cassandra 前提でない限り最適とは言えない。\n- B: DocumentDB は MongoDB 互換のドキュメント DB だが、グローバルな高可用性とシングルミリ秒 OLTP をこの規模で担うにはリージョン構成等の運用が増える。\n- D: Timestream は時系列データ専用で、汎用 OLTP のキーバリューワークロードには不適。\n\nポイント: グローバル・低レイテンシー・フルマネージドな NoSQL キーバリュー＝DynamoDB（Global Tables + DAX）。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -14998,7 +14998,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nEventBridge が Lambda を呼ぶ際の AccessDeniedException は権限不足が原因。EventBridge 側が使う IAM ロール（またはターゲットへの呼び出し権限）と、Lambda 関数のリソースベースポリシー（EventBridge に lambda:InvokeFunction を許可）の双方が正しく設定されている必要がある。\n\n- A: Lambda の実行ロールの信頼ポリシーは Lambda サービスがロールを引き受けるためのもので、EventBridge からの呼び出し可否とは別。EventBridge が実行ロールを assume する構成ではない。\n- C: サブネットが public/private かはネットワーク到達性の話で、AccessDenied（認可エラー）の原因ではない。\n- D: スキーマやイベントマッピングの妥当性はルーティングの問題であり、アクセス拒否例外の直接原因ではない。\n\nポイント: EventBridge→Lambda 呼び出しの認可は「EventBridge 側の権限」＋「Lambda のリソースベースポリシー（Principal: events.amazonaws.com）」の両輪。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -15181,7 +15181,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n2層のサーバーサイド暗号化を要件どおり適用するには、DSSE-KMS（Dual-layer Server-Side Encryption with KMS）を使う。S3 側でオブジェクトに独立した2層の KMS 暗号化を施すマネージド機能で、Lambda で PutObject 時に指定するだけで規制要件を満たせる。\n\n- A: SSE-KMS と S3 Encryption Client（クライアントサイド暗号化）の併用は、サーバーサイド2層という要件と構成が異なり、鍵管理が複雑化する。DSSE-KMS が要件に直接合致。\n- C: SSE-C は顧客が鍵を提供・管理する単層のサーバーサイド暗号化で、2層要件を満たさず鍵管理負荷も高い。\n- D: SSE-KMS は単層のサーバーサイド暗号化。2層要件を満たさない。\n\nポイント: 「サーバーサイドで2層（dual-layer）」の暗号化要件＝DSSE-KMS。単層は SSE-S3/SSE-KMS/SSE-C。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -15293,7 +15293,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAthena のクエリが実行前にキューで待つのは、オンデマンドの同時実行上限に達しているため。ワークグループに Provisioned Capacity（プロビジョンドキャパシティ）を割り当てると、専用の処理容量を確保でき、キューイングを避けて安定した同時実行を得られる。\n\n- A: クエリ結果の上限（件数）はキューイングと無関係。\n- C: フェデレーテッドクエリは外部データソースへの接続機能で、同時実行のキューイング解消策ではない。\n- D: ワークグループへのアクセス許可はアクセス制御の話で、容量不足によるキューイングは解消しない。\n\nポイント: Athena のキューイング（キャパシティ不足）対策はワークグループへの Provisioned Capacity 割り当て。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -15498,7 +15498,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nジョブブックマークを有効にしても S3 ファイルが再処理されるのは、スクリプトに job.commit()（コミット文）が無いため。ブックマークは job.init() と job.commit() の対でチェックポイントを保存する。commit が無いと処理状態が保存されず、次回実行で同じファイルを再処理してしまう。\n\n- A: s3:GetObjectAcl はブックマーク動作に必須の権限ではない。権限不足なら通常は読み取り自体が失敗する。\n- B: 最大同時実行数1は逐次実行の設定で、ブックマークによる再処理防止とは無関係。\n- C: Glue のバージョン指定はブックマークの再処理挙動の直接原因ではない。commit 欠如が本質。\n\nポイント: Glue ブックマークは job.init() + job.commit() のペアで機能する。commit を書き忘れると増分処理が効かず再処理される。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -15637,7 +15637,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nサーバー管理不要（サーバーレス相当のマネージド）で、Python と Bash スクリプトをそのままオーケストレーションでき、コードのリファクタリング不要という条件を満たすのは Amazon MWAA。Airflow の DAG から既存の Python/Bash スクリプトを PythonOperator/BashOperator 等で呼び出せ、サードパーティのオーケストレーションツールからの移行に適する。\n\n- A: Lambda は個々の関数実行向けで、実行時間制限や複雑な依存フローのオーケストレーションには不向き。既存スクリプトの再構成も要る。\n- C: Step Functions はステートマシン定義（ASL）へのワークフロー再設計が必要で、既存の Python/Bash をそのまま流用しにくく、リファクタリング不要の要件に反する。\n- D: Glue は ETL 特化で、汎用の Bash スクリプトをオーケストレーションする用途には合わない。\n\nポイント: 既存 Python/Bash をリファクタなしでオーケストレーション＝MWAA（Airflow DAG の Operator で既存スクリプトを呼ぶ）。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -15749,7 +15749,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nオンプレ MySQL の頻繁な更新をほぼリアルタイムに Redshift へ取り込み、最小の開発工数で実現するには AWS DMS のフルロード＋CDC タスクを使う。初期の全件ロードに続いて変更データを継続レプリケーションでき、Direct Connect 経由で接続しつつコード開発をほぼ不要にできる。\n\n- A: スケジュール実行の Glue ETL（JDBC ポーリング）はバッチ処理でほぼリアルタイムにならず、増分抽出ロジックの実装も必要で開発工数が増える。\n- C: AppFlow SDK でカスタムコネクタを自作するのは開発工数が最大。MySQL の CDC は DMS が標準対応。\n- D: DataSync はファイル／オブジェクトの転送サービスで、データベースの CDC レプリケーションには対応しない。\n\nポイント: DB のニアリアルタイム移行＋継続レプリケーション＝DMS のフルロード + CDC。DataSync はファイル転送、AppFlow は SaaS 連携が主用途。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -15888,7 +15888,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n複数バケットの S3 オブジェクトを JOIN でクエリし、パーティション化とサーバーレス、かつ ACID を維持する要件は Amazon Athena で満たせる。Athena はサーバーレスで標準 SQL の JOIN・パーティションに対応し、Apache Iceberg テーブルを使えば ACID トランザクションもサポートする。コスト面でもスキャン量課金で効率的。\n\n- A: S3 Select は単一オブジェクト内のフィルタ抽出のみで、複数オブジェクトの JOIN やパーティション、ACID をサポートしない。\n- B: Redshift Spectrum はクエリに Redshift クラスタが必要でサーバーレス要件（および最小コスト）に合致しにくい。\n- D: EMR はクラスタ管理が必要でサーバーレスではなく、この用途にはコスト・運用が過大。\n\nポイント: サーバーレスな SQL 分析＋JOIN／パーティション＋ACID＝Athena（+ Iceberg）。S3 Select は単一オブジェクト限定。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16076,7 +16076,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nクロスアカウント・クロスリージョンの DMS レプリケーションでは、レプリケーションインスタンスをターゲット側（Account_B、eu-west-1、Redshift と同じ）に配置するのが定石。ターゲットと同一リージョンに置くことで Redshift への書き込みが効率的になり、ソース（Account_A の RDS PostgreSQL、eu-east-1）へはネットワーク／エンドポイント経由で接続する。\n\n- B: eu-east-1 の Account_B は、ターゲットの Redshift（eu-west-1）ともソース（Account_A）とも異なる配置で最適でない。\n- C: 新規アカウントにインスタンスを作るのは不要な複雑化で、ターゲットアカウントに置く方が管理しやすい。\n- D: ソース側（Account_A, eu-east-1）に置く構成も可能だが、一般にターゲットの Redshift 側に配置する方が推奨され、コミュニティでも A が支持されている。\n\nポイント: DMS レプリケーションインスタンスはソース・ターゲットのどちらのリージョンにも置けるが、ターゲット（Redshift）側に配置してソースへリモート接続する構成が標準。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16177,7 +16177,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nRedshift の COPY コマンドは manifest ファイルを指定すると、複数の場所に散在する複数のデータファイルを1回の COPY で並列ロードできる。各ファイル場所ごとに個別の COPY を発行する方式では並列度が低く時間がかかるが、manifest に全ファイルのパスを列挙すれば Redshift がクラスターのスライス全体で並列に取り込むため高速化でき、追加インフラも不要でコストも増えない。\n\n- A: EMR クラスターを別途プロビジョニングするとコストが増える。ファイルを1フォルダに集約しても COPY 自体の並列性は manifest なしと変わらず、要件（コスト増なし）に反する。\n- B: Aurora を経由するのは冗長で、Aurora と Glue の追加コスト・オーバーヘッドが発生する。データウェアハウス取り込みの本筋から外れる。\n- C: Glue ジョブでファイルを1フォルダにコピーする処理自体に時間とコストがかかる。単一プレフィックスの COPY でも並列ロードは可能だが、コピー工程が余分。manifest 方式のほうが低コストで済む。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16387,7 +16387,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nKinesis Data Firehose 自体は CSV から JSON への変換機能を持たないため、データ変換（CSV→JSON）は Lambda 変換（Firehose の Transform）で行う。一方、JSON から Parquet への変換は Firehose の record format conversion（組み込みの Parquet/ORC 変換）で実現できる。したがって「Firehose が Lambda を呼んで CSV→JSON、その後 Firehose が Parquet で保存」が最小の開発労力。\n\n- A: Firehose 単体で CSV→JSON 変換はできない。また Parquet 保存を Lambda で自作するのは開発労力が大きい。\n- B: Firehose 単体では CSV→JSON 変換ができない。Firehose の Parquet 変換は入力が JSON であることが前提。\n- C: Parquet への変換を Lambda 内で自作する必要があり開発労力が増える。Firehose のネイティブ Parquet 変換を使うべき。\n- 補足: Firehose のネイティブフォーマット変換は入力が JSON であることを要求するため、Lambda で JSON 化 → Firehose で Parquet 化という順序が正しい。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16499,7 +16499,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nAWS Transfer Family では、サーバーに割り当てる security policy によって許可する暗号スイートと最小 TLS プロトコルバージョンを制御できる。TLS 1.2 以上を最小バージョンとする security policy を指定すれば、要件（転送中の TLS 1.2 以上の暗号化）を満たせる。\n\n- A: SSH キーの再生成はユーザー認証に関する操作であり、TLS プロトコルバージョンの制御とは無関係。\n- B: オンプレミス側のセキュリティグループで TLS バージョンをフィルタすることはできない（セキュリティグループは L3/L4 制御でプロトコルバージョンを判別しない）。制御は Transfer Family 側の security policy で行う。\n- D: Transfer Family はマネージドサービスであり、TLS 終端やプロトコルバージョンは security policy で管理する。手動での SSL 証明書インストールという運用は行わない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16611,7 +16611,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nオンプレミスの Apache Kafka を「リプラットフォーム（lift-and-reshape）」で移行するなら、Kafka 互換の Amazon MSK が最適。中でも MSK Serverless はブローカーのキャパシティ・スケーリング・パーティション管理をフルマネージドで自動化するため、管理オーバーヘッドが最小。アプリのリファクタは不要で Kafka API がそのまま使える。\n\n- A: Kinesis Data Streams は Kafka とは API が異なるため、アプリケーションのリファクタが必要になり要件（リプラットフォーム/リファクタしない）に反する。\n- B: MSK プロビジョニングクラスターも Kafka 互換だが、ブローカー数・容量・スケーリングを自分で管理する必要があり、Serverless より運用オーバーヘッドが大きい。\n- C: Kinesis Data Firehose は配信専用で Kafka の置き換えにならず、API も異なるためリファクタが必要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16723,7 +16723,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nAWS Glue の Job bookmarks は、ジョブが前回どこまで処理したか（既に処理した S3 オブジェクトや行）を追跡し、次回実行時に新規/未処理データのみを処理する機能。これにより増分データ処理（incremental processing）が実現でき、同じデータの再処理を防ぐ。\n\n- A: Workflows は複数の crawler/ジョブ/trigger を1つのフローとしてオーケストレーションする機能で、増分処理の追跡機能ではない。\n- B: Triggers はジョブ/クローラーの起動条件（スケジュール・イベント・オンデマンド）を定義するもので、処理済みデータの追跡はしない。\n- D: Classifiers はクローラーがデータのスキーマ/形式を判定するために使うもので、増分処理とは無関係。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16846,7 +16846,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nKinesis Data Streams のプロデューサーは、ネットワーク障害時のリトライ（PutRecord の再送）により同一レコードが複数回書き込まれる可能性があり、また消費側もフェイルオーバー時に再処理し得るため、真の exactly-once はストリーム単体では保証されない。実務上の解は、各レコードに一意の ID を埋め込み、消費/処理側で冪等に重複排除（deduplication）することで、結果的に exactly-once 相当を実現すること。\n\n- B: Managed Service for Apache Flink の checkpoint は Flink 内部の状態一貫性には寄与するが、プロデューサー側のリトライによる Kinesis への重複取り込みは防げない。\n- C: 「ソースが複数回取り込まないよう設計」は、まさに問題となっているネットワーク障害時のリトライを制御できず、現実的に重複を完全排除できない。\n- D: Kinesis をやめて EMR + Flink/Spark に置き換えても、分散ストリーミングでの重複は本質的に発生し得る。過剰な再設計であり、重複排除ロジック（ID ベース）が本質的な解。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -16958,7 +16958,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nS3 Versioning を有効にすると、オブジェクトの上書き/削除時も過去バージョンが保持され、意図しない削除に対しては delete marker が付くだけで実データは残るため復元できる。設定は一度有効化するだけで運用オーバーヘッドが最小。\n\n- A: 手動の定期バックアップは運用負荷が高く、バックアップ間の削除は保護できない。\n- C: レプリケーションは別バケット/リージョンへのコピーで可用性・DR 向け。ソース側で削除が伝播し得る設定もあり、意図しない削除の直接的防止策としては Versioning より劣る。\n- D: S3 Glacier はコスト削減のためのアーカイブストレージクラスであり、削除防止の機能ではない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17163,7 +17163,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n最小レイテンシーで急激な使用量低下を検知するには、ストリーム処理でリアルタイムに異常検知するのが最適。処理アプリを Kinesis Data Streams に発行するよう変更し、Amazon Managed Service for Apache Flink でストリームを連続的に分析すれば、データ到着とほぼ同時に低下を検知できる。\n\n- A: Lambda を EventBridge で1分ごとに Aurora へポーリングする方式は、最大1分のポーリング遅延がありレイテンシーが大きい。\n- C: DynamoDB + DAX に置き換えても、1分ごとのポーリングである限り検知レイテンシーは改善しない。DB 置き換えの労力も無駄。\n- D: Aurora Database Activity Streams は監査（DB アクティビティのログ記録）用途であり、業務データの使用量分析・異常検知の仕組みではない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17291,7 +17291,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAWS Glue DataBrew はコードを書かずに視覚的にデータのクリーニング/準備ができ、複雑な ETL コーディングやインフラ管理が不要。準備後のデータを Glue で Redshift にロードし、アナリストは Redshift 上で複雑な SQL クエリを実行できる。全体としてサーバーレス/マネージドで運用オーバーヘッドが最小。\n\n- A: EMR は複雑な ETL とクラスター（インフラ）管理を伴い、要件（ETL/インフラ管理の排除）に反する。\n- C: Lambda でのデータ準備はコード実装が必要で、複雑な前処理には向かない。Firehose は Redshift への配信手段としては使えるが全体の労力・適合度で劣る。\n- D: Glue での ETL 実装は必要になり、DMS は主に DB 間移行/CDC 用でファイルベースの準備済みデータ投入には不適。Redshift Spectrum は S3 直接クエリで、要件の Redshift へのロードとは目的が異なる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17408,7 +17408,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nVPC 内の Lambda が S3 へアクセスする際のタイムアウトは、S3 へのルートがないことが原因。S3 は VPC Gateway Endpoint に対応しており、ルートテーブルにエンドポイント経由のルートを追加すればプライベート（インターネットを経由しない）かつ追加料金なしで S3 に到達できる。Gateway Endpoint は時間課金/データ処理料金がかからず最もコスト効率が良い。\n\n- A: NAT Gateway は時間・データ処理課金が発生しコストが高く、トラフィックが（S3 のパブリックエンドポイント経由で）インターネットに出るためセキュア要件でも劣る。\n- C: S3 は Interface Endpoint(PrivateLink)も使えるが、ENI ごと/データ処理の課金があり Gateway Endpoint より高コスト。同一 VPC 内の S3 アクセスなら Gateway Endpoint が最適。\n- D: Internet Gateway 経由はトラフィックがインターネットに出るためセキュア要件に反する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17498,7 +17498,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nフィールド名が異なっても（place_id と location_id など）レコードの同一性を機械学習で判定するには、AWS Glue の FindMatches 変換（ML transform）が適する。まず Glue crawler で RDS 上のデータをカタログ化し、FindMatches でマッチング/重複を学習・検出し、ラベルとパフォーマンスで調整する。マネージドで運用オーバーヘッドが最小。\n\n- A: EMR クラスターのプロビジョニングと Zeppelin での運用は管理負荷が高い。FindMatches は本来 Glue の ML transform であり、EMR/Zeppelin 上で使う構成は不自然。\n- C: SageMaker で Spark ML パイプラインを自作するのは実装/運用の労力が大きく、マネージドな FindMatches に劣る。\n- D: EMR + Zeppelin + 自作 Spark ML モデルは最もオーバーヘッドが大きく、マネージド機能を使う要件に反する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17623,7 +17623,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, D。\n\nGlue crawler が複数オブジェクトを1テーブルに統合するには、それらを「同一テーブルのパーティション/断片」と認識させる必要がある。そのため (A) 各オブジェクトのフォーマット・圧縮タイプ・スキーマが同一であること、(D) S3 のプレフィックス構造が一貫していること（同一階層/命名構造で1つの論理テーブルとみなせること）が条件。両者が揃うとクローラーは単一テーブルを作成する。\n\n- B: 圧縮タイプの不一致を許容すると、クローラーは別々のデータとみなしテーブルを分割し得る。圧縮も揃える必要がある。\n- C: フォーマットや圧縮タイプの不一致を許容すると同様にテーブルが分割される。\n- E: 「似たパターン」だけでは不十分で、実際にはプレフィックス構造の一貫性（D）が必要。曖昧な条件では単一テーブル化を保証できない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17759,7 +17759,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, C。\n\nアプリのダウンタイム中にメッセージが保持期間切れで消えるのが原因。(A) メッセージ保持期間（retention period、最大14日）を延ばせば、ダウンタイムが長引いてもメッセージが期限切れで消えにくくなる。(C) DLQ を接続すれば、処理に失敗/再試行上限を超えたメッセージを退避でき、データ損失を防げる。\n\n- B: visibility timeout の延長は処理中の重複配信を防ぐためのもので、保持期間切れによる損失は防げない。\n- D: delay queue は配信を意図的に遅らせる機能で、損失防止には寄与せず、むしろ状況を悪化させ得る。\n- E: 処理時間の短縮は多少スループットを上げるが、ダウンタイム中の保持期間切れという根本原因を解決しない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -17865,7 +17865,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nパイプラインが既に OpenSearch Service へ書き込んでいるため、可視化には OpenSearch Dashboards を OpenSearch Service のデータに直接つなぐのが最小レイテンシー。取り込み後すぐにインデックスされたデータをそのまま可視化でき、追加のクエリ層を挟まない。\n\n- B: S3 の Avro を Athena 経由でクエリし Grafana で可視化する構成は、S3 書き込み→Athena クエリのバッチ的な経路でレイテンシーが大きい。\n- C: 同様に Athena で S3 の Avro をクエリする経路は遅い。加えて Amazon Keyspaces を Athena のデータカタログにする構成は不正確。\n- D: Glue カタログ + S3 Select による S3 クエリはニアリアルタイム可視化には遅く、S3 Select は集計/ダッシュボード用途に不向き。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18059,7 +18059,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nTRUNCATE は全行を即座に削除し、DELETE と違って削除マーク行を残さないため、追加の VACUUM を待たずにストレージ容量を最も効率的に回収できる。Redshift ではマテリアライズドビューに対しても TRUNCATE が使える。\n\n- A: DELETE ... WHERE 1=1 は全行を論理削除するが、削除された行はすぐには物理的に回収されず、容量回収には別途 VACUUM が必要。\n- C: VACUUM は削除済み領域の再利用/再ソートを行うコマンドで、WHERE 句を伴うこの構文は無効（不正な構文）。\n- D: 条件付き DELETE は一部行のみ削除し全行削除にならず、かつ DELETE 同様に即時の容量回収もされない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18198,7 +18198,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nKinesis データストリームからの変換取り込みで運用オーバーヘッドを最小化するには、Kinesis Data Firehose をコンシューマーにし、変換に Lambda（Firehose の Transform）を使い、Firehose の OpenSearch Service への組み込み配信を利用するのが最適。スケーリングやバッファリング、配信をフルマネージドで担う。\n\n- B: Logstash パイプラインは自前でインフラを構築・運用する必要があり、オーバーヘッドが大きい。\n- C: Kinesis Agent はログファイルをストリームへ送るプロデューサー側ツールであり、Lambda から呼び出して変換・OpenSearch 配信する構成は不自然かつ非現実的。\n- D: KCL でコンシューマーアプリを自作するのはコード実装と運用（スケーリング/チェックポイント管理）の負担が大きく、Firehose のマネージド配信に劣る。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18288,7 +18288,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n特定の値（国=カナダ）を持つ「行」へのアクセスを制限する要件には、Lake Formation の row-level filter（行レベルセキュリティ/データフィルター）が最適。国がカナダの行を除外するフィルターを定義してユーザー/ロールに付与するだけで、最小の運用労力で行アクセスを制御できる。\n\n- B: IAM ロールでは行単位（特定カラム値を持つレコード）のアクセス制御はできない。行レベル制御は Lake Formation の機能で行う。\n- C: column-level filter は列（カラム）単位のアクセス制御であり、特定の値を持つ行を隠す要件には合わない。\n- D: LF-Tags はデータベース/テーブル/列へのタグベース権限管理には使えるが、行の値に基づく行単位のアクセス制御には適さず、要件に対して過剰/不適合。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18493,7 +18493,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nRedshiftでサードパーティIdP（例: Okta、Azure ADなど）による認証を有効にする最初のステップは、Amazon Redshift内でそのIdPを identity provider として登録すること。CREATE IDENTITY PROVIDER コマンド（またはコンソール）でIdPのメタデータ・接続情報をRedshift側に登録し、その後クエリエディタからのフェデレーション認証が可能になる。\n\n- A: 「Redshiftクラスターの設定で登録」という言い回しが不正確。IdPの登録はクラスターのハードウェア/ネットワーク設定ではなく、Redshiftのデータベース側（identity provider オブジェクト）に対して行う。\n- C: Secrets Manager は認証情報（DB接続文字列・パスワード等）の保管サービスであり、外部IdPフェデレーションを登録・仲介する仕組みではない。\n- D: ACM はTLS証明書の発行・管理サービスであり、ユーザー認証情報の管理やIdP登録には使用しない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18605,7 +18605,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n症状は「CPU使用率が最大に張り付く一方、メモリ使用率は30%未満」。つまりワークロードはCPUバウンドでメモリは余っている。汎用インスタンスをコンピューティング最適化（compute optimized、Cシリーズ）に切り替えれば、同じコスト帯でより多くのvCPUが得られCPUボトルネックが解消、ジョブが速く終わるためスケールアウトも抑えられコスト効率が最も良い。\n\n- A: 最大ノード数を10に増やすと台数（＝コスト）が増える。ボトルネックはノード数不足ではなくノードあたりのCPU性能なので方向が逆。\n- B: メモリ最適化はメモリが不足している場合に有効。ここではメモリが30%未満で余っており、CPU不足を解決しないため無駄。\n- D: クールダウン期間の短縮はスケーリングの反応速度を変えるだけで、CPUボトルネックもコストも改善しない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18695,7 +18695,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n重複を防ぎつつRedshiftを更新する定石は、いったんステージング（一時）テーブルにデータをCOPY/挿入し、そこから本番テーブルに対してupsert（UPDATE＋INSERT、いわゆるmerge）を行う方法。ステージングと本番をキーで突合し、既存行はUPDATE、新規行のみINSERTすることで再実行しても重複が発生しない。RedshiftのETLベストプラクティスとして推奨されるパターン。\n\n- B: MySQLを経由してupsertするのは不要なコンポーネントを増やし、運用が複雑化する。Redshift内で完結できる。\n- C: dropDuplicates() はジョブ内のDataFrame内部の重複を除くだけで、Redshiftに既に存在する行との重複は防げない。\n- D: ResolveChoice は同名カラムのデータ型競合を解決する変換であり、行レベルの重複排除やupsertとは無関係。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18818,7 +18818,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n単一のCOPYコマンドで複数ファイルをロードするのが最もスループットが高く、クラスターリソースを最適に使う。Redshiftは1つのCOPYで指定された複数ファイルを全スライスに自動的に並列分散してロードするため、ノード/スライスを最大限活用できる。\n\n- A: 複数のCOPYを同時に発行すると、各COPYが直列的にコミット競合やリソース分散の非効率を招き、単一COPYの並列ロードより遅くなる。AWSは複数の同時COPYを避けるよう推奨。\n- B: S3DistCp＋HDFS経由は不要な中間ステップで、S3から直接COPYするより非効率かつ複雑。\n- C: INSERT文は行単位処理で極めて低速。大量データのロードにはCOPYを使うのが原則。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -18908,7 +18908,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n「共通の一意な識別子が無くても一致レコードを識別する」＝ファジーマッチング（名寄せ・重複解決）。AWS Lake Formation の FindMatches 変換（AWS Glue ML変換）は、機械学習でラベル例を学習させ、完全一致キーが無いレコード同士の一致を判定できる。要件にぴったり。\n\n- A: Amazon Macie は S3内の機密データ（PII等）の検出・分類サービスで、レコードのマッチングは行わない。\n- B: PySpark の Filter は条件でレコードを絞り込むだけで、あいまいな一致の識別はできない。\n- C: 一意識別子でのパーティション化は、そもそも共通の一意識別子が無いという前提に反し、名寄せの解決にならない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19009,7 +19009,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nAthenaはGlue Data Catalogのテーブルが指すS3のロケーション（プレフィックス配下）にある全ファイルをスキャンする。クローラーの除外設定はカタログ化（スキーマ推論）から除くだけで、テーブルのS3ロケーション配下に.jsonが物理的に残っていればAthenaは読んでしまう。.jsonファイルをテーブルのパス外へ移動すれば、Athenaは.csvのみをスキャンし、余分な読み取りが無くなりクエリ時間も最短になる。.csvへのアクセス要件も変えない。\n\n- A: クローラーの除外はカタログ化対象を絞るだけで、Athenaが実データをスキャンする挙動は変わらない。\n- B: Athena側でWHERE等で除外しても、対象ファイルは依然スキャンされスキャン量・時間は減らない（むしろ最短にならない）。\n- D: バケットポリシーで.jsonをブロックすると、同じ場所にある.csvへのアクセスや権限運用に影響し得るうえ、Athenaのクエリがアクセス拒否で失敗する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19110,7 +19110,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nS3オブジェクトがKMSキーで暗号化（SSE-KMS）されている場合、読み取りにはS3の権限に加えて、そのKMSキーに対する kms:Decrypt 権限が必要。Lambdaの実行ロールにS3アクセスはあってもKMS復号権限が無いため、オブジェクト取得時に復号できずエラーになる。\n\n- A: S3バケット権限は設定済みという前提で、症状（暗号化オブジェクトのみ失敗）と最も整合するのはKMS権限不足。\n- B: 古いSDKバージョンがKMS暗号化オブジェクトの取得失敗を引き起こすのは一般的でなく、原因として最も可能性が高いとは言えない。\n- C: リージョン違いはレイテンシーではなくアクセス経路の問題であり、この復号エラーの説明として不適切。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19200,7 +19200,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n1,000テーブル分のデータ品質ルールをまとめて編集するなら、AWS Glue Data Quality のAPI（例: UpdateDataQualityRuleset）を呼び出すLambda関数でプログラム的に一括更新するのが最も運用オーバーヘッドが低い。ルールセットの更新に特化したマネージド機能を直接叩くだけで済む。\n\n- A: テーブルごとにETLパイプラインとGlueジョブを作るのは大規模で過剰。1,000本のジョブ管理は運用負荷が極めて高い。\n- C: EMRクラスターの立ち上げ・運用は重く、単なるルール編集には不要なインフラ。\n- D: マネジメントコンソールで1,000テーブルを手作業編集するのは非現実的でヒューマンエラーも多く、運用オーバーヘッドが最大。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19328,7 +19328,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nBranch Aが本番へマージ済みで、masterが進んでいる状況。Branch Bのプルリクエスト前に git rebase master を実行すると、Branch Bの変更を最新のmasterの先端に載せ替えられ、履歴が直線的になり、事前にコンフリクトを解消してクリーンなPRを出せる。\n\n- A: 「git diff branchB master」＋「git commit -m」は差分表示とメッセージ不完全なコミットの羅列で、ブランチを最新化する操作になっていない。\n- B: git pull master はブランチ名の指定方法として不正確（通常は git pull origin master）で、rebaseと違いマージコミットが生まれ履歴が汚れやすい。ここでは最善でない。\n- D: git fetch に -b オプションは存在せず、無効なコマンド。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19524,7 +19524,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A、B。\n\nRedshiftのcompound sort key（複合ソートキー：Region ID, Department ID, Role ID）は、宣言順の先頭カラムから連続して（プレフィックスとして）フィルタに使ったときにのみ効率的にゾーンマップで絞り込める。\n\n- A: 先頭キー Region ID のみで絞る → プレフィックス条件に合致し高速。\n- B: Region ID → Department ID の順で先頭から連続して使用 → プレフィックスに合致し高速。\n- C: Department ID と Region ID を指定しているが、ソートキー先頭は Region ID。WHERE句の記述順は関係ないものの、この設問ではB（Region→Departmentの並び）が模範解答として選ばれており、複合ソートキーの恩恵を説明する代表例としてA・Bが採用。\n- D: Role ID は3番目のキーのみを単独使用。先頭 Region ID を飛ばしているためcompound sort keyの効果が得られない。\n- E: Region ID（先頭）は使うが、次に Department ID を飛ばして Role ID を使用。連続プレフィックスにならず2番目以降のソート効果が効かない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19663,7 +19663,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n問題の本質は「数百万個の1KB小ファイル」による small files problem。AWS Glue の DynamicFrame にはファイルグループ化オプション（groupFiles / groupSize）があり、多数の小ファイルを取り込み時に自動でまとめて1タスクで処理するため、タスク起動オーバーヘッドが激減し処理時間が最も短縮される。追加コンポーネント不要でGlue内で完結。\n\n- A: Lambdaで事前にファイルを結合する方式も有効だが、前処理ステップとS3への再書き込みが増え、Glueのグループ化オプションを使うBより運用が増え効率が劣る。\n- C: RedshiftのCOPYに生JSONを直接入れると変換（Parquet化）や小ファイル問題の解決にならず、Redshift内処理も本要件に不向き。\n- D: EMRへの切り替えはクラスター管理の負荷が増え、Glueのグループ化オプションで解決できる問題に対して過剰。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19780,7 +19780,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nMWAA（Apache Airflow）でワークフロー（DAG）の実行失敗の原因を診断するには Task ログ（YourEnvironmentName-Task）を見る。個々のタスクインスタンスの実行ログ・例外・スタックトレースが記録されており、失敗の直接原因が分かる。\n\n- A: WebServer ログはAirflow UI（Webサーバー）に関するログで、タスク実行失敗の診断には向かない。\n- B: Scheduler ログはDAGのスケジューリングやキューイングの問題向けで、タスク自体の実行エラー詳細は乏しい。\n- C: DAGProcessing ログはDAGファイルのパース/読み込みに関するログで、構文エラー等の検出向け。実行時のタスク失敗原因はTaskログにある。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -19943,7 +19943,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A、C。\n\n要件は「データがAWS環境外からアクセスされないようにする」＝トラフィックをAWS内部/プライベート経路に閉じる。\n\n- A: Redshiftをプライベートサブネットに配置し、接続にインターフェースVPCエンドポイント、S3アクセスはNATゲートウェイ経由とすることで、パブリック露出を避けクラスターアクセスを閉域化できる。\n- C: Redshift Spectrumのenhanced VPC routing を有効化するとRedshift↔S3のトラフィックがVPC経由（インターネットを通らない）に強制される。さらにData Connect（Direct Connect）でデータプロバイダーとの接続をプライベート回線化すれば、データ経路をAWS/専有回線内に閉じられる。\n- B: CloudHSMによる暗号化はデータ保護には有効だが、「環境外からのアクセス防止」というネットワーク境界の要件を直接満たさない。\n- D: 主キー/外部キー制約はデータモデリングの話でアクセス制御・ネットワーク隔離とは無関係（Redshiftでは制約は情報的で強制もされない）。\n- E: フェデレーテッドクエリはRDS/Aurora等のリレーショナルDB向けで、本シナリオ（S3上のプロバイダーデータ）に合わず、ゲートウェイVPCエンドポイントでフェデレーテッドクエリを流すという記述も不正確。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20044,7 +20044,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n新ファイルの到着をトリガーにほぼリアルタイムでRedshiftへ取り込むには、S3イベント通知でLambdaを起動し、そのLambdaがRedshiftへCOPY（またはData APIで実行）する構成が最適。到着即時にイベント駆動でロードでき低レイテンシー。\n\n- A: query editor v2でCOPYをスケジュール実行するのは定期バッチであり、到着イベント駆動の「ほぼリアルタイム」にならない。\n- B: Aurora↔Redshiftのzero-ETL統合はAuroraのトランザクションデータ連携用で、S3に到着するファイルの取り込みには使えない。\n- C: Glueジョブブックマークは処理済みデータの重複回避に使う機能で、それ自体はほぼリアルタイムのイベント駆動取り込みを提供しない（ジョブの起動契機が別途必要）。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20145,7 +20145,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nKinesis Data Streams のデータを最小の運用オーバーヘッドでRedshiftに取り込み、下流のリアルタイムクエリ/エンリッチに使うなら、Amazon Redshift streaming ingestion が最適。ストリームを直接マテリアライズドビューとして取り込め、中間のS3やFirehoseを介さず低レイテンシー・低運用で扱える。\n\n- A/B: Kinesis Data Firehose経由（クラスターへ直接、またはS3経由でロード）は追加の配信ストリーム管理が必要で、streaming ingestionよりレイテンシーと運用負荷が高い。特にBはS3を挟むぶん遅延・複雑さが増す。\n- C: Managed Service for Apache Flink はストリーム処理アプリの構築・運用が必要で、単純な取り込みには過剰な運用オーバーヘッド。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20322,7 +20322,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n各テーブルに「単調増加するカラム」があり、テーブルは50GB未満、更新は夜間の限られた時間帯。AWS Glue のJDBC接続＋ジョブブックマークを、その単調増加カラムをブックマークキーに設定して使えば、前回以降に増えた行だけを増分抽出できる。カスタムロジックでS3のフルロードコピーに増分を追記すれば同期が保てる。CDC基盤を常時稼働させる必要がなく、日次ジョブで運用効率が高い。\n\n- A: DMSのフルロード＋CDCは継続的レプリケーションのためのレプリケーションインスタンスを常時稼働させ、単純な日次増分にはオーバーヘッド・コストが大きい。オンプレのデータウェアハウスに対しCDC設定も重い。\n- C: DMSフルロードを毎日実行して上書きは、増分カラムを活かさず毎回全量転送で非効率。\n- D: Glueで毎日フルコピーして上書きも同様に毎回全量で、増分同期の要件に対し非効率。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20461,7 +20461,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nオンプレOracleの70テーブルを毎日、変更を反映しつつParquetでS3データレイクに取り込むには、AWS DMS の継続的レプリケーション（CDC）タスクでソース=Oracle、ターゲット=S3、出力形式=Parquet と設定するのが最小労力。DMSは複数テーブルのスキーマ移行と変更キャプチャをマネージドに扱え、Parquet出力もネイティブ対応。\n\n- A: EMR上のSqoopジョブはクラスター構築・ジョブ実装・スケジューリングを自前で行う必要があり労力が大きい。\n- B: Glueのジョブブックマークでの増分取り込みは可能だが、70テーブル分の接続・ジョブ・増分ロジックの実装が必要で、変更（更新）の反映にはCDCほど確実でなくDMSより手間がかかる。\n- D: いったんRDS Oracleへ移行し、トリガー＋Lambdaで変更を書き出す構成は、余分なRDS・トリガー・Lambdaを組む大掛かりな仕組みで労力が最大。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20551,7 +20551,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nKinesis Producer Library (KPL) は、レコードのバッファリング・集約（aggregation）・リトライを自動で行うため、10バイトの極小レコードを毎秒10,000件送るケースで最もシャードのスループット効率を高められる。数分の遅延が許容されるため、KPL のバッファリングによる集約が理想的で、複数の小レコードを1つの Kinesis レコードにまとめて PUT ペイロード上限（1,000レコード/秒、1MB/秒）を有効活用できる。信頼性の高い送信（リトライ）も内蔵する。\n\n- A（Kinesis Agent）: ログファイルを監視して送信するエージェントで、アプリからの位置情報レコードのようなプログラム的なストリーミング取り込みには不向き。集約効率も KPL に劣る。\n- C（Kinesis Data Firehose）: 送信先（S3/Redshift等）へ配信するマネージドサービスであり、要件は Kinesis Data Streams への取り込み。Firehose は Data Streams への信頼性ある送信手段ではなく要件不一致。\n- D（Kinesis SDK）: PutRecord/PutRecords を直接呼ぶ低レベル手段。集約・バッファリング・リトライを自前実装する必要があり、小レコードでのシャード効率最大化と運用効率の両立では KPL に劣る。\n\nポイント: 小さいレコードを大量に取り込むときは KPL の aggregation でシャードスループットを最大化するのが定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20641,7 +20641,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nAWS Glue の FindMatches（ML Transform）は、機械学習で「完全一致でない」重複レコード（スペルミスや表記ゆれを含む）を検出・名寄せできる。ルールを手書きせずに学習させるだけで済むため、運用オーバーヘッドが最も低い。半構造化データの重複排除・ファジーマッチに最適。\n\n- B（Athena の window/非window関数）: SQL で厳密一致の重複は消せるが、スペルミスなど曖昧な重複の除去はロジックを自作する必要があり運用負荷が高い。\n- C（Neptune ML + Gremlin）: グラフDB用途であり、重複排除・名寄せの手段として過剰かつ複雑。開発・運用負荷が大きい。\n- D（DynamoDB グローバルテーブル）: マルチリージョンレプリケーション機能であり、重複排除とは無関係。既存の重複やスペルミスは解決できない。\n\nポイント: ファジーな重複排除・レコードリンケージは Glue FindMatches が定番。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20750,7 +20750,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, C。\n\nKinesis のコンシューマーが重複データを受け取る主因は2つ。プロデューサー側とコンシューマー側それぞれに起因する。\n\n- A（プロデューサーのネットワークタイムアウト）: PutRecord が成功していてもレスポンスが届かずタイムアウトすると、プロデューサーはリトライして同じレコードを再送する。結果ストリームに重複が入る（プロデューサー起因の重複）。\n- C（シャード数・レコードプロセッサ数の変更）: KCL はシャードのリシャーディングやワーカー/レコードプロセッサ数の変化時にリバランスを行い、その際に同じレコードが再処理されることがある（コンシューマー起因の重複）。\n\n不正解:\n- B（IteratorAgeMilliseconds が高い）: コンシューマーの処理遅延を示すメトリクスで、重複ではなくラグの指標。\n- D（AggregationEnabled=true）: KPL が複数レコードを1つに集約する設定で、KCL が正しく分解するため重複の原因にはならない。\n- E（max_records が大きい）: 1回の GetRecords で取得するレコード数の上限で、スループットに影響するが重複は生じない。\n\nポイント: Kinesis は at-least-once 配信であり、重複はプロデューサーのリトライとコンシューマーのリシャード/リバランスで発生する。冪等処理で対処する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -20889,7 +20889,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n複数の JDBC 準拠リレーショナルDBから、1時間ごとの追跡（バッチ）で注文を横断分析したい。AWS Glue で各運用システムから Amazon Redshift へ取り込み、Redshift 上で結合・集計、Amazon QuickSight でダッシュボード化するのが、分析ワークロードとして最も自然で開発オーバーヘッドが少ない。Redshift は多数テーブルの結合・集計に適したデータウェアハウス。\n\n- B（Glue → DynamoDB → QuickSight）: DynamoDB は NoSQL でキー指定アクセス向き。複数システム横断の分析クエリ・結合には不向きで、QuickSight 連携も分析用途として弱い。\n- C（DMS → 別リージョンの DynamoDB → Grafana）: DynamoDB は分析結合に不向き、別リージョンにする必然性がなく、Grafana は時系列メトリクス監視向けで注文追跡分析には過剰・不適。\n- D（DMS → 別リージョンの DynamoDB → QuickSight）: 1時間ごとのバッチ要件に CDC(DMS) は過剰。DynamoDB での横断分析も不向きで、別リージョン化の必然性もない。\n\nポイント: 複数DBを集約して横断分析するなら Redshift + QuickSight。1時間ごとで十分ならリアルタイムCDC(DMS)は不要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21028,7 +21028,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n要件は「各デバイスから最適なスループットで取り込み」かつ「3つの社内コンシューマーそれぞれに専用スループットを持たせる」。Amazon Kinesis Data Streams に PutRecords（複数レコードを一括送信）で効率よく取り込み、enhanced fan-out を使うと各コンシューマーがシャードあたり2MB/秒の専用スループットを得られる。1本のストリームに対しコンシューマーごとに enhanced fan-out を登録すれば要件を満たす。\n\n- B（Firehose + PutRecordBatch + Support ケースで専用スループット）: Firehose は配信サービスで、コンシューマーが自作ストリーム処理する用途に合わない。「専用スループット有効化のSupportケース」も存在しない誤った手順。\n- C（KPL で Firehose に送信 + enhanced fan-out）: enhanced fan-out は Kinesis Data Streams の機能で Firehose にはない。KPL も Firehose 送信手段として一般的でない。技術的に成立しない。\n- D（Data Streams + EC2 上でコンシューマー + Auto Scaling）: enhanced fan-out を使わないと共有スループットの奪い合いになり「専用スループット」を満たせない。EC2 管理の運用負荷も増える。\n\nポイント: 複数コンシューマーに個別の専用スループットを与えるなら Kinesis Data Streams の enhanced fan-out。取り込み効率は PutRecords でバッチ送信。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21118,7 +21118,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n「ルートユーザーであっても保持期間中は削除・変更できない」という強い不変性（WORM）が要件。S3 Object Lock の compliance mode は、保持期間中は誰も（アカウントのルートユーザーを含め）オブジェクトの削除・上書きも保持設定の短縮もできない。デフォルト保持期間を7年に設定すれば要件を満たす。\n\n- A（governance mode）: 特別な権限（s3:BypassGovernanceRetention）を持つユーザーは保護を解除して削除・変更できる。ルートも含め絶対に不可という要件を満たせない。\n- C（legal hold）: legal hold は保持「期間」を持たない（無期限で ON/OFF）。「7年間」という期間要件に合わず、権限を持つユーザーが解除できてしまう。\n- D（個々のオブジェクトに保持期間のみ設定）: モード（compliance/governance）指定が本質。モードを明示せず期間だけ設定してもルート不可の不変性は担保されない。\n\nポイント: ルートすら変更不可の WORM = Object Lock compliance mode。解除可能なのが governance mode。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21230,7 +21230,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n「old_table と同じスキーマを持つ、空の新テーブル」を Athena で作る。CTAS（CREATE TABLE AS SELECT）に WITH NO DATA を付けると、SELECT のスキーマだけを引き継いでデータを1行も入れない空テーブルを作成できる。これが要件通り。\n\n- A（CREATE TABLE ... AS SELECT * FROM old_tables）: データもコピーされてしまい「空」でない（かつテーブル名 old_tables はタイポ）。\n- B（INSERT INTO ... SELECT）: 既存テーブルへのデータ挿入で、新テーブル作成にはならない。\n- C（CREATE TABLE new_table (LIKE old_table)）: LIKE 構文は Athena ではサポートされない（Redshift 等の構文）。\n\nポイント: Athena で空の同一スキーマテーブルを作るなら CTAS + WITH NO DATA。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21353,7 +21353,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n既存 cities_world から米国の都市だけを抽出して新テーブル cities_usa に入れる。列を明示した INSERT INTO ... (city, state) SELECT city, state ... WHERE country='usa' が正しい（cities_usa は事前に作成済みという前提）。\n\n- B（MOVE ... TO ...）: そのような SQL 文は存在しない。\n- C（INSERT INTO cities_usa SELECT city, state ...）: 挿入先の列指定なしで2列だけ SELECT しており、テーブルスキーマと列数・順序が一致しないと失敗する可能性がある。設問の採用解は列を明示した A。\n- D（UPDATE ... SET (city,state)=(SELECT ...)）: UPDATE は既存行の更新であり、Athena は行レベル UPDATE を（通常テーブルで）サポートしない。抽出コピー用途に不適。\n\nポイント: Athena でクエリ結果を既存テーブルに書き込むなら INSERT INTO ... SELECT。列を明示すると安全。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21521,7 +21521,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B, D。\n\nデータメッシュで、中央ガバナンスアカウントの Lake Formation が Redshift Serverless のデータプロダクトを列レベルで各チームに共有する。手順は Redshift datashare を作り、それを Lake Formation カタログに登録して Lake Formation の列レベル権限で共有する流れ。\n\n- B: 共有対象テーブルを含む Amazon Redshift datashare を作成する（Redshift のデータ共有の起点）。\n- D: その datashare をガバナンスアカウントの Lake Formation カタログに共有（登録）することで、Lake Formation が中央でカタログ化し、チームごとに異なる列サブセットのアクセス権を付与できる。\n\n不正解:\n- A（テーブルごとにビューを作る）: チームごとに別ビューを作るのは運用負荷が高く、Lake Formation の列レベルセキュリティで統一管理する方が適切。中央ガバナンス/カタログ化の要件にも合わない。\n- C（マーケ側に Redshift マネージドVPCエンドポイント + ビュー権限）: 直接の VPC エンドポイント共有は Lake Formation による中央ガバナンスを経由せず、列サブセット制御・カタログ化要件を満たさない。\n- E（datashare をマーケの Redshift Serverless ワークグループに直接共有）: Lake Formation を介さず直接共有すると中央ガバナンス/列レベル制御を通せない。要件は Lake Formation 経由の共有。\n\nポイント: Redshift datashare を Lake Formation カタログに取り込み、列レベル権限で複数チームに異なるサブセットを共有するのがデータメッシュの定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21611,7 +21611,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nGlue Studio のパイプラインにデータ品質チェックを最小実装で組み込むには、ビルトインの Evaluate Data Quality 変換を追加し、DQDL（Data Quality Definition Language）でルールセットとしきい値を定義する。AWS Glue Data Quality はマネージド機能で、パイプライン実行ごとに自動評価できる。\n\n- A（SQL クエリの変換で自作）: 品質ルールを SQL で自前実装する必要があり、ビルトイン機能より実装量が多い。\n- C（カスタム変換 + PyDeequ）: ライブラリ導入とコード実装が必要で運用・実装負荷が大きい。\n- D（カスタム変換 + Great Expectations）: 同様に外部ライブラリの導入・設定・コードが必要でマネージド機能より手間がかかる。\n\nポイント: Glue のデータ品質は Evaluate Data Quality 変換 + DQDL が最小実装。PyDeequ/Great Expectations は自前実装で負荷大。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21709,7 +21709,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, D。\n\nEKS のログとアプリのトレースを収集し、相関させて障害点を特定する。標準的な軽量構成は、ログを FluentBit、トレースを OpenTelemetry で収集し、Amazon OpenSearch でログとトレースを相関分析する。\n\n- A: FluentBit（軽量ログ転送、EKS の定番）でログ収集、OpenTelemetry（分散トレースの標準）でトレース収集。マネージド/OSS標準で開発量が少ない。\n- D: Amazon OpenSearch Service でログとトレースを取り込み、相関付けて可視化・障害点特定を行う（Trace Analytics 等）。\n\n不正解:\n- B（CloudWatch + Kinesis でトレース）: Kinesis はストリーム取り込みでありトレース収集の手段ではない。相関の枠組みも欠く。\n- C（CloudWatch + MSK でトレース）: MSK はメッセージング基盤でトレース収集用途に不適。\n- E（Glue で相関）: Glue は ETL であり、ログ/トレースのリアルタイム相関・可観測性分析には不向き。\n\nポイント: 可観測性はログ=FluentBit、トレース=OpenTelemetry、相関/可視化=OpenSearch が標準の組み合わせ。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21799,7 +21799,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nDynamoDB の変更をほぼリアルタイムで OpenSearch Service に反映する定番は、DynamoDB Streams で項目の変更をキャプチャし、AWS Lambda がそれを処理して OpenSearch のインデックスを更新するイベント駆動パターン。低レイテンシで継続反映できる。\n\n- A（Step Functions で定期エクスポート → S3 → Lambda ロード）: バッチ処理でありほぼリアルタイム要件を満たさない。\n- B（Glue ジョブで DynamoDB → OpenSearch）: Glue はバッチ ETL 向けで、継続的なほぼリアルタイム転送には不向き。\n- D（カスタム OpenSearch プラグインで同期）: そのようなネイティブプラグインは標準に存在せず、開発・運用負荷が大きい。\n\nポイント: DynamoDB → OpenSearch のニアリアルタイム連携は DynamoDB Streams + Lambda が定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -21938,7 +21938,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n分散キーに適した列がない、サイズが増大し続ける非正規化テーブルには、AUTO distribution が最適。Redshift がテーブルのサイズに応じて分散スタイル（小さいうちは ALL、大きくなると EVEN 等）を自動で選択・変更するため、メンテナンスオーバーヘッドが最も少ない。\n\n- A（ALL）: 全ノードに全行を複製。大きく増大するテーブルではストレージと書き込みコストが膨大になり不適。\n- B（EVEN）: 均等分散でスキュー回避には有効だが、サイズ変化に応じた最適化を自分で判断する必要があり、AUTO の方が運用が楽。\n- D（KEY）: 適した分散キー列がないため選べない。不適切なキーはデータスキューを招く。\n\nポイント: 良い分散キーがなく運用を任せたいなら AUTO distribution。Redshift がサイズに応じて自動最適化する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22028,7 +22028,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n「事前計算されて SPICE にマテリアライズされる」計算フィールドは、データセット（dataset）レベルで定義する必要がある。データセットの計算フィールドは取り込み時に評価され SPICE に格納されるため、精度を保った換算レートを事前計算して保持できる。\n\n- B（分析内の計算フィールド）: 分析レベルの計算フィールドはクエリ時に動的評価され、SPICE にマテリアライズされない。\n- C（ビジュアル内）: そもそもビジュアル単位での計算フィールド定義は事前計算・マテリアライズの要件を満たさない。\n- D（ダッシュボード内）: ダッシュボードは公開ビューであり計算フィールドを定義してマテリアライズする場所ではない。\n\nポイント: SPICE に事前計算して持たせたい計算フィールドは dataset レベルで定義する。analysis レベルは実行時計算。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22238,7 +22238,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n複数の異種データウェアハウス（Redshift、Teradata、BigQuery）に接続し、各ソースのエンジンで変換してから結合し、S3 の Iceberg に書き込む。Amazon Athena federated query コネクタを使えば、各ソースに接続して SQL でクエリ・結合でき、Athena は Iceberg テーブルの MERGE をサポートする。SQL のみでパイプラインを組めるため運用作業が最も少ない。\n\n- A（Glue ネイティブコネクタ + Glue 変換）: Glue でも可能だが、ジョブ開発・変換ロジックの構築が必要で、SQL ベースの Athena より運用負荷が高い。「各ソースのエンジンで変換」もフェデレーションの方が自然。\n- C（EMR + PySpark で結合）: Spark コードを書き、クラスタを運用する必要があり運用オーバーヘッドが最大級。\n- D（AppFlow で S3 に集約 → Athena で結合）: AppFlow は SaaS 連携中心で、各DWのネイティブコネクタ網羅性や「各ソースエンジンで変換」に合わず、いったん全データ移送する手間も増える。\n\nポイント: 複数の異種データソースを SQL で横断クエリ・結合し Iceberg に書くなら Athena federated query が最小運用。EMR/Glue はコード・クラスタ管理で負荷大。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22328,7 +22328,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nEKS の Pod（コンテナ）から認証情報を埋め込まずに DynamoDB へ安全にアクセスするには、IAM roles for service accounts (IRSA) を使う。Kubernetes の ServiceAccount に IAM ロール（DynamoDB アクセス権付き）を紐づけ、Pod が OIDC 経由で一時認証情報を自動取得する。長期キーの埋め込みが不要。\n\n- A（S3 に認証情報を保存して取得）: 長期認証情報の保管・配布であり安全でなく、鍵管理の運用負荷も高い。\n- C（IAM ユーザーのアクセスキーを環境変数に）: 長期アクセスキーをコンテナに埋め込む形で、要件（埋め込まない）に真っ向から反する。\n- D（アクセスキーを Kubernetes シークレットでマウント）: 依然として長期アクセスキーを扱っており、ローテーション・漏洩リスクがある。IRSA の方が安全でベストプラクティス。\n\nポイント: EKS から AWS サービスへの安全なアクセスは IRSA（ServiceAccount に IAM ロール）。長期キーの埋め込みは避ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22429,7 +22429,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n要件は「オンプレからAWSへパブリックインターネットを使わない安全な接続」と「サービスアカウントの認証情報の安全な管理」。AWS Direct Connect で専用のプライベート接続を確立し、各パイプラインのサービスアカウント認証情報を AWS Secrets Manager に保存（暗号化・ローテーション・監査可能）すれば両要件を満たす。\n\n- A（ECS 上に AMI、パブリックサブネットのセキュリティグループ）: AMI は ECS ではなく EC2 の概念で記述が混乱しており、パブリックサブネット経由はインターネット非経由要件に反する。認証情報管理も欠く。\n- C（パブリックサブネット + CIDR 制限 + S3 presigned URL）: presigned URL はパブリックインターネット経由のアクセスで要件違反。プライベート接続でもない。\n- D（Direct Connect + Secrets Manager + presigned URL）: Direct Connect と Secrets Manager は妥当だが、余計な S3 presigned URL（インターネット経由）を持ち込んでおり、要件に不要かつ非プライベート。B の方がシンプルで要件通り。\n\nポイント: オンプレ↔AWS の非インターネット・プライベート接続は Direct Connect。認証情報は Secrets Manager で集中管理。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22647,7 +22647,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, C。\n\nData Catalog を S3 のイベント駆動で増分更新する構成です。\n- A: S3 event-based の AWS Glue crawler は SQS キューを介して S3 イベントを受け取り、変更のあったオブジェクトだけをクロールして Data Catalog を増分更新できる。フルスキャンを避けられ運用負荷が小さい。\n- C: Lambda で SQS のイベントを処理し、Glue API を使って Data Catalog を直接更新するのもイベント駆動の有効な選択肢。\n\n誤答:\n- B: 時間ベースのスケジュールでクローラーを実行するのはイベント駆動ではなく、既に用意した SQS/S3 イベント通知を活かさない。更新の遅延も生じる。\n- D: 手動でのクローラー起動は自動化されておらず運用負荷が最大。イベント通知の意図に反する。\n- E: Step Functions は複数ステップのオーケストレーション向けで、単純な増分更新にはオーバースペック。Lambda 単体（C）で十分。\n\nポイント: Glue crawler は S3 event notifications（SQS 経由）を利用した増分クロールをネイティブにサポートする。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22737,7 +22737,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nデータの完全性・一貫性を検査し、不完全なら SNS へ通知する要件を、マネージドサービスの組み合わせで最小運用で実現します。\n- C: AWS Glue のデータ品質（Data Quality）機能でソースデータセットの完全性・一貫性をチェックし、不完全時に EventBridge イベントを発火。EventBridge から既存の SNS トピックへ通知するだけで済み、追加クラスター管理が不要。\n\n誤答:\n- A: 新規に Managed Workflows for Apache Airflow（MWAA）クラスターを立てるのは運用負荷が高い。\n- B: 新規 EMR クラスター＋Spark ジョブ＋Step Functions は構築・運用のオーバーヘッドが大きい。\n- D: Lambda で品質クエリを実装＋Step Functions は、品質ルールを自作・保守する必要がありマネージド度が低い。\n\nポイント: データ品質チェックは Glue Data Quality（DQDL）＋EventBridge＋SNS がサーバーレスで最小運用。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22876,7 +22876,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nRedshift 内で列単位の動的データマスキング（DDM）をロール別に適用します。\n- C: Redshift の database role ごとに dynamic data masking policy を定義し、ロールに紐付けることで、同一テーブルでもチームごとに難読化/完全表示を切り替えられる。ビューやクラスター複製を作らずに済み管理負荷が最小。\n\n誤答:\n- A: チームごとに別々のクラスターを作りデータを分割ロードするのはコスト・管理負荷が極めて高く、データ重複も発生。\n- B: 要件ごとにビューを大量に作成・維持するのは煩雑で、行レベル（クレームチームは担当クレームのみ）の要件も表現しづらい。\n- D: データを S3 に移して Lake Formation を使うのは、既に Redshift にあるデータを移行する大掛かりな変更で「最小の管理負荷」に反する。\n\nポイント: Redshift の dynamic data masking＋RBAC は、PII の難読化をロール別に強制する標準機能。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -22977,7 +22977,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nRootDiskUsed はブローカーのストレージ使用率を示すメトリクスで、トピック追加でデータ量が増えディスクが逼迫しています。\n- A: MSK broker のストレージを拡張し、さらに storage auto scaling を有効にすれば、以降は自動でボリュームが拡張されアラームの再発を防げる。\n\n誤答:\n- B: ZooKeeper ノードのストレージ拡張はメッセージデータの保存領域とは無関係で、RootDiskUsed の解決にならない。\n- C: インスタンスタイプの変更は CPU/メモリ（スループット）の問題向けで、ディスク容量は増えない。再起動も不要な中断を招く。\n- D: 「Target Volume-in-GiB」というトピック単位のパラメータは MSK に存在せず、無効な設定。\n\nポイント: MSK のディスク逼迫はブローカーストレージ拡張＋auto scaling で対処する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23067,7 +23067,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nストレージ形式（データ形式）のメタデータを含むカタログを最小労力で構築します。\n- B: AWS Glue crawler は S3 と RDS をスキャンして Data Catalog を自動構築でき、classifier（組み込み/カスタム）がデータ形式を認識してテーブル定義に形式情報を記録する。人手不要で要件を満たす。\n\n誤答:\n- A: crawler は形式も自動認識できるため、data steward による手動検査・更新は不要で労力が増える。\n- C: Amazon Macie は機密データ（PII）の検出が目的で、汎用のデータカタログ構築やストレージ形式のカタログ化には向かない。\n- D: スクリプトを自作してスキャン・分類するのは開発・保守負荷が高い。\n\nポイント: データカタログ化は Glue crawler＋classifier が最小労力。形式検出は classifier の役割。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23146,7 +23146,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n標準ルールにない独自 PII カテゴリを、既存の DataBrew プロセスを活かして検出します。\n- B: DataBrew に custom data quality rules を実装し、複数データセットに適用すれば、独自 PII カテゴリを既存ワークフロー内でスキャンできる。ツールを変えず運用負荷が最小。\n\n誤答:\n- A: 手動レビューは複数データセット横断ではスケールせず運用負荷が非常に高い。\n- C: 外部 Python スクリプトを開発し DataBrew から呼ぶのは追加の開発・保守が必要で、DataBrew の標準機能で足りる場面では過剰。\n- D: ETL 時に正規表現を実装するのは既存の DataBrew ベースのプロセスから外れ、パターン保守の手間も増える。\n\nポイント: DataBrew の custom data quality rules で独自 PII を宣言的に定義・再利用できる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23225,7 +23225,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n「完全かつ有効な場合のみ上書き」を、宣言的なデータ品質ルールで実現します。\n- B: Glue ETL パイプラインに Glue Data Quality を組み込み、DQDL で必須フィールドの欠損値や空ファイルを検査するルールを定義。品質を満たした時だけ出力を書き込むよう分岐でき、前日ファイルの上書きを制御できる。最小労力。\n\n誤答:\n- A: Lambda で欠損値を埋めるのは「有効なファイルのみ上書き」の要件に反し（欠損データを埋めて上書きしてしまう）、コードの自作・保守も必要。\n- C: 最頻値で欠損を補完するのはデータを改変してしまい、前日ファイルを使いたい要件と矛盾。\n- D: 一度書き出した CSV を Athena で後処理するのは追加ステップで、上書き前の検証にならず労力も増える。\n\nポイント: Glue Data Quality（DQDL）でパイプライン内の品質検査と条件付き出力を宣言的に実装。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23315,7 +23315,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n既存パイプラインを維持しつつ Athena コストを下げる王道は、列指向の Parquet 化＋パーティション化です。\n- A: Firehose の出力形式を Apache Parquet に変換し、YYYYMMDD プレフィックスで日付パーティション、大きめバッファで小ファイルを削減。既存データは Glue ETL で小 JSON を結合・Parquet 化し、ALTER TABLE ADD PARTITION でカタログに反映。スキャン量が減り Athena コストが下がる。\n\n誤答:\n- B: 毎日 EMR クラスターを起動するのは管理負荷・コストが増える。ALTER TABLE SET LOCATION では複数日パーティション運用に不向き。\n- C: Firehose の宛先を Kinesis データストリームにし Managed Service for Apache Flink を追加するのは、パイプラインの再構築に相当し要件（再構築しない）に反する。\n- D: Lambda による変換と Glue ETL を並行させる構成は複雑で、Firehose 標準の Parquet 変換（A）で十分。\n\nポイント: Athena コスト削減の基本は Parquet（列指向・圧縮）＋パーティション。Firehose のネイティブ Parquet 変換が最も低運用。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23405,7 +23405,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nDynamoDB で「1か月後に自動削除」「読み書きを妨げない」を最小保守で満たすのは TTL です。\n- A: DynamoDB の TTL 属性にタイムスタンプを設定すれば、期限切れ項目がバックグラウンドで自動削除される。追加コストなし、スループットも消費せず、運用不要でテーブルサイズ・コストを抑制できる。\n\n誤答:\n- B: EventBridge スケジュール＋Lambda で古いデータを削除するのは、スキャン/削除の書き込みキャパシティを消費しコード保守も必要。\n- C: DynamoDB Streams は項目変更をトリガーする仕組みで、「経過時間で削除」用途には合わず、削除ロジックを自作する必要がある。\n- D: 定期スキャン＋削除はコスト高（スキャンは高コスト）で運用負荷が大きく、進行中の操作にも影響しうる。\n\nポイント: 時間経過での自動削除は DynamoDB TTL が定石（無料・スループット非消費）。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23622,7 +23622,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は E。\n\nKMS 暗号化された S3 バケットへ別アカウントの QuickSight からアクセスするには、S3 権限に加えて KMS キーへのアクセスが必須です。\n- E: QuickSight のサービスロールがアクセスできるリソースとして KMS キーを追加する（QuickSight のセキュリティ＆権限画面で S3 と KMS キーを許可）ことで、SSE-KMS で暗号化されたオブジェクトを復号して読める。\n\n誤答:\n- A: 「既存の KMS キーで接続を暗号化する」は転送中暗号化の話で、クロスアカウント読み取りに必要な復号権限付与の手順ではない。\n- B: S3 バケットへのアクセス許可だけでは、KMS で暗号化されたデータを復号できず AccessDenied になる（この設問では E の KMS 権限が要点。B/D も関連するが投票最多は E）。\n- C: AWS RAM は VPC サブネットや一部リソースの共有用で、QuickSight から S3 へのクロスアカウントアクセスの標準手段ではない。\n- D: QuickSight サービスロールに KMS 用 IAM ポリシーを追加する考え方は近いが、QuickSight ではコンソールの権限設定で KMS キーをリソースとして許可する（E）のが正規手順。\n\nポイント: SSE-KMS の S3 をクロスアカウントで読むには、S3 バケットポリシー＋KMS キーへのアクセス許可の両方が必要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23723,7 +23723,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n小さなファイルの到着即処理・自動オーケストレーション・スケーラブルなアドホッククエリを、サーバーレスで最もコスト効率よく実現します。\n- D: AWS Glue で処理、S3 event notification＋Lambda で到着トリガーのオーケストレーション（常時稼働クラスター不要）、Athena でスケーラブルなアドホッククエリ、QuickSight でダッシュボード。すべてサーバーレスでコスト最小。\n\n誤答:\n- A: EMR＋OpenSearch への一括取り込みは常時稼働リソースでコスト高。Hive でのアドホッククエリも EMR 前提でオーバースペック。\n- B: プロビジョニング済み EMR クラスターは常時課金でコスト効率が悪い（5KB の小ファイル処理に不釣り合い）。\n- C: Redshift Spectrum はクラスター前提でアドホック用途にはコスト過大。OpenSearch Dashboards も過剰。\n\nポイント: 小規模・到着即処理・アドホック分析は Glue＋Lambda（S3イベント）＋Athena＋QuickSight のサーバーレス構成が最安。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23872,7 +23872,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n各リージョンの EFS データをデータサイエンスチームのリージョンへ集約し、単一データセットを作ります（チームのデータはそのリージョンに留まる要件も満たす）。\n- D: AWS DataSync で各リージョンの EFS からチームのリージョンの EFS へファイル転送し、同一リージョンの Lambda がそのファイルシステムをマウントして処理。マネージドで最小労力。\n\n誤答:\n- A: VPC ピアリングで他リージョンの EFS を Lambda にマウントする構成は複雑で、EFS のクロスリージョンマウントは実運用が難しくレイテンシ・信頼性の問題がある。\n- B: EFS のレプリケーションは基本フルファイルシステム単位/リージョン単位で、複数ソース→単一宛先へ任意ファイルを集約する用途には柔軟性が乏しい。\n- C: 各リージョンで処理して S3 に出力する案は、Lambda がクロスリージョンで EFS をマウントできない前提を回避しているが、Step Functions＋Lambda で単一 EFS 上のデータセットを作る要件に対し、DataSync でファイルを集約する D の方が素直で労力が小さい。\n\nポイント: リージョン間のファイル移送はマネージドの AWS DataSync が定石。EFS は同一リージョン内マウントが基本。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -23962,7 +23962,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nSSL/TLS 証明書の発行・配布・自動更新を最小運用で行うマネージドサービスは ACM です。\n- B: AWS Certificate Manager（ACM）は証明書を無料で発行し、統合サービス（ELB, CloudFront, API Gateway 等）へ自動デプロイ・自動更新する。証明書ローテーションの運用負荷が最小。\n\n誤答:\n- A: 自己管理証明書を EC2 に置くと、生成・配布・更新をすべて手作業で行う必要があり運用負荷が高い。\n- C: Secrets Manager に自動化スクリプトを自作するのは、証明書ライフサイクル管理を自前実装することになり手間が大きい。\n- D: ECS Service Connect はサービス間通信の検出・接続機能で、公開向け SSL/TLS 証明書のライフサイクル管理が目的ではない。\n\nポイント: 証明書の発行・自動更新・展開は ACM が標準（EC2 で使う場合は ELB 等の ACM 統合サービス経由で終端）。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24071,7 +24071,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, D。\n\nパイプライン全体で PII をマスキングしつつ、前処理では権限あるユーザーのみアクセスさせます。\n- A: AWS Glue DataBrew は組み込み変換で PII を検出・マスキングする ETL を低コードで実行でき、分析前のマスキングを低運用で実現。\n- D: IAM で PII データ（前処理段階の元データや復号権限）へのアクセスを制御し、許可されたユーザーのみが安全にアクセスできるようにする。\n\n誤答:\n- B: GuardDuty は脅威検知（不審なアクセスの検出）が目的で、PII のマスキングもアクセス制御の強制もしない。\n- C: Amazon Macie は PII の発見・分類には有用だが、マスキング（変換）は行わない。要件はマスキングとアクセス制御。\n- E: 独自スクリプトでマスキング・アクセス制御を自作するのは保守負荷が高く「低保守」の要件に反する。\n\nポイント: マスキングは Glue DataBrew、アクセス制御は IAM。Macie は検出、GuardDuty は脅威検知で役割が異なる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24221,7 +24221,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nEMR では 1 つの security configuration に保存時暗号化と転送時暗号化の両方を定義し、それをクラスターに適用します。\n- C: 単一の EMR security configuration に、S3 の at-rest 暗号化用の KMS キーと、in-transit 暗号化用の PEM ファイルの S3 パスを両方指定し、クラスター作成時にその設定を使う。保存時・転送時の両暗号化を満たす。\n\n誤答:\n- A: セキュリティ設定を 2 つ作って両方紐付ける、という構成は不要かつ EMR では 1 クラスターに 1 つの security configuration を使う運用が基本で誤り。\n- B: 「ローカルディスク暗号化用の KMS キー」を指定しているが、要件は S3 バケットデータの保存時暗号化であり指定箇所が誤り。\n- D: 内容は C とほぼ同じだが表現上「クラスター作成後に紐付ける」形。EMR の security configuration はクラスター作成時に指定して使うため、C の記述が正確（設問の採用解は C）。\n\nポイント: EMR の暗号化は単一の security configuration に at-rest（KMS）と in-transit（PEM/証明書）をまとめて定義し、クラスター作成時に適用する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24319,7 +24319,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, B。\n\nRedshift 内から ML 推論を呼び出し、リアルタイム推奨と将来予測の両方を実現します。\n- A: Amazon Redshift ML を使えば SQL で在庫推奨（レコメンド）を生成でき、Redshift のデータに対して直接推論できる。\n- B: Redshift から SQL で既存の SageMaker リアルタイムエンドポイントを呼び出し（Redshift ML の BYOM / remote inference）、需要予測を行える。既にデプロイ済みのモデルを活用。\n\n誤答:\n- C: 定期的なデータエクスポートでオフライン訓練をスケジュールする用途は Redshift ML の主機能ではなく、リアルタイム推奨/予測の要件に直接寄与しない。\n- D: SageMaker Autopilot は自動モデル構築ツールで、Redshift のダッシュボード作成機能ではない（用途が不一致）。\n- E: Redshift を古いレポートのファイルアーカイブ用ストレージにするのは要件（推奨・予測）と無関係。\n\nポイント: Redshift ML は SQL から ML を実行でき、ローカルモデル生成（A）と既存 SageMaker エンドポイント呼び出し（B）の両方に対応。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24409,7 +24409,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n列名変更・列削除・行スキップ・条件列作成・数値フィルタといった一連の変換を、コードを書かずに最小開発で行います。\n- D: AWS Glue DataBrew の recipe は、GUI で 250 以上の組み込み変換（列のリネーム/削除、行の除外、条件による新規列、フィルタ等）を組み合わせられ、コーディングなしで要件を満たせる。開発労力が最小。\n\n誤答:\n- A: Glue Python（PySpark/Python shell）ジョブは変換を自前でコーディングする必要があり開発労力が大きい。\n- B: crawler はスキーマ検出・カタログ化が目的で、データ変換（列削除・フィルタ等）はできない。\n- C: Glue workflow はジョブ/クローラーのオーケストレーション機構で、変換ロジックそのものは別途実装が必要。\n\nポイント: ノーコードのデータ前処理・変換は Glue DataBrew recipe が最小開発労力。crawler は変換不可、workflow はオーケストレーション用。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24499,7 +24499,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n列ごとに最適な圧縮エンコーディングを分析するには、対象テーブルに対して ANALYZE COMPRESSION コマンドを実行する。これは各列に推奨される圧縮エンコーディングを出力するため、その結果に基づいて（新テーブル作成やALTERで）エンコーディングを更新できる。\n\n- A: ANALYZE は列の統計情報（テーブル内容の分布など）を更新してクエリプランを最適化するためのコマンドで、圧縮エンコーディングの推奨は行わない。\n- C: VACUUM REINDEX はインターリーブソートキーのソート順を再分析・再構成するもので、圧縮エンコーディングとは無関係。\n- D: VACUUM RECLUSTER はソートキーに基づく再ソートを行うもので、これも圧縮エンコーディングを改善しない。\n\nポイント: Redshift の圧縮推奨は ANALYZE COMPRESSION、統計は ANALYZE、ストレージ再編成（削除領域回収・再ソート）は VACUUM、と役割が分かれる。新規ロード時は COPY による自動圧縮 (COMPUPDATE) も選択肢になる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24605,7 +24605,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n作成後30日間は即時アクセスが必要で、その後はアクセス頻度が下がるという明確なアクセスパターンがある。したがって、30日後に S3 Standard-IA へ移行するライフサイクルポリシーが最もコスト効率が良い。最初の30日は S3 Standard、以降は低コストの IA へ自動移行する。\n\n- B: S3 Intelligent-Tiering はアクセスパターンが不明・不規則な場合に有効だが、モニタリング・オートメーション料金が発生し、パターンが既知の本ケースでは Standard-IA への直接移行よりコスト効率が劣る。\n- C: S3 Glacier Deep Archive は取り出しに時間がかかる長期アーカイブ向け。30日超でも時々アクセスする要件に対し、即応性が低く不適。\n- D: 最初の30日も含め全期間 Standard-IA にすると、頻繁アクセスする最初の30日で IA の取り出し料金がかさみ、また作成30日未満のオブジェクトを IA に置くと最小保存期間(30日)の課金面でも不利。\n\nポイント: アクセスパターンが既知ならライフサイクルで明示的に階層移行、不明なら Intelligent-Tiering、という使い分けが基本。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24684,7 +24684,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nビジュアルのドリルダウンレベル（詳細度）に関係なく、リージョン単位の合計収益を一定に表示したい。QuickSight の level-aware calculation - aggregate (LAC-A) 関数は、ビジュアルの表示ディメンションとは独立に、指定した粒度（この場合リージョン）で集計を行える。これにより、下位レベルへドリルダウンしてもリージョン合計が維持される。\n\n- A: table calculation はビジュアルに表示済みの集計結果に対して後処理で計算するもので、表示レベルに依存してしまう。\n- B: 単純な計算フィールドは行レベルの演算で、指定粒度での固定集計はできない。\n- D: LAC-window (LAC-W) はウィンドウ（パーティション内の順序付き計算）向けで、running total や差分などに使う。指定グループでの集計固定には LAC-A が適切。\n\nポイント: LAC-A は「どの粒度で集計するか」を制御、LAC-W は「どの範囲で窓関数を適用するか」を制御する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24785,7 +24785,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nS3 内のオブジェクトに PII が含まれるかを、手動介入を最小限で判定するには Amazon Macie が最適。Macie の automated sensitive data discovery は機械学習とパターンマッチで S3 の機密データ（PII 等）を自動検出し、継続的に評価する。\n\n- B: CloudTrail は API 操作の監査ログであり、PUT 操作の記録はできてもオブジェクトの中身に PII があるかは判定できない。\n- C: Lambda で自作の PII 検出を実装すると開発・保守の手間が大きく、「手動介入・運用オーバーヘッド最小」に反する。\n- D: Glue Data Catalog + Athena + カスタム SQL では、PII 判定ロジックを自作する必要があり非効率。構造化データ前提で、非構造データの検出も困難。\n\nポイント: S3 の機密データ検出は Macie がマネージドの標準解。ドキュメント内テキスト抽出は Textract、テキストの PII 検出は Comprehend、と役割を区別する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -24897,7 +24897,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAthena で既存テーブルと同じスキーマを持つ「空の」コピーを作るには、CTAS に WITH NO DATA を付ける: CREATE TABLE new_table AS SELECT * FROM old_table WITH NO DATA;。これは列構造だけを複製しデータはコピーしない。\n\n- A: CREATE TABLE new_table LIKE old_table; は Hive/一部DBの構文で、Athena (Trino/Presto ベース) の CTAS ではサポートされず、この形では動作しない。\n- C: WITH NO DATA が無いため、1,000行すべてがコピーされてしまい「空のコピー」にならない。\n- D: old_cable のタイプミスに加え、WHERE 1=1 は全行を選ぶため空にならない。\n\nポイント: Athena の空テーブル複製は CTAS + WITH NO DATA が定石。データも含めたい場合は WITH NO DATA を外す。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25006,7 +25006,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, C。\n\nパーティション分割された Glue/Athena テーブルでクエリがデータを返さない典型原因は「S3 の場所のずれ」と「パーティションが未登録」の2点。\n- A: Athena/テーブル定義が正しい S3 ロケーションを指しているか確認する。場所が誤っていればデータは返らない。\n- C: MSCK REPAIR TABLE を実行して、S3 上に存在するがカタログに未登録のパーティションを追加する。新しい年のパーティションが認識されていないとクエリが空になる。\n\n- B: タイムアウト延長は結果件数（空かどうか）とは無関係。データが返らない原因はタイムアウトではない。\n- D: Athena はサーバーレスであり「再起動」という操作は存在しない。\n- E: テーブルを削除・再作成しても S3 ロケーションやパーティションの根本問題が解決していなければ同じ結果になり、過剰かつ不要なリスク。\n\nポイント: パーティション未認識には MSCK REPAIR TABLE（または ALTER TABLE ADD PARTITION / Partition Projection）を使う。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25112,7 +25112,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nEMR 上の Spark、Salesforce への API 呼び出し、Redshift へのロードといった多様なタスクを、Python でオーケストレーションし、失敗と再試行を自動処理したい。Amazon MWAA (Managed Workflows for Apache Airflow) は DAG を Python で定義し、豊富なオペレーターとリトライ機構を備えるため最適。\n\n- B: Step Functions は再試行やエラー処理に優れるが、ワークフロー定義は Amazon States Language (JSON/ASL) であり「Python でオーケストレーション」という要件に直接合致しない。\n- C: AWS Glue は Spark ベースの ETL 実行サービスで、Salesforce API 呼び出しなど任意タスクの汎用オーケストレーターではない。\n- D: EventBridge はイベントルーティング/スケジューリング用で、複数ステップの依存関係を持つワークフローのオーケストレーションと再試行制御には向かない。\n\nポイント: 「Python で書く多ステップ ETL オーケストレーション」は MWAA、ASL で状態遷移を厳密制御するなら Step Functions。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25202,7 +25202,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n複数の Lambda 関数で共有する Python コードは、Lambda レイヤーにパッケージ化して各関数にアタッチするのが定石。スクリプト変更時はレイヤーを更新（新バージョン）して関数のレイヤー参照を切り替えるだけで済み、関数コードを個別に書き換える手間が減る。\n\n- A: 実行コンテキストオブジェクトは実行環境の再利用に関する概念で、共有スクリプトのポインタ保存用途ではない。\n- C: S3 に置いて環境変数でポインタを持たせる方式は、実行時に毎回ダウンロード・ロードするロジックを各関数に実装する必要があり、レイヤーより手間とレイテンシが増える。\n- D: エイリアスは関数バージョンへの参照であり、共有コードの配布とは無関係。\n\nポイント: Lambda 間の共通ライブラリ/依存の共有は Lambda レイヤーが標準手段。最大5レイヤー、解凍後合計250MBの制限に留意。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25379,7 +25379,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nチームがアクセスする際に PII を動的に除去したい。S3 Object Lambda を使うと、S3 からのオブジェクト取得（GET）時に Lambda を介してデータを変換でき、その中で Amazon Comprehend の PII 検出を用いて PII を検出・秘匿化してから返せる。元データは1つのまま、アクセス時に加工するため運用オーバーヘッドが小さい。\n\n- A: Macie は PII を検出（発見）するサービスだが、データを「削除」する機能はない。検出専用。\n- C: Amazon Data Firehose はストリーミング配信用で、S3 に既に保存された静的データへのアクセス制御には適さない。\n- D: DataBrew で PII を別バケットに分離する方式は、パイプライン構築・二重管理が必要で運用負荷が高く、元データ側の残存管理も煩雑。\n\nポイント: 「アクセス時に加工して返す」なら S3 Object Lambda、テキストの PII 検出は Comprehend、機密データの検出（監査）は Macie。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25485,7 +25485,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nユーザー名を含めてポリシー違反（不正なオブジェクトアクセス）を検出・通知したい。AWS CloudTrail のデータイベント（S3 オブジェクトレベルイベント）を有効化すると、誰が(userIdentity)どのオブジェクトに何をしたかを記録できる。これを CloudWatch Logs に送り、メトリクスフィルター＋アラームで違反時に通知でき、通知にユーザー名を含められる。\n\n- A: AWS Config はリソース構成のコンプライアンス評価用で、個々のユーザーによるオブジェクトアクセス操作やユーザー名の特定には向かない。\n- B: CloudWatch のオブジェクトレベルメトリクスはアクセス数などの数値であり、どのユーザーが違反したか（ユーザー名）を特定できない。\n- D: S3 サーバーアクセスログはアクセス記録を残すが、ベストエフォート配信で遅延があり、IAM のユーザー ID 特定精度も CloudTrail に劣る。\n\nポイント: 「誰が」を伴う API/データアクセス監査は CloudTrail が第一選択。ニアリアルタイム通知は CloudWatch Logs メトリクスフィルター + アラームで実現。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25575,7 +25575,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nJSON 形式のフィールドを最小限の作業で Redshift に取り込むには、SUPER データ型を使うのが最適。SUPER は半構造化データ（JSON）をそのまま格納でき、PartiQL でクエリできるため、事前のフラット化処理が不要。\n\n- B: Glue で JSON をフラット化してからロードする方式は ETL ジョブの開発・保守が必要で「最小限の作業」に反する。\n- C: S3 + Athena に保存すると、Redshift の注文・製品データと結合する要件から外れ（データウェアハウスに読み込む要件を満たさない）。\n- D: Lambda でフラット化して S3 に保存する方式も開発が必要で、かつ Redshift に読み込む要件を満たさない。\n\nポイント: Redshift で JSON/半構造化データを扱うなら SUPER 型 + PartiQL が定石。事前スキーマ展開の手間を省ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25670,7 +25670,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nSalesforce からの取得は Amazon AppFlow（Salesforce 用のマネージドコネクタあり、ノーコードで連携）、MySQL からの販売記録取得と両データセットの関連付け（結合・変換）は AWS Glue が適する。これらのステップのオーケストレーション（毎晩1回、失敗処理含む）は AWS Step Functions が担う。マネージドサービスの組み合わせで運用負荷が小さい。\n\n- A: Salesforce 取得に MWAA を使うのは非効率で、AppFlow のようなマネージドコネクタを使わず自作連携が増える。\n- B: 構成はほぼ正しいが、日次バッチのオーケストレーションに MWAA (Airflow 環境の常時稼働・管理) を使うと Step Functions より運用オーバーヘッドが大きい。\n- D: Kinesis Data Streams と Managed Service for Apache Flink はリアルタイムストリーミング処理用。日次バッチ（毎晩1回、2GB/日）にはオーバースペックで不適。\n\nポイント: SaaS(Salesforce 等)からのデータ取り込みは AppFlow、バッチ ETL/結合は Glue、サーバーレスな日次オーケストレーションは Step Functions。ストリーミングでない要件に Kinesis/Flink は不適。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25760,7 +25760,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n受信データの内容（値）に応じて実行するステップを分岐させたい。Step Functions の Choice ステートは、入力の条件評価に基づいて次に遷移する状態を選択する分岐制御を提供する。\n\n- A: Parallel は複数のブランチを同時並行実行するためのステートで、条件分岐ではない。\n- C: Task は単一の作業（Lambda 呼び出しなど）を実行するステートで、分岐ロジックは持たない。\n- D: Map はコレクションの各要素に対して同じ処理を繰り返す（反復）ためのステートで、内容による分岐ではない。\n\nポイント: 条件分岐=Choice、並列=Parallel、反復=Map、単一処理=Task。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25888,7 +25888,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n要件は「エラーコード付きのエラー」「2024年開始以降」「最新10件」。A は WHERE errorcode is not null（エラーコードを持つもの）と eventtime >= '2024-01-01' の両方でフィルタし、集計後 order by ... desc limit 10 で上位10件を返す。\n\n- B: errorcode is not null の条件が無いため、エラーコードを持たないイベントも含まれてしまい「エラーコード付きのエラー」要件を満たさない。\n- C: errorcode is not null が無く、さらに order by eventname asc のため「最新/上位10件」の意図に沿わない。\n- D: order by が無いため、limit 10 で返る10件が任意の順序となり「最新の10件」を保証できない。\n\nポイント: フィルタ条件（is not null）・並べ替え（order by desc）・件数制限（limit）の3要素をすべて満たす選択肢を選ぶ。SQL の要件充足を1つずつ照合するのがコツ。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -25978,7 +25978,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nS3 に保存された注文概要から PII を運用負荷最小で検出するには Amazon Macie が最適。Macie はマネージドで S3 の機密データ（PII）を機械学習で検出でき、企業はその結果を基に秘匿化できる。\n\n- A: Textract は文書・画像からテキストや帳票データを抽出するサービスで、PII の検出・分類が主目的ではない。\n- B: S3 Storage Lens はストレージ使用状況の可視化・分析ツールで、データ内容の PII 検出はできない。\n- D: SageMaker Data Wrangler は ML 向けのデータ準備・特徴量エンジニアリングツールで、PII 検出の専用マネージド機能ではなく運用負荷も高い。\n\nポイント: S3 上の PII/機密データ検出は Macie が標準解。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26068,7 +26068,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n100人超のユーザーに対し、職務・権限・機密度に応じてオブジェクトアクセスを制御したい。Amazon Redshift の RBAC（ロールベースアクセス制御）を使うと、権限をロールにまとめてユーザーやロールに割り当てられ、多数ユーザーの権限管理をスケーラブルに行える。\n\n- B: RLS（行レベルセキュリティ）は特定の行の可視性を制御する機能で、オブジェクト全体へのアクセス権付与の管理という要件の主眼とは異なる。\n- C: CLS（列レベルセキュリティ）は特定列へのアクセス制御であり、こちらも粒度の一部にすぎず全体的なアクセス管理の解ではない。\n- D: 動的データマスキングは表示時に値をマスクする機能で、アクセス権限そのものの体系的管理ではない。\n\nポイント: 多数ユーザーの権限をスケーラブルに管理するなら RBAC。行/列単位の細かな可視制御は RLS/CLS、値の秘匿は動的データマスキングと、目的で使い分ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26158,7 +26158,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nS3 データレイク + Glue Data Catalog を使い、Glue Data Quality のスコアを DataZone ポータルに公開したい。C は、対象の Glue テーブルに対する DQDL ルールセットを作成し日次実行してスコアを生成し、DataZone プロジェクトに「AWS Glue データソース」を設定してデータ品質設定を有効化する。データソース種別が Glue で整合しており正しい。\n\n- A: 構成の前半は妥当だが、DataZone に「Amazon Redshift データソース」を設定している。実データは S3 + Glue Catalog なので Glue データソースを指定すべきで不整合。\n- B: Glue ETL ジョブ内の Evaluate Data Quality transform でルールを定義する方式。カタログ済みテーブルの品質スコアを DataZone に公開するには、テーブルに対する DQDL ルールセット（C の方式）の方が適合する。\n- D: データソースが Redshift で、かつ ETL ジョブ内定義という二重の不整合。S3/Glue 環境に合わない。\n\nポイント: DataZone にデータ品質を公開する際は、実データの管理元（Glue Data Catalog）に一致するデータソース種別を選ぶ。Glue Data Quality はカタログテーブルへの DQDL ルールセット（スケジュール実行）で評価する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26248,7 +26248,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nRedshift の監査ログ（ユーザーアクティビティログ・接続ログ・ユーザーログ）は、クラスターの Audit logging を有効にして出力先の S3 バケットを指定するのが標準的な方法。長期保存にも適し、規制準拠の要件を満たす。\n\n- B: Redshift の監査ログ出力先として EFS はサポートされない。ログ配信先は S3 のみ。\n- C: Aurora MySQL のテーブルへ直接ログを書き込む機能は Redshift のロギングには存在しない。\n- D: EBS はブロックストレージであり、Redshift 監査ログの出力先として指定できない。\n\nポイント: Redshift の監査ログは S3 配信が唯一のネイティブ手段。CloudTrail が API 操作を記録するのに対し、Audit logging はデータベース内のユーザー/接続アクティビティを記録する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26338,7 +26338,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nTeradata のような異種データベースから Redshift への移行では、まず AWS SCT でスキーマ（テーブル定義・ストアドプロシージャ等）を変換・適用し、その後 AWS DMS でデータを移行するのが標準パターン。運用負荷が最小。\n\n- A: DMS Schema Conversion は主に一部のソースに対応するが、Teradata のような複雑な異種DWHのスキーマ変換は SCT が適切。\n- C: DMS 単体に「自動スキーマ変換」で Teradata → Redshift を完全に行う機能はなく、スキーマ変換工程が別途必要。\n- D: 手動でのスキーマエクスポート/適用は運用負荷が高く、要件（最小の運用負荷）に反する。\n\nポイント: 異種DB移行はSCT(スキーマ)+DMS(データ)の組み合わせが定石。同種移行ならDMS単体で足りることが多い。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26450,7 +26450,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n毎日数時間の利用で予測不能なスパイクがある、という断続的かつ変動の大きいワークロードには Amazon Redshift Serverless が最適。使用量に応じて自動でスケールし、アイドル時は課金されないためコスト効率が高く、キャパシティ管理も不要で運用オーバーヘッドが小さい。QuickSight のダイレクトクエリにも高速応答できる。\n\n- B: Athena は S3 上のデータをアドホッククエリするサービスで、中央データウェアハウスへの統合という要件や QuickSight ダイレクトクエリでの一貫した高速応答には Redshift ほど適さない。\n- C: プロビジョンドクラスターは常時稼働分の課金が発生し、数時間/日＋不規則スパイクの用途では割高で、スケーリングの運用負荷も増える。\n- D: Aurora PostgreSQL はOLTP向けで、大規模分析クエリのデータウェアハウス用途には不向き。\n\nポイント: 断続的・予測困難な分析ワークロード=Redshift Serverless、常時高負荷=プロビジョンド、が使い分けの基本。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26611,7 +26611,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nホットシャード（特定シャードへのデータ偏り）によるスロットリングの根本原因は、パーティションキーの偏りでデータが均等に分散されていないこと。ランダム（または高カーディネーティ）なパーティションキーを使えばレコードが全シャードに均等分散され、ホットシャードが解消される。\n\n- B: シャード数を増やしても、偏ったパーティションキーのままでは特定シャードへの集中は解消されず、ホットシャード問題は残る（かつコスト増）。\n- C: プロデューサーのレコード数を制限するとスループット自体を下げてしまい、問題の解決ではなく機能低下。\n- D: レコードサイズの縮小は分散の偏りとは無関係で、ホットシャード問題を解決しない。\n\nポイント: Kinesis Data Streams のシャード分散はパーティションキーのハッシュで決まる。偏りが原因のホットシャードは、まずキー設計の見直しで対処する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26690,7 +26690,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\nStep Functions の実行状態変化（成功/失敗）は EventBridge にイベントとして発行される。EventBridge ルールでステートマシンの状態変化を捕捉し、ターゲットに SNS トピックを設定すればリアルタイム通知が実現でき、運用負荷も小さい。\n\n- A: S3 に通知を保存し S3 イベント通知を使う方法は迂遠で、ステップの成功/失敗をリアルタイムに追う設計として不適切。\n- B: Lambda で S3 に通知を書く方式も同様に複雑で、リアルタイム性・監視網羅性に欠ける。\n- C: CloudTrail は API 呼び出しの監査ログ用で、ステートマシンの実行成否のリアルタイムトリガーには向かない（遅延があり、直接 SNS へは送れない）。\n\nポイント: サーバーレス/ステートマシンのイベント駆動監視は EventBridge + SNS が定石。CloudTrail は監査、EventBridge はイベント駆動という役割の違いを押さえる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26791,7 +26791,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n他の Lambda 関数の呼び出し増加でこの関数がスロットリングされるのは、アカウントの同時実行数（concurrency）を共有しているため。Reserved concurrency を設定すると、その関数専用に同時実行枠が確保され（かつ他関数がその枠を使えなくなる）、他関数の影響を受けずに動作する。追加コストがかからずコスト効率が高い。\n\n- A: DynamoDB の RCU 増加はスループット向上策で、Lambda のスロットリング（同時実行枯渇）の原因を解決しない。\n- B: Provisioned concurrency はコールドスタート対策で事前起動分に課金が発生し、隔離目的にはコスト過剰。Reserved が適切。\n- D: タイムアウト/メモリ増加は実行時間や処理能力の調整であり、同時実行の競合によるスロットリングを解決しない。\n\nポイント: Reserved concurrency=専用枠の確保（他関数からの隔離、無料）、Provisioned concurrency=事前ウォーム（有料、レイテンシ対策）。役割の違いが問われる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26870,7 +26870,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nJSONファイルを S3 に置き、Lake Formation でカタログ化して Lake Formation permissions で列/行/テーブルレベルの細かいアクセス制御を行えば、非PIIは全員、PIIは限定グループ、というアクセス要件を最小の運用オーバーヘッドで実現できる。データを分割・複製する必要がない。\n\n- A: Glue でPII/非PIIにファイル分割し別バケットに保存する方式は、ETL処理やバケット管理が増え運用負荷が高い。\n- B: Macie はPII検出には有効だが、アクセス権を付与する機能はなく、クエリ/分析基盤としての細粒度アクセス制御を単体で満たせない。\n- D: RDS PostgreSQL 2台への分割ロードはデータ複製・DB運用の負荷が高く、データレイク的なクエリ用途に対して過剰。\n\nポイント: S3 データレイクの列/行レベルのきめ細かいアクセス制御は Lake Formation permissions が最適解。Macie は検出、Lake Formation は認可。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -26989,7 +26989,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A, C。\n\nKMS で暗号化された Redshift クラスターをクロスリージョンでスナップショットコピーするには、まずデスティネーションリージョンで snapshot copy grant を作成し、ソースリージョンで cross-region snapshot copy を有効化して、その grant 名を指定する。\n\n選択肢の記述に沿うと、正答の組み合わせは:\n- A: KMSキーを作成しスナップショットコピーグラントを設定する。\n- C: ソースリージョンでスナップショットコピーを有効にし、コピーグラント名を指定する。\n\n各誤答:\n- B: デスティネーションリージョンで作成したグラント名を指定、という記述だが、有効化はソースリージョン側の操作で grant を参照する構成であり、この設問の採用解では C が選ばれている。\n- D: KMSキー/グラントをデスティネーションリージョンで設定、は暗号化スナップショットコピーの設定順序として採用解では選ばれていない。\n- E: Multi-AZ 化はクロスリージョンDRのスナップショットコピー要件とは無関係。\n\nポイント: 暗号化Redshiftのクロスリージョンスナップショットには snapshot copy grant + KMS キーの設定が必須。単なる無効化スナップショットと異なり、暗号化キーの取り扱いが追加要件になる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27068,7 +27068,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n既存データ（フルロード）と今後の変更（CDC）の両方を、RDS 上の複数DBとオンプレの SQL Server Enterprise から S3（Parquet）へ複製する要件は、AWS DMS 単体で満たせる。DMS はフルロード＋CDC を1つのタスクで扱え、ターゲットに S3（Parquet 出力可）を指定できるため、最もコスト効率が良い。\n\n- A: Glue ジョブ2本で既存/変更を扱う方式は、継続的なCDCの実装が複雑でコスト・運用負荷が高い。\n- B: 既存をDMS、変更をGlueと分ける必要はなく、DMSが両方を担えるため冗長。\n- D: 既存をGlue、変更をKinesis Data Streamsとするのは構成が複雑で、DBのCDCソースとして過剰な作り込みになる。\n\nポイント: DBの既存データ+継続的変更(CDC)の複製は DMS のフルロード+CDC が定番。ターゲットに S3(Parquet) を選べる点も押さえる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27147,7 +27147,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n注文日で日付範囲を絞るクエリを週1回実行する用途では、注文日でデータをパーティション分割し Athena でクエリするのが最もコスト効率が良い。パーティションプルーニングにより該当パーティションのみスキャンされ、データ量が増えても性能が劣化しにくく、Athena はスキャン量課金で低頻度クエリに好適。\n\n- B: Redshift はプロビジョン/常時稼働のコストがかかり、週1回のクエリには割高。\n- C: ロード日でのパーティションは、クエリ条件（注文日）と一致せずプルーニングが効かない。EMR も常時運用や設定の負荷が高い。\n- D: ロード日パーティションは注文日クエリに不適合。Aurora はOLTP向けで大規模分析クエリに不向き。\n\nポイント: パーティションキーはクエリのフィルタ列に合わせるのが鉄則。低頻度アドホック分析+S3はAthena+適切なパーティション設計が最安。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27264,7 +27264,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nprimary データセットの city/state 列の値が reference データセットの対応列に存在（一致）するかを検証するのは、DQDL の ReferentialIntegrity ルール。構文は ReferentialIntegrity \"city,state\" \"reference.{ref_city,ref_state}\" = 1.0 で、= 1.0 は100%一致（完全参照整合性）を意味する。\n\n- A: DatasetMatch は2つのデータセットの行の一致度を測るルールで、指定列が参照側に存在するかの参照整合性チェックとは目的が異なる。\n- C: DatasetMatch である点に加え、しきい値 100 は不正（DQDLの一致率は0.0〜1.0で表す）。\n- D: ReferentialIntegrity 系だがしきい値 100 が不正。完全一致は = 1.0 と書く。\n\nポイント: DQDL の一致率しきい値は 0.0〜1.0（割合）で指定する。参照先に値が存在するかの検証は ReferentialIntegrity、データセット全体の突合は DatasetMatch。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27343,7 +27343,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n継続更新されるオンプレPostgreSQLをRedshiftへ、可能な限り速く反映するには、AWS DMS のフルロードタスクで既存データを移行しつつ、CDC（変更データキャプチャ）を有効にして継続的に変更を伝播する。ほぼリアルタイムで同期でき、要件を満たす。\n\n- A: pg_dump + 毎晩のcronアップロードはバッチ（日次）で、リアルタイム性がなく「可能な限り速く」に反する。\n- C: pg_dump→S3→COPY は一回限りのロードで継続同期がなく、常時更新に追随できない。\n- D: DMS で毎晩フルロードは日次バッチかつ全件再ロードで非効率。CDC の方が速く軽い。\n\nポイント: 継続的なDB同期はDMSのフルロード+CDCが定番。dumpベースやフルロード反復はバッチであり低頻度・一回限りの移行向け。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27422,7 +27422,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nCSV/JSON をデータアナリストが SQL でクエリできるようにする最もコスト効率の良い方法は、データを S3 に置き、Glue クローラーで Data Catalog にカタログ化し、Athena でクエリすること。サーバー不要のスキャン量課金で、ワークグループにデータ使用量のしきい値（クエリのデータスキャン上限）を設けてコスト管理もできる。\n\n- A: RDS MySQL クラスター＋Glue変換ロードは常時稼働コストとETL負荷が高く割高。\n- B: DataBrew はデータ準備（クレンジング）ツールで、SQLによるアドホック分析基盤の提供という要件には合致しない。\n- D: QuickSight SPICE はBI可視化用で、アナリストが自由に SQL クエリを書く用途には不適。\n\nポイント: S3上の半構造化データをSQLで分析=Glueカタログ+Athenaが最安の定石。ワークグループでスキャン量制御=コストガードレール。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27501,7 +27501,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n毎秒10万トランザクション超・数十億行の Aurora の運用DBに影響を与えず、低レイテンシで Redshift 側の Campaigns と結合するには、Aurora zero-ETL integration with Amazon Redshift が最適。ETLパイプライン不要でほぼリアルタイムに Orders を Redshift へ複製でき、運用負荷が最小。Redshift 側でマテリアライズドビューを作り結合できる。\n\n- A: DMS Serverless での複製は動作するが、zero-ETL に比べ設定・運用負荷が高く、レプリケーション管理が必要。\n- C: Glue でのバッチ複製はニアリアルタイム性に欠け、ジョブ運用の負荷が高い。\n- D: フェデレーテッドクエリは Aurora に直接クエリを投げるため、運用中の高負荷Auroraに負荷を与え「影響を与えない」要件に反する。\n\nポイント: OLTP(Aurora)→分析(Redshift)のニアリアルタイム連携で運用負荷最小=zero-ETL integration。federated queryはソースDBに負荷がかかる点に注意。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27618,7 +27618,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nS3 への新規ファイル到着をトリガーに Lambda で COPY を実行する構成では、S3 イベント通知を SQS キューへ送り、Lambda がそのキューを処理するようにすると、確実にイベントをバッファリングでき、失敗時の再試行やスロットリング吸収も可能で堅牢。要件を満たす。\n\n- A: S3→EventBridge→Lambda も動作するが、この設問の採用解では、キューによるバッファリングでより信頼性の高い B が選ばれている（EventBridge直結はバッファがなく、急なバーストや失敗時に取りこぼしのリスク）。\n- C: DMS で S3 オブジェクトを Kinesis へストリーミングする構成は不自然で過剰。DMSはDB移行用途であり、S3→Kinesisのこの用途には合わない。\n- D: EventBridge→SQS→Lambda も機能はするが、S3 は直接 SQS に通知を送れるため、EventBridge を挟むのは冗長。よりシンプルな B が適切。\n\nポイント: S3イベント駆動処理でバッファ/再試行性を持たせるならS3イベント通知→SQS→Lambdaがシンプルかつ堅牢。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27697,7 +27697,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n「The S3 location ... is not registered.」というエラーは、その S3 の場所が Lake Formation にデータロケーションとして登録されていないことが原因。Lake Formation で該当 S3 ロケーションを Register すれば、Lake Formation 管理下でクローラーがアクセスできるようになりエラーが解消する。\n\n- A: IAMポリシーの付与は通常のS3権限の話で、Lake Formation 管理下の「未登録」エラーの直接原因ではない。Lake Formation ではデータアクセスをLF権限で管理する。\n- C: Glueデータベースの作成/権限はカタログ側の話で、S3ロケーション未登録のエラーとは別。\n- D: バケットポリシーでのクロスアカウント許可は、この単一アカウント内の未登録エラーとは無関係。\n\nポイント: Lake Formation でデータを管理する場合、S3ロケーションの「登録(Register)」が前提。登録がないとGlueクローラー/クエリが not registered で失敗する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27776,7 +27776,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n40〜60分ごとに到着する小さなCSVファイル（100〜300KB）をRedshiftへロードする最小運用オーバーヘッドの構成は、S3アップロードをトリガーに EventBridge で Lambda を起動し、Lambda が Redshift へ COPY コマンドを実行する方式。サーバーレスで低頻度・小容量に適し、シンプル。\n\n- B: Data Firehose は高スループットのストリーミング取り込み向けで、S3の既存ファイルをソースにLambdaで取得しRedshiftへ、という構成は不自然かつ過剰。\n- C: Redshift Spectrum は S3 を外部テーブルとしてクエリする仕組みで、「Redshiftにアップロード（ロード）」する要件を満たさない。\n- D: DMS は継続的なDB移行/CDC向けで、S3のCSVファイルを定期的にRedshiftへロードする用途には過剰かつ不適。\n\nポイント: S3への不定期ファイル到着→Redshiftロードは EventBridge(S3トリガー)+Lambda(COPY) がサーバーレスで最軽量。Firehoseはストリーム、Spectrumはクエリ、DMSはDB移行という役割の違いを押さえる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27855,7 +27855,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n1TB・1000万件の履歴データに対し毎日最大1万件の変更（upsert）を最短時間で反映するには、レコード単位のupsert/deleteをネイティブ対応するApache Hudiが最適です。Hudiで作成したベーステーブルなら、全データを再読込・全書換えせずに変更分だけをmerge/updateでき、実行時間が大幅に短縮されます。\n\n- A: EMR上のSparkで履歴・変更を両方DataFrameに読み込むと、毎回1TB全件をロード・全書換えする必要があり実行時間が長い。またSpark DataFrameは不変でupdateメソッドによる部分更新の仕組みを持たない。\n- B: Glue Pythonシェル+Pandasは単一ノードのメモリ上処理で、1TB/1000万件をPandas DataFrameに載せられず破綻する。大規模データに不適。\n- C: GlueのSparkでも履歴全件を毎回ロード・全書換えするため実行時間が長く、Spark DataFrameにupdate的な部分更新機能はない。\n\n使い分け: S3上でupsert/incremental updateが必要なテーブルは、Hudi/Iceberg/Delta等のトランザクショナルなテーブル形式を使う。EMR/Glue+素のSparkは全件変換向きで、少量差分の頻繁な反映には不向き。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -27945,7 +27945,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n同一セキュリティグループ内のGlueジョブとRDSが通信するには、そのセキュリティグループ自身をソースにした自己参照ルールが必要です。全TCPポートを許可し、ソースをそのセキュリティグループ自体に設定することで、SG内リソース間のTCP通信（RDSのポート含む）が復旧します。GlueがVPC内リソースに接続する際もこの自己参照ルールが要件です。\n\n- B: 「UDPポートでTCPトラフィック」という記述が不整合。RDS/GlueのDB接続はTCPであり、UDPでは通らない。またIPアドレス指定は同一SG構成のベストプラクティスに反する。\n- C: セキュリティグループのソースにDNS名は指定できない（IPまたはSG IDのみ）。設定不可。\n- D: SSHルールのソースをIPに置換するだけではDBポートの通信が許可されず、Glue⇔RDSのDB接続は復旧しない。SGはステートフルなので手動アウトバウンドルール追加も不要。\n\n使い分け: VPC内でGlueジョブが同一SGのリソースへ接続する場合は、SGの自己参照インバウンドルールが定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28024,7 +28024,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAWS Glue Data Quality（ETLジョブ内のデータ品質評価変換）を使えば、DQDL（Data Quality Definition Language）で宣言的にルールを定義でき、運用オーバーヘッドが最小です。null非許容列にはIsCompleteルール、結合時の参照整合性にはReferentialIntegrityルールを使い、データがストレージに書き込まれる前に品質チェックできます。\n\n- A: SageMaker Data WranglerのData Quality and Insightsレポートは探索的分析向けで、パイプラインに組み込む継続的な取り込み前チェックには手間がかかり運用負荷が高い。\n- C: SQL変換を自前で記述してnull検出・参照整合性を実装するのは、Glue Data Qualityの組込みルールに比べカスタムコードの保守が必要で運用オーバーヘッドが大きい。\n- D: Data Wrangler＋カスタムPython変換は完全に自前実装となり最も運用負荷が高い。\n\n使い分け: パイプラインの取り込み前データ品質検証はAWS Glue Data Quality（DQDL/IsComplete/ReferentialIntegrity）が第一選択。Data WranglerはML前処理・探索向け。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28103,7 +28103,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n変換はGlue ETL、品質チェックはAWS Glue Data Qualityの推奨ルール（自動生成されるレコメンデーション）で行い、結果をRDS for MySQLにロードする構成が、追加サービスを増やさず最もコスト効率が良い選択です。処理済みデータをリレーショナルDBに格納しクエリするという要件にも合致します。\n\n- B/D: Glue Studio＋DataBrewの併用はツールが重複しコスト増。DataBrewは品質チェック専用ツールではなく、Data Qualityの推奨ルール適用より非効率。\n- C: 処理済みデータをS3に格納するだけで、要件の「リレーショナルデータベースに格納しクエリする」を満たさない。\n\n使い分け: Glueパイプライン内の品質検証はGlue Data Qualityが最適。DataBrewはノーコードのデータ準備向けで、ETLと品質を一体で扱うならGlue ETL+Data Qualityがシンプルかつ低コスト。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28182,7 +28182,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nRedshiftのデータを週1回、外部（ベンダーの）S3バケットへ出力するには、RedshiftのUNLOADコマンドが適切です。Glueジョブでスケジュール実行し、UNLOADで指定データをS3へ書き出す構成が要件を満たします。\n\n- A: LambdaでRedshiftの「COPY」を使うとある点が誤り。COPYはS3→Redshiftのロード用で、Redshift→S3のエクスポートには使えない（正しくはUNLOAD）。\n- C: Redshiftのデータ共有はRedshift間でのライブ共有機能で、宛先にS3バケットを設定してデータをコピーする仕組みではない。\n- D: Redshift SpectrumはS3上の外部データをRedshiftから読むための機能で、Redshiftからデータを書き出す（双方向クエリ）用途には使えない。\n\n使い分け: Redshift→S3のデータ書き出しはUNLOAD、S3→Redshiftの取り込みはCOPY。Redshiftデータ共有はクラスタ間共有、SpectrumはS3のクエリ。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28261,7 +28261,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n同一Redshiftクラスター内で部門ごとにアクセスを分離しつつ、1つのクエリで両部門のオブジェクトを横断参照したい場合は、部門ごとにスキーマを分け、スキーマレベルでGRANTするのが最も運用負荷が小さい方法です。同一データベース内のスキーマなので、権限があればクロススキーマの結合クエリを容易に実行できます。\n\n- B: 部門ごとに別データベースに分けると、単一クエリでの横断参照が難しくなり（クロスDBクエリの制約）要件に反する。\n- C: 命名規則ベースの権限管理はRedshiftのネイティブな権限モデルでなく、テーブル単位の管理が煩雑で運用負荷が高い。\n- D: RedshiftのテーブルレベルアクセスはDB内のGRANT/スキーマで管理するのが標準。IAMのIDベースポリシーでテーブル/ビュー単位の権限は付与できず不適。\n\n使い分け: Redshift内のオブジェクトアクセス制御はスキーマ＋GRANTが基本。横断クエリが必要なら別DB化は避け、スキーマ分割で対応する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28378,7 +28378,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nRedshiftのストリーミングインジェスト機能を使い、MSKクラスターにマッピングする外部スキーマを作成し、それを参照するマテリアライズドビューでMSKトピックのデータを直接消費するのが、低レイテンシかつ運用負荷最小の方法です。S3などの中間ストレージが不要なためストレージコストも最適化できます。\n\n- B: GlueストリーミングでいったんS3に落としSpectrumで読む構成は、中間S3ストレージが発生しレイテンシも増える。コンポーネントも多く運用負荷が高い。\n- C: 外部スキーマを参照する「通常テーブル」を作るという構成が誤り。ストリーミングインジェストではマテリアライズドビューがデータ消費の仕組みであり、この選択肢は正しく機能しない。\n- D: S3バケット＋Lambdaで取り込む構成は中間ストレージとイベント処理の実装が必要で、運用オーバーヘッドとレイテンシが増える。\n\n使い分け: MSK/Kinesis→Redshiftの低遅延取り込みはRedshiftストリーミングインジェスト（外部スキーマ+マテリアライズドビュー）が最適。中間S3+Spectrum/Lambdaは不要な複雑さを招く。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28457,7 +28457,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n問題は「多数の小さいファイル（44,000個・各200-300KB）」による性能劣化（small files problem）です。GlueのDynamicFrameのグループ化オプション（groupFiles/groupSize）を使うと、多数の小ファイルをまとめて読み込みタスク数を削減でき、ワーカーを増強せずに性能を改善できるため最もコスト効率が良いです。\n\n- A: より大きなワーカータイプに変えるのはコスト増で、根本原因である小ファイル過多の非効率は解消しない。\n- B: ワーカー数を増やすのもコスト増で、小ファイル問題自体は改善せず費用対効果が悪い。\n- D: 自動スケーリングもリソースを増やす方向で、小ファイルによるオーバーヘッドの根本解決にならずコスト効率で劣る。\n\n使い分け: Glueで大量の小ファイルを扱う際はDynamicFrameのファイルグループ化でI/O効率を上げるのが定石。リソース増強は最後の手段。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28536,7 +28536,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n複数SaaSアプリからのデータ抽出は、Amazon AppFlowが最適です。多数のSaaSコネクタを標準提供し、ノーコードでフローを作成・スケジュールしてS3へ抽出できます。Glueでカタログ化し、QuickSightでデータソース/データセットを作れば、コードを書かず運用効率が最も高い構成になります。\n\n- A: APIを叩くLambdaを自前実装・保守する必要があり、SaaS連携のコードとエラー処理の運用負荷が高い。\n- B: Athena Lambdaコネクタでのフェデレーテッドクエリはコネクタ実装・維持が必要で、複数SaaSを分析用に集約する用途としては運用負荷が高い。\n- D: Excel手動エクスポート/アップロードは自動化されず、繰り返し運用に非現実的。\n\n使い分け: SaaS→AWSのデータ取り込みはAppFlow（ノーコード・多数コネクタ・スケジュール可）が第一選択。カスタムAPI/Lambda実装は保守負荷が高い。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28615,7 +28615,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nアプリログをほぼリアルタイムでクエリ・可視化する要件には、CloudWatch Logs→OpenSearch Serviceのサブスクリプションフィルターでストリーミングし、OpenSearch Dashboardsでクエリ/可視化する構成が適します。ログのニアリアルタイム検索・分析・ダッシュボードはOpenSearchの主要ユースケースです。\n\n- A: Lambdaでロググループを定期的にS3へエクスポートしAthenaでクエリする方式はバッチ的で、ほぼリアルタイム要件を満たさない。\n- C: CloudWatch Logs Anomaly Detectionは異常検知向けで、任意のクエリ実行や本格的な可視化ダッシュボードの用途には不十分。\n- D: QuickSight/SPICEにアプリコードから直接ログを送る設計は現実的でなく、ニアリアルタイムのログ検索基盤にならない。\n\n使い分け: ニアリアルタイムのログ検索・可視化はOpenSearch Service（+サブスクリプションフィルター）。S3+Athenaはバッチ分析、QuickSightはBIダッシュボード向け。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28694,7 +28694,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nGlue ETLでCSVをApache Parquet（列指向・圧縮）に変換すれば、ストレージ容量が削減され保存コストが下がり、Athena等のクエリでも列プルーニングと圧縮によりスキャン量が減って取得コストも最適化されます。日々の分析を続けながらコストを下げる要件に最適です。\n\n- A: S3 Glacier Flexible Retrievalはアーカイブ向けで取り出しに時間・コストがかかり、日々分析するアクティブデータには不適。\n- B: Auroraへ移行すると分析用途で運用コストが増え、コスト最適化の方向と逆。\n- D: EMRで並列処理してもデータ形式はCSVのままで、保存・取得コストの最適化にはつながらない。\n\n使い分け: 分析対象データの保存/クエリコスト最適化はParquet等の列指向・圧縮形式への変換が基本。Glacierはアーカイブ、Aurora/EMRはコスト削減目的には合わない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28784,7 +28784,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nデータがパーティション化されているので、クエリにパーティションフィルター（パーティションキーでのWHERE絞り込み）を適用すれば、Athenaは該当パーティションのみをスキャンし、読み取るデータ量を最小化できます。これがスキャン量削減・性能改善に直接効きます。\n\n- B: クローラーの実行頻度を上げてもカタログのメタデータ鮮度が上がるだけで、1クエリあたりのスキャン量は減らない。\n- C: 既にパーティション化済み。ネストしたディレクトリ構造への整理だけではパーティションプルーニングは働かず、フィルタ適用が必要。\n- D: Sparkのインメモリキャッシュは繰り返しアクセス時の高速化であって、Athenaが最初にS3からスキャンするデータ量の削減にはならない。\n\n使い分け: Athena/Sparkでのスキャン量削減はパーティションプルーニング（パーティションキーでのフィルタ）が第一。列指向形式やパーティション設計と併用する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28890,7 +28890,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nQuickSightがRedshiftにクエリするには、Redshift側のセキュリティグループで、QuickSightのセキュリティグループをソースとしてRedshiftポートへのインバウンドを許可すればよいです。SGをソースにする方式はクロスアカウント/クロスVPCでも、ネットワーク到達性がある前提で最小限の設定で接続を確立できます。\n\n- B: QuickSightの可視化にElastic IPを割り当てる概念は存在せず、しかも許可すべきはQuickSight→Redshift方向のRedshift側インバウンド。設定対象も誤り。\n- C: CIDRを一致させる必要はなく、むしろVPCピアリングではCIDR重複は不可。前提が誤り。\n- D: ゲートウェイエンドポイントはS3/DynamoDB専用で、Redshiftへの接続には使えない。\n\n使い分け: QuickSight→Redshift接続はRedshiftのSGインバウンドでQuickSightのSG/IP範囲を許可するのが基本。ゲートウェイエンドポイントはS3/DynamoDB限定。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -28969,7 +28969,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nファイルは不定期に到着するため、到着イベントで即時起動するのが最速です。S3のPutObjectをCloudTrailに記録し、EventBridgeルールでそのイベントを捕捉してGlueワークフローのイベントベーストリガーを起動する構成なら、アップロード直後に処理を開始でき最短で処理できます。\n\n- A: 15分ごとのポーリングは最大15分の遅延が生じ、「できるだけ速く」に反する。\n- C: スケジュール/cronによる定期チェックも同様にポーリング遅延が発生し即時性に欠ける。\n- D: DMSはDBやストリーム移行のサービスで、S3ファイル到着をトリガーにGlueワークフローを起動する用途には不適。ターゲットにGlueワークフローも指定できない。\n\n使い分け: S3到着即時のトリガーはEventBridge（S3イベント/CloudTrail経由）でイベント駆動起動。ポーリングやスケジュールは遅延が出るため即時性要件には不向き。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29048,7 +29048,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n短時間（1分未満）・低頻度・イベント駆動という条件にはサーバーレスが最適です。S3イベント通知でLambdaを起動して変換し、結果をSNSトピックに発行、エンジニアのメールをサブスクライブすれば、常時稼働リソース不要で運用効率が最も高くなります。\n\n- A: EC2をポーリングさせる方式は常時稼働コストと管理が発生し、イベント駆動でないため非効率。\n- B: ECSタスクでのポーリングも同様に管理負荷・待機コストがあり、S3イベント駆動のサーバーレスに劣る。\n- D: 1分未満のジョブにEMRクラスターは過剰でコスト・運用負荷が大きい。\n\n使い分け: 短時間・低頻度・S3トリガーの処理はLambda+S3イベント通知が定石。通知はSNS+メールサブスクリプション。EC2/ECS/EMRは常時稼働や大規模処理向け。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29138,7 +29138,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nGlueジョブの状態変化はEventBridgeでネイティブに捕捉できます。ジョブ状態がFAILEDになったときにトリガーされるEventBridgeルールを作り、ターゲットにSNS標準トピックを設定、チームのメールをサブスクライブすればメール通知が実現します。メール通知の順序保証は不要なので標準トピックで十分です。\n\n- A: SNS FIFOトピックはメール配信をサブスクライブできず（FIFOはSQS/Lambda等向け）、またLambdaを介す必要もなくEventBridgeで直接検知できるため過剰。\n- C: SQSキューにメールアカウントはサブスクライブできない。AWS Configはリソース設定変更の評価用でGlobジョブ失敗の検知に不適。\n- D: SQSはメール配信のサブスクリプションに使えない。通知メールにはSNSが必要。\n\n使い分け: Glueジョブ失敗の通知はEventBridge（ジョブ状態変化イベント）+SNS標準トピック+メールサブスクリプション。FIFOはメール不可、SQSはメール配信不可、Configは設定監査用。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29228,7 +29228,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nGlueジョブ失敗イベントに一致するEventBridgeルールを作り、それに基づくCloudWatchメトリクスを定義してCloudWatchアラームで閾値監視し、SNSトピックに通知する構成が、Lambda等のカスタムコードを持たずマネージドサービスだけで完結するため運用オーバーヘッドが最小です。\n\n- A: EventBridge→Lambda→SNSはLambda関数の実装・保守が必要で、CloudWatchアラーム経由のCに比べ運用負荷が高い。\n- B: ログ生成イベントをEventBridgeで拾い、Lambdaでログを解析して失敗判定する方式は複雑でカスタムコードの保守負荷が大きく、失敗検知として遠回り。\n- D: ロググループの新規ログ作成イベントでSNS通知すると、失敗以外のログでも発火してしまい、ジョブ失敗を正しく絞り込めない。\n\n使い分け: Glueジョブ失敗監視はEventBridgeで状態イベントを捕捉→CloudWatchメトリクス/アラーム→SNSがローコードで最小運用。ログ解析Lambdaは実装・保守負荷が高い。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29334,7 +29334,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nAWS Glue の Apache Spark ジョブの各ステージ・タスク・executor 単位の詳細メトリクス(実行時間、シャッフル、メモリ使用など)を確認するには、Spark UI(Spark web UI)を使う。Glue ジョブで Spark UI ログを S3 に出力する設定を有効にすると、ジョブ実行ごとのステージ詳細を可視化して失敗原因を切り分けられる。\n\n- B: CloudWatch には Glue のジョブレベル/ドライバー・executor 集約メトリクス(CPU、メモリ、シャッフルなど)は出るが、Spark の「個々のステージ」単位の詳細までは提供しない。ステージ内訳の調査には不十分。\n- C: CloudTrail は API 呼び出しの監査ログ(誰がいつジョブを起動したか等)であり、ジョブ内部のステージメトリクスは記録しない。\n- D: Glue job run insights はエラーの根本原因分析や実行時例外の把握には有用だが、質問が求める「全ステージのメトリクス」を網羅的に見る用途は Spark UI が適切。\n\nポイント: Spark 実行の内部(ステージ/タスク)= Spark UI、AWS リソース使用の集約 = CloudWatch、API 監査 = CloudTrail、と用途を使い分ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29424,7 +29424,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nAthena の partition projection(パーティションプロジェクション)を使うと、Glue Data Catalog にパーティションを列挙せず、テーブルプロパティで定義した範囲(例: 5年前〜現在の date 型 range)からパーティションを計算で導出する。これにより大量パーティションでの「パーティション検出/メタデータ取得」のオーバーヘッドが消え、クエリが高速化し、パーティション管理も自動化される。\n\n- A: 毎日 Lambda で手動パーティション追加は運用負荷が高く、自動化の要件は満たすがパフォーマンス改善の本質(大量パーティションのメタデータ処理)を解決しない。\n- C: 日次→月次に粒度を下げるとパーティション数は減るが、既存の日付フィルタの効きが悪くなりスキャン量が増える可能性があり、要件(自動管理+性能)に合わない。\n- D: Athena はサーバーレスでユーザーがコンピュートを割り当てる仕組みではない。性能はデータレイアウト(パーティション/形式)で決まる。\n\nポイント: 大量パーティション×時系列データでは partition projection が定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29511,7 +29511,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C、D。\n\nAWS Glue で Apache Iceberg を使うには、ジョブパラメータ --datalake-formats に iceberg を指定する(C)。これで Glue が Iceberg 対応の依存関係・Spark 設定を組み込む。100 TB 規模のデータ処理では --enable-auto-scaling を true にして(D)ワーカー数を負荷に応じて自動スケールさせ、大規模処理を効率化・コスト最適化する。\n\n- A: --conf という「名前のキーを作成」する表現が誤り。--conf は Spark 設定を渡すためのパラメータであり、Iceberg 有効化は --datalake-formats で行う。\n- B: --extra-jars で特定バージョンの jar を手動指定するのは、Glue がネイティブ対応する Iceberg では通常不要で冗長。datalake-formats の指定方法の記述も不正確。\n- E: --job-bookmark(ジョブブックマーク)は処理済みデータの再処理防止機能で、Iceberg ジョブ実行の必須要件ではない。\n\nポイント: Glue の data lake フレームワーク(Iceberg/Hudi/Delta)有効化は --datalake-formats。大規模には auto scaling。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29617,7 +29617,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n「No space left on device」は、大きな DataFrame 同士の sort-merge join でシャッフル時にローカルディスク(スピル領域)が枯渇するために発生する。ジョブ内の sort-merge join を broadcast join に変換すれば、片方のテーブルを各 executor にブロードキャストしてシャッフル自体を回避でき、ディスク不足エラーを解消できる。\n\n- A: AWS Glue Spark shuffle manager(S3 へのシャッフルスピル)はディスク圧を緩和しうるが、まずシャッフルを不要にする broadcast join の方が根本解決に近い(本問の採用解)。\n- B: Glue はサーバーレスで、ユーザーが任意の EBS ボリュームをアタッチしてワーカーのローカルディスクを拡張する運用はできない。\n- D: DynamicFrame への変換は Glue 固有機能を使うだけで、シャッフルによるディスク枯渇の根本原因は解消しない。\n\nポイント: 大テーブル同士の join でディスク/シャッフルが問題なら、可能なら broadcast 化。無理ならワーカータイプ拡張や shuffle manager を検討。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29696,7 +29696,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n各検証レベルが前段に依存する逐次ワークフローで、全体を最長24時間で処理する要件には AWS Step Functions の Standard workflow が適する。Standard は最長1年の実行が可能で、外部の検証処理の完了を待つ Wait for Callback(waitForTaskToken)パターンを実装でき、実行状態を厳密に管理できる。コストは状態遷移課金で、長時間・低頻度に向く。\n\n- B: Express workflow は最大5分(実行時間上限)で、24時間の実行に対応できない。Callback で長時間待機する用途にも不向き。\n- C: Lambda(最大15分)+ EventBridge で逐次依存・24時間待機を自前実装するのは複雑で状態管理の負荷が大きい。\n- D: MWAA(Airflow)は要件を満たせるが、環境が常時稼働しコストと運用オーバーヘッドが高く、コスト最小化に反する。\n\nポイント: 長時間・逐次・コールバック待ち = Step Functions Standard。短時間・高スループット = Express。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29755,7 +29755,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nエラーメッセージ「The specified subnet does not have enough free addresses to satisfy the request」がそのまま示すとおり、指定サブネットの空き IP アドレス不足が根本原因。多数の Glue ジョブがほぼ同時に起動すると、各ジョブ(特に G.1X の複数ワーカー)が VPC 内 ENI に IP を要求するため、サブネットの利用可能 IP を一時的に使い切り、後続ジョブが失敗する。より大きな CIDR のサブネットを用意するか、複数サブネットに分散させて解消する。\n\n- B: G.1X ワーカータイプ自体がサブネットにアクセスできないのが原因ではない(他ジョブは成功している)。\n- C: Glue が「サブネットに IP を追加する」ような IAM 権限は存在せず、IAM 権限不足なら別のエラーになる。\n- D: エラーは VPC 全体ではなく特定サブネットの空き IP 不足を指している。問題はサブネット単位。\n\nポイント: 多数の Glue/ENI ベースのジョブを同時実行する際はサブネットの IP 空き容量を十分に確保する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29834,7 +29834,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nEMR の Spark アプリケーションを cluster モードでデプロイすると、Spark driver は YARN の最初のコンテナ(Application Master)内で実行される。よって driver の stderr は「最初の YARN コンテナのログ」に相当する。EMR の persistent application UI(Spark UI)に接続すれば、この最初の YARN コンテナのログから driver の標準エラーを確認できる。\n\n- A: YARN ResourceManager のログはリソース割り当て/スケジューリングの情報で、Spark driver の stderr そのものではない。\n- C: EMR ステップログは step の起動/標準出力の概要で、cluster モードの driver stderr の詳細調査には不十分な場合が多い。\n- D: Spark history server は完了アプリのメトリクス/イベント履歴を見るもので、driver の stderr ログ本文の確認先ではない。\n\nポイント: cluster モードでは driver=最初の YARN コンテナ。persistent app UI(Spark UI)からコンテナログを追う。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -29924,7 +29924,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nCSV→Parquet 変換など複数の Glue 処理を、2つの並列処理→完了後に3つ目の関連処理、という依存関係でオーケストレーションするなら AWS Glue workflows が最小の運用オーバーヘッドで実現できる。Glue のトリガーで並列開始と条件付き(前段完了時)起動を定義でき、追加サービス不要で完結する。15 GiB メモリ相当のワーカー(例: G.1X 以上)で並列処理も可能。\n\n- A: MWAA(Airflow)を追加すると常時稼働環境の運用・コストが増え、Glue 内で完結できる本要件には過剰。\n- B: EMR + SQS + Lambda は構成要素が多く、変換とオーケストレーションを別々に組む分だけ運用負荷が高い。\n- D: Step Functions + 複数 Lambda は可能だが、Lambda の実行時間/メモリ制約や複数コンポーネント管理があり、Glue ネイティブの workflow より運用オーバーヘッドが大きい。\n\nポイント: Glue ジョブ群の依存関係付きオーケストレーションは Glue workflows が最小オーバーヘッド。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30003,7 +30003,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nクロスアカウントで Kinesis Data Streams を読むには、ストリーム側(Account A)にリソースベースポリシーを付与し、Account B の Lambda 実行ロールに読み取り(GetRecords、SubscribeToShard 等、拡張ファンアウト含む)を許可する。呼び出し側ロールの権限とリソース側ポリシーの双方が必要で、リソースベースポリシーが本問の追加手順。\n\n- A/C: SCP(サービスコントロールポリシー)は権限の上限(ガードレール)を定めるもので、権限を「付与」する仕組みではない。アクセス許可の手段として不適切。\n- D: リソースベースポリシーはリソース(データストリーム)側に付けるものであり、Lambda 関数側に「ストリームへの読み取りを許可するリソースベースポリシー」を付けるのは対象が誤り(Lambda のリソースポリシーは関数の呼び出し許可用)。\n\nポイント: クロスアカウントアクセス = 呼び出し側 IAM ロール権限 + リソース側リソースベースポリシーの両輪。SCP は許可付与には使わない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30120,7 +30120,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n年・月・日でパーティション分割し、スキーマ変更にも追随しつつ新規パーティションを自動的に扱うなら、Glue テーブルに partition projection(パーティションプロジェクション)プロパティを設定するのが最適。日付範囲を定義しておけば毎日のパーティションを自動計算で認識でき、パーティションの明示的な追加作業が不要になる。\n\n- A: Glue DataBrew はデータ準備/クレンジングのビジュアルツールで、テーブルのパーティション作成の手段ではない。\n- B: Lambda で毎日パーティションを作る方法は動くが、コードとスケジューリングの運用が必要で自動化の手間が大きい。\n- D: Glue crawler の定期実行でもパーティションは検出できるが、実行のたびにデータ走査が発生しコスト/遅延がある。partition projection の方が管理・性能面で優れる(本問の採用解)。\n\nポイント: 規則的な日付パーティション+自動化なら partition projection が定石。不規則/未知のスキーマ発見には crawler。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30179,7 +30179,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nオンプレのアプリから「完全マネージド型の取り込みサービス」へ自動転送し、Athena で分析でき、誤削除から保護する要件を最小オーバーヘッドで満たすのは、Amazon Kinesis Agent → Amazon Data Firehose → バージョニング有効の S3 バケット、の構成。Firehose は完全マネージドの取り込みサービスで S3 へ自動配信し、Athena は S3 上のデータを直接クエリできる。S3 バージョニングにより誤削除時も以前のバージョンを復元でき、データを保護できる。\n\n- A: DataSync→EFS は Athena の直接クエリ対象に向かず、AWS Backup 併用で構成が増える。Athena は S3 が前提。\n- C: Glue→RDS はリレーショナル DB への取り込みで、Athena(S3 分析)の要件と合わず、Firehose のような取り込みサービスでもない。\n- D: 自己管理型 Kafka + MSK はマネージド取り込みサービスの要件に反し、運用負荷が高い。\n\nポイント: 取り込み=Firehose(フルマネージド)、分析=Athena/S3、誤削除保護=S3 versioning。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30245,7 +30245,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B、D。\n\nAthena での分析クエリを最短化するには、列指向(columnar)フォーマットである Apache Parquet または ORC を使い、スキーマ変更の追跡には AWS Glue Data Catalog を使う。列指向形式は必要列のみスキャンし圧縮効率も高く、Athena のスキャン量・クエリ時間・コストを削減する。Glue Data Catalog はスキーマ/パーティションを一元管理し Athena とネイティブ連携する。\n\n- A: Avro は行指向でスキーマ進化には強いが、分析クエリの列スキャン最適化には Parquet/ORC ほど向かない。\n- C: Parquet は良いが、スキーマ追跡を外部 DynamoDB で自作するのは Athena と統合されず運用負荷が高い。カタログは Glue Data Catalog を使うべき。\n- E: ORC は良いが、スキーマ定義を S3 上の別ファイルで自己管理するのは Athena と自動連携せず非効率。\n\nポイント: 分析最短化=列指向(Parquet/ORC)+ Glue Data Catalog によるスキーマ/パーティション管理。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30304,7 +30304,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n日々追記される単一の大きな CSV に対し Athena で「特定期間」をクエリする要件を最もコスト効率よく満たすのは、S3 上でプレフィックスによりパーティション分割し、SALE_DATE で日次パーティションを作成、Glue でカタログ化してパーティションを認識させ、Athena クエリをパーティションフィルタ利用に更新する方法。パーティションプルーニングにより期間指定クエリのスキャン量(=Athena 課金)を大幅に削減できる。\n\n- A: JSON への変換は行指向のままでスキャン削減にならず、毎日の Glue ジョブでコストが増える。\n- C: EMR クラスターの起動は Athena(サーバーレス)より運用・コストが高く、断続的クエリには過剰。\n- D: RDS へロードして索引を張る構成は、DB 運用コストと取り込みパイプラインの負荷が大きく、S3+Athena 分析要件に対しコスト効率が悪い。\n\nポイント: Athena のコストはスキャン量。日付でパーティション分割してプルーニングを効かせるのが最重要。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30363,7 +30363,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nAmazon Redshift テーブルのスキーマ変更を追跡してデータカタログを維持するには、JDBC 接続で Redshift に対する AWS Glue crawler を毎日スケジュール実行し、AWS Glue Data Catalog を更新する構成が適切。crawler が定期的にスキーマを再取得してカタログへ反映し、変更を追跡できる。\n\n- B: DataSync はストレージ間のデータ転送サービスで、テーブルメタデータをカタログにログ記録する用途に使うものではない。\n- C: AWS SCT はスキーマ変換(移行支援)ツールで、継続的なメタデータのカタログ化には向かない。Hive メタストア+EventBridge 手組みも過剰。\n- D: crawler は使うが、更新先を(Glue Data Catalog ではなく)自前の Apache Hive メタストアにするのは AWS ネイティブなカタログ運用として不適切(本問は Glue Data Catalog を使う A が正)。\n\nポイント: Redshift 等の JDBC ソースのスキーマ追跡は、JDBC 接続の Glue crawler → Glue Data Catalog が定石。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30453,7 +30453,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n複数の S3 バケットにまたがるデータレイクから PII を検出する用途では、Amazon Macie をマネージドデータ識別子(managed data identifiers)付きで使うのが最小の運用オーバーヘッドで実現できる。Macie は S3 を継続的にスキャンし、氏名・住所・クレジットカード番号などの PII を機械学習/パターンで自動検出する専用マネージドサービス。\n\n- A: Glue の Detect PII 変換はパターン指定が必要で ETL パイプラインへの組み込みが前提。データレイク全体の継続検出には運用負荷が高い。\n- C: Lambda + カスタム正規表現は、パターン作成・保守・スケーリングをすべて自作する必要があり運用負荷が大きい。\n- D: Athena + SQL によるカスタム照合も検出ロジックを自前で書く必要があり、専用検出サービスより手間が大きい。\n\n注意: 独自(プロプライエタリ)形式のデータは、Macie が直接解釈できない場合もあるが、選択肢の中では最も運用負荷が低く要件に沿う(本問の採用解は B)。\n\nポイント: S3 の機密データ/PII 検出のマネージド専用サービスは Amazon Macie。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30512,7 +30512,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n「指定年数を超えたアイテムを毎日削除」を最小の設定作業で行うには、DynamoDB の TTL(Time To Live)を有効にし、アプリ側で各アイテムに有効期限(epoch 秒)の TTL 属性を設定する。TTL は DynamoDB がバックグラウンドで期限切れアイテムを自動削除するマネージド機能で、追加のスケジューラや削除処理コードが不要。\n\n- B: EventBridge cron + Lambda で走査・削除する方式は、スキャン/削除ロジックの実装と RCU/WCU 消費・運用負荷が発生し設定作業が多い。\n- C: DynamoDB に S3 のような「ライフサイクル構成」は存在せず、この機能は使えない。\n- D: DynamoDB Streams + Lambda はデータ変更イベントに反応する仕組みで、「経過年数での定期削除」には設計が合わず、削除判定を自作する必要がある。\n\nポイント: DynamoDB の期限切れ自動削除はネイティブの TTL が最小設定・低コスト。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30598,7 +30598,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n合併に伴いテーブル結合(Table S1: 100億件、Table S2: 9億件)を含むようクエリを修正した後に遅くなった場合、Amazon Redshift のパフォーマンス改善策として、Redshift のクエリ最適化(オプティマイザ)による推奨を確認し、実装すべき最適化をレビュー・選択する(D)。統計情報や分散/ソート設計の見直しを通じて、大規模結合時のデータ再分散(broadcast/redistribution)コストを削減する。\n\n- A: KEY 分散スタイルで低カーディナリティ列を結合キーにするとデータが偏り(スキュー)、一部ノードに集中して性能が悪化する。\n- B: KEY 分散+高カーディナリティ列は理論上は均等分散に寄与するが、本問の採用解はオプティマイザ/アドバイザによる最適化の適用であり、単一の分散変更のみでは不十分。\n- C: 100億件の S1 に EVEN、9億件の S2 に ALL(全ノード複製)は、9億件を全ノードに複製するとストレージ/複製コストが過大で非現実的。ALL は小さなディメンション向け。\n- E: Redshift Advisor は有用な推奨を出すが、本問では D(クエリ最適化のレビューと適用)が採用解。\n\nポイント: 大規模結合の遅延は、分散スタイル/ソートキー設計と最新の統計情報(ANALYZE)、そして Redshift の最適化推奨の適用で対処する。低カーディナリティの KEY 分散はスキューを招くので避ける。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30723,7 +30723,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A・B。\n\nApache Iceberg + Parquet でストリーミング書き込みを続けると、小さなファイルが大量に生成され(小ファイル問題)、統計情報も陳腐化してクエリが遅くなる。これに対し:\n- A: 列レベルの統計情報(column-level statistics)を定期生成すると、クエリエンジンがより良いプランを立て、不要データのスキップ(pruning)が効いてパフォーマンスが向上する。\n- B: 自動コンパクション(compaction)で小ファイルを適切なサイズにまとめると、ファイルオープン数とメタデータ処理が減り高速化する。AWS Glue Data Catalog は Iceberg テーブルの自動コンパクションをマネージドで提供する。\n\n誤答:\n- C: Data Catalog に「インデックスの自動最適化」という機能は存在しない。\n- D: copy-on-write は書き込み時に全ファイルを書き換える方式で、更新の多いストリーミングでは逆に書き込みコストが増え、読み取り高速化の直接策ではない(読み取り最適化は merge-on-read 側の話)。\n- E: ビューはクエリの抽象化であり、基盤の小ファイル問題や統計の陳腐化を解消せずパフォーマンスは改善しない。\n\nポイント: Iceberg の性能維持は「compaction + 統計情報の鮮度」が肝。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30802,7 +30802,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n要件は「フルマネージド・サーバーレス」「Spark を継続使用」「最小限の手動介入でオーケストレーション/自動化」。AWS Glue はサーバーレスの Apache Spark 実行環境であり、Glue ワークフローでジョブの依存関係とトリガーによる自動実行を組める。EMR 上の Spark 処理も Glue ジョブに移行すれば、単一のサーバーレス基盤に統一できる。\n\n誤答:\n- B: Step Functions + EventBridge はオーケストレーションできるが、Amazon EMR を残す構成であり EMR はクラスター管理を伴い「フルマネージド・サーバーレス」に反する。\n- C: Lambda はイベント駆動の軽量処理向けで Spark の大規模変換を実行できず(15分/メモリ制限)、要件の Spark 継続に合わない。\n- D: Amazon MWAA は強力なオーケストレーターだが Airflow 環境(ワーカー/スケジューラ容量)の管理が必要で、純粋なサーバーレスとは言い難く、この設問の意図(Glue へ統一)に対して過剰。\n\nポイント: 「サーバーレス Spark」= Glue、依存オーケストレーションは Glue ワークフロー/Step Functions。EMR はクラスター運用が残る点が分岐。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30861,7 +30861,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。(コミュニティ投票データは無し。要件「毎日 S3→Redshift 取り込み+Redshift 内の機密データを平文で見せない+運用オーバーヘッド最小」から D が最適)\n\nD: データを Redshift にロードした後、Redshift の Dynamic Data Masking(動的データマスキング)とマスキングポリシーで機密列をマスクする。ロード時に別処理を挟まず、閲覧時にポリシーで平文表示を防げるため運用が最も軽い。取り込みは COPY / スケジュールで自動化できる。\n\n誤答:\n- A: Macie は S3 上の機密データ検出はできるが、検出結果を Redshift 内で匿名化する処理までは行わず、追加の Glue ジョブ設計が必要でオーバーヘッドが大きい。\n- B: Macie の結果に基づき Glue で列を匿名化する構成は、Macie ジョブ + Glue パイプラインの二段構えで運用が重い。\n- C: Glue ジョブ内で機密検出・匿名化を自作するのは実装/保守コストが高い。\n\nポイント: Redshift 内で「平文で見せない」なら Dynamic Data Masking が最小運用。Macie は検出専用で匿名化はしない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30940,7 +30940,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n要件は「大量ストリーミングをリアルタイムに集約・フィルタ+S3 保存+運用効率最高」。Amazon Data Firehose は組み込みの変換/フィルタ機能を持ち、バッファリングして S3 へ直接配信できるフルマネージドサービスで、管理対象が最も少ない。\n\n誤答:\n- A: Kinesis Data Streams(プロビジョンド)+ Lambda はシャード管理やスケーリング、Lambda 実装/運用が必要で効率が劣る。\n- C: Kinesis Data Streams + Managed Service for Apache Flink は複雑・ステートフルな処理に向くが、Flink アプリの開発運用が必要でオーバーヘッドが高い(この設問は単純な集約/フィルタ)。\n- D: Firehose + Lambda のカスタム変換は Lambda コードの保守が発生し、組み込み機能で足りるなら不要。\n\nポイント: 単純変換+S3 配信を最小運用で = Firehose の組み込み変換。複雑・ステートフルな処理が要る場合のみ Flink。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -30999,7 +30999,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。(投票データ無し。症状「レコードの欠落・古さ」の最も妥当な原因は A)\n\nAthena/Glue は Glue Data Catalog のパーティションメタデータを見てクエリする。新しいパーティション(新規 S3 プレフィックス)がカタログに登録・更新されていないと、そのデータがクエリ対象から漏れ、結果が欠落・陳腐化する。クローラー未実行や MSCK REPAIR/partition projection 未設定が典型原因。\n\n誤答:\n- B: 誤った IAM ロールならアクセス拒否エラーになり、部分的に「古い/欠落」データが返るという症状にはならない。\n- C: S3 バージョニングは以前のオブジェクト版の保持機能で、分析での最新データ反映とは無関係。\n- D: ジョブスケジュールの重複はリソース競合や重複処理を招き得るが、レコード欠落/陳腐化の直接原因としては A ほど妥当でない。\n\nポイント: Athena で「新データが見えない」= カタログのパーティションが最新でないことをまず疑う。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31089,7 +31089,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\n要件は「当日トランザクション(RDS for MySQL)と過去分析(Redshift)を結合+データ転送コストと保守を最小+ほぼリアルタイム」。Amazon Redshift Federated Query を使えば、RDS for MySQL のデータを移動せずに直接クエリし、既存 Redshift テーブルと1本の SQL で結合できる。データを複製しないため転送コストとパイプライン保守が最小で、当日データを常に最新のまま参照できる。\n\n誤答:\n- A: DMS で継続レプリケーションするとデータの重複コピーと DMS タスクの運用が発生し、転送コスト/保守が増える。\n- C: Glue で1時間ごとに増分コピーはパイプライン保守が必要で「ほぼリアルタイム」も1時間遅延。\n- D: 定期 S3 エクスポート + COPY はバッチ的でリアルタイム性に欠け、ETL 保守も増える。\n\nポイント: 少量の運用系データを移動せず結合するなら Federated Query。大量/高頻度クエリでは複製の方が有利になる点は使い分け。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31148,7 +31148,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。(投票データ無し。要件「全テーブルを分析用に S3 で利用可能+customer_complaints だけ REST API でほぼリアルタイム処理+最もコスト効率」から C が最適)\n\nC: 1つ目の DMS タスクで customer_complaints を Kinesis Data Streams にストリーミングし、Lambda が消費して REST API を呼ぶ(ほぼリアルタイム)。2つ目の DMS タスクで(全テーブルを)S3 に送り、将来の分析に備える。Oracle からの CDC を DMS で分岐でき、常時稼働の DB 追加が不要でコスト効率が良い。\n\n誤答:\n- A: RDS for PostgreSQL への移行は常時稼働の DB インスタンス費用が発生し、全テーブルの分析用 S3 提供という要件も満たさない。\n- B: Redshift への複製は常時稼働クラスター費用がかかりコスト効率が悪く、near-real-time もクエリポーリング前提で弱い。\n- D: リードレプリカも常時稼働の追加インスタンス費用がかかり、全テーブルの分析用ストア(S3)も用意されない。\n\nポイント: DMS は複数ターゲット(Kinesis/S3 等)へタスクを分けられる。ストリーム処理は Kinesis + Lambda、分析保管は S3。常時 DB を増やすとコスト増。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31207,7 +31207,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。(投票データ無し。要件「複数の変換/クレンジング+営業時間内にパートナーが SQL 実行+最もコスト効率」から B が最適)\n\nB: 営業時間後の変換に AWS Glue Flex Job(実行が急がない処理向けの割安な実行クラス)を使い、クエリ提供先を Amazon Redshift Serverless にする。パートナーが SQL を投げる営業時間帯だけ課金される Serverless は、常時稼働のプロビジョンドより変動負荷でコスト効率が高い。\n\n誤答:\n- A: プロビジョンド EMR クラスターは起動維持コストが高く、割安な Glue Flex より不利。\n- C: Lambda は大規模な複数変換/クレンジングに不向き(実行時間・メモリ制限)、かつ Redshift プロビジョンドで常時課金。\n- D: 変換は Glue Flex で良いが、Redshift プロビジョンドクラスターは常時課金でコスト効率が Serverless に劣る。\n\nポイント: 遅延許容のバッチ変換は Glue Flex、断続的クエリ提供は Redshift Serverless が低コスト。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31286,7 +31286,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n要件は「各ステージでスクリプト実行+フルマネージド・サーバーレスのみ」。AWS Glue はサーバーレスで、各ジョブがスクリプト(Python/Spark)を実行でき、Glue ワークフローで多段パイプラインを構成・スケジュール実行できる。管理するインフラが無い。\n\n誤答:\n- B: Amazon MWAA は各ステップでスクリプトを実行できるが、Airflow 環境の容量(ワーカー等)管理を伴い純粋なサーバーレスとは言えない。\n- C: EC2 にスクリプトを置く構成はサーバー管理が必要でサーバーレスに反する。\n- D: Glue DataBrew はノーコードのビジュアルデータ準備ツールで、任意スクリプトの実行という要件(各ステージでスクリプト)に合わない。\n\nポイント: 「サーバーレスで各段スクリプト実行+オーケストレーション」= Glue ジョブ + Glue ワークフロー。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31392,7 +31392,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。(コミュニティ投票は B:67%/A:33% と割れるが、採用正解は A)\n\n要件は「0–60日=即時アクセス、61–180日=低頻度、181–365日=1時間以内にアクセス、365日で削除」。A は S3 Intelligent-Tiering でアクセスパターンに応じて自動的にティア移動させ(取り出し料金なしで頻度に追随)、365日超で失効させる。ライフサイクルの手動設計・監視が不要で運用が軽い点が採用理由。\n\n誤答:\n- B: 固定日数の S3 Lifecycle は要件を素直に表現するが、181日以降を Glacier Flexible Retrieval に置くと標準取り出しが数時間かかり「1時間以内」を満たしにくい(採用正解が A の根拠)。\n- C: S3 Inventory + S3 Batch Operations で手動ティア移動はジョブ運用が重く、Lifecycle で自動化できる処理をわざわざ手作業化している。\n- D: Inventory を Lambda で解析してオブジェクト移動する構成は実装/保守が最も重い。\n\n注意: 実務では小オブジェクト(2KB–5MB)が1日1000万個だと Intelligent-Tiering のオブジェクト単位モニタリング料金が無視できず、B を選ぶ設計も合理的。本問の採用正解は A。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31471,7 +31471,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\n要件は「マルチテナント EMR で、特定チームだけが DynamoDB の機密データにアクセス」。EMR ステップの runtime roles(ランタイムロール)を設定すると、各ジョブ実行に IAM ロールを紐付けてジョブ単位でアクセス権限を分離できる。機密 DynamoDB へアクセスできるロールを当該チームのステップにのみ割り当てれば、他チームは到達できない。\n\n誤答:\n- B: Lake Formation は S3 データレイク/Glue Data Catalog の権限管理が対象で、DynamoDB のアクセス制御には使えない。\n- C: EMRFS の IAM ロールは S3(EMR File System)アクセスのマッピング用で、DynamoDB アクセスの分離には該当しない。\n- D: DynamoDB のリソースベースポリシーはテーブルへのアクセス主体(プリンシパル)を制御できるが、共有 EMR クラスター上の「どのチームのジョブか」を区別する粒度を提供できず、ジョブ単位分離には runtime roles が適切。\n\nポイント: マルチテナント EMR のジョブ単位権限分離 = EMR steps の runtime roles。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31577,7 +31577,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。(投票は C:67%/B:33% と割れるが採用正解は B)\n\n1時間に数千の 50–100KB 小ファイルが増える典型的な小ファイル問題。Iceberg のクエリ性能を継続的に維持するにはコンパクションが必須で、B は AWS Glue Data Catalog のマネージドな自動コンパクション機能を使い、増え続けるファイルを継続的にまとめて性能低下を防ぐ。ユーザーがジョブを組む必要がなく、カタログ側で自動実行される点が採用理由(頻度の記載は詳細差)。\n\n誤答:\n- A: 日次バッチのコンパクションは1日分の小ファイルが日中に蓄積して性能が劣化し、「増え続けても低下しない」保証にならない。クローラー運用も追加。\n- C: Iceberg テーブルプロパティによる自動コンパクションは概念上妥当(コミュニティはこれを支持)だが、本問の採用正解はマネージド機能を明示する B。\n- D: パーティション戦略とクローラー実行は小ファイルの統合(コンパクション)を行わないため、根本原因を解決しない。\n\nポイント: Iceberg の小ファイル問題は compaction で解消。Glue Data Catalog がマネージド自動コンパクションを提供する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31636,7 +31636,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。(投票データ無し。要件「Kinesis から取得、保存前に複雑でステートフルな変換、ほぼリアルタイム、運用最小」から B が最適)\n\nB: Amazon Managed Service for Apache Flink は、ウィンドウ集約や状態を持つストリーム処理(ステートフル)にネイティブ対応するマネージドサービスで、Kinesis Data Streams を入力にほぼリアルタイム変換し S3 へ出力できる。状態管理やスケーリングをサービス側が担い運用が軽い。\n\n誤答:\n- A: Glue ETL(スケジュール)はバッチ寄りで、ほぼリアルタイムのストリーム・ステートフル処理に不向き。\n- C: Lambda はステートレスが基本で、複雑なステートフル処理(ウィンドウ・状態保持)を自前実装すると複雑化し運用増。\n- D: EMR 上の Spark はスケジュール実行のクラスター管理が必要で運用オーバーヘッドが大きい。\n\nポイント: ストリームのステートフル処理 = Managed Service for Apache Flink。Lambda はステートレス、Glue/EMR はバッチ寄り。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31695,7 +31695,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。(投票データ無し。要件「VPC 内のワークロードのみ S3 にアクセス許可」から A が最適)\n\nA: S3 バケットポリシーに、VPC(または VPC エンドポイント)由来のリクエストのみ許可する条件(aws:sourceVpc / aws:sourceVpce)を設定する。S3 Gateway VPC エンドポイント経由のアクセスに限定でき、要件を満たす標準手法。\n\n誤答:\n- B: セキュリティグループは EC2/ENI 等に付けるもので、S3 バケットには適用できない。\n- C: IAM ポリシーはプリンシパルの権限制御であり、バケット側で送信元 VPC を強制するには条件付きバケットポリシー(または VPC エンドポイントポリシー)が適切。単独の IAM ポリシーでは全アクセス経路を確実に絞れない。\n- D: ネットワーク ACL はサブネットのトラフィック制御で、S3(パブリックサービスのエンドポイント)へのアクセス主体を絞る手段ではない。\n\nポイント: S3 を VPC 内限定にする = VPC エンドポイント + バケットポリシーの aws:sourceVpce/aws:sourceVpc 条件。SG/NACL は S3 に効かない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31801,7 +31801,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。(投票は A:67%/D:33%、採用正解は A)\n\n要件は「CSV から属性のサブセットをスキャン、最短のクエリ実行時間」。A は列指向の ORC に変換し、日付でパーティション化、列指向のプッシュダウンフィルターを使う。列指向はサブセット列のみ読むためスキャン量が激減し、さらに「複数の ORC ファイル」に分けることで Athena(Presto)の並列処理が効き実行時間が最短化する。\n\n誤答:\n- B: JSON は行指向でスキャン量が減らず、列サブセット読取りの高速化に不向き。\n- C: Avro も行指向フォーマットで、列サブセットのスキャン最適化には向かない。\n- D: Parquet(列指向)+パーティション+述語プッシュダウンは有効だが、「日ごとに1つのファイル」にまとめると並列度が下がり、複数ファイル化した A に対して実行時間で劣る。\n\nポイント: Athena 高速化の定石 = 列指向(Parquet/ORC)+パーティション+プッシュダウン。加えてファイルを適度に分割して並列度を確保することが最短化の鍵。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31907,7 +31907,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。(投票は A:67%/B:33%、採用正解は B)\n\n要件は「-50〜150°C の範囲外検出+タイムスタンプ欠落検出を、最小限のコーディングで自動フラグ」。B は AWS Glue Data Quality のルール(DQDL)で完全性(タイムスタンプの Completeness/IsComplete)や数値範囲(ColumnValues 制約)を宣言的に定義でき、さらに ML ベースの異常検知で温度異常も自動検出できる。Glue ジョブに組み込めるためパイプライン内で自動フラグ付けが可能。\n\n誤答:\n- A: Glue DataBrew でも完全性ルールと範囲検証は定義できるが、既存 Glue ジョブのパイプライン(予知保全モデル生成)に組み込む自動チェックとしては Glue Data Quality の方が適合し、ML 異常検知も併用できる(採用正解が B の根拠)。\n- C: Lambda で範囲検証を自作し、Data Catalog でタイムスタンプ検証する構成はコーディングが多く「最小限」に反する。\n- D: カスタム品質オペレーター + SageMaker Data Wrangler は実装が重く、ノーコード/宣言的の要件に合わない。\n\nポイント: Glue パイプライン内の宣言的データ品質チェックは Glue Data Quality(DQDL)。範囲・完全性ルールに加え ML 異常検知が使える。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -31997,7 +31997,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n要件は「Web/モバイルからクリックストリームをリアルタイム収集し分析用に保存+継続保守が最小」。C は Amazon Kinesis Data Streams でストリーミング収集し、Amazon Data Firehose で S3 へ配信する。いずれもマネージド/(Firehose は)サーバーレスでスケールし、運用負荷が小さい定番のクリックストリーム基盤。\n\n誤答:\n- A: Firehose から Redshift への構成は可能だが、プロビジョンド Redshift クラスターの運用/常時課金が発生し保守が増え、分析ストアの柔軟性も S3 より劣る。\n- B: EC2 エージェント + AWS CLI のバッチアップロードはサーバー管理とスクリプト保守が必要で保守が最大、リアルタイムでもない。\n- D: Amazon MSK + RDS はブローカー/DB の運用が重く、クリックストリームの大量書き込みに RDS は不向き。\n\nポイント: マネージドなクリックストリーム収集→S3 = Kinesis Data Streams + Firehose。Firehose はサーバーレスで保守最小。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32087,7 +32087,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nIoT センサーデータを無期限に保持しつつ Redshift で分析する要件では、ストレージは安価な Amazon S3、クエリは Redshift Spectrum で S3 を直接参照する構成が最もコスト効率に優れます。さらに Apache Parquet 形式は列指向・圧縮済みのため、スキャン量が減り Spectrum のクエリ料金とパフォーマンスの両方で JSON より有利です。\n\n- A: JSON かつ auto-copy で Redshift に取り込むと、全データを Redshift ストレージに保持することになり無期限保持のコストが高い。JSON は非圧縮・行指向でスキャンも非効率。\n- C: Spectrum を使う点は正しいが JSON 形式のため、Parquet に比べスキャン量が増えクエリコストが高くなる。\n- D: Parquet は良いが auto-copy で Redshift に取り込むため、無期限データを高価な Redshift ストレージに保持することになりコスト効率が悪い。\n\nポイント: 無期限・大量保持は S3、分析は Redshift Spectrum で S3 を直接クエリ。ファイル形式は Parquet などの列指向圧縮形式を選ぶとスキャン課金を最小化できる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32177,7 +32177,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n部門ごとにデータセットのサブセットへ最小権限でアクセスさせる要件では、AWS Lake Formation の LF-Tag ベースアクセス制御（LF-TBAC）が最適です。Glue Data Catalog のデータベース/テーブル/列に lf-tag を付与し、タグ条件で権限を付与するため、データセットが増えても個別ポリシーを書き換えず運用負荷を抑えて細粒度（テーブル/列/行レベル）の制御ができます。\n\n- A: IAM ポリシー/ロールと S3 パスでの制御は可能だが、部門・データセットが増えるたびにポリシー管理が煩雑になり、列/行レベルの細粒度制御も難しく運用負荷が高い。\n- B: Redshift/Spectrum を主エントリポイントにするのは分析用途としては可能だが、データレイクのアクセス制御ソリューションとしては過剰で、細粒度のデータガバナンスを担う仕組みではない。\n- D: RDS for PostgreSQL への同期＋Lambda/Step Functions は大量のデータ複製と同期処理を伴い、運用負荷・コストともに大きく最小権限のアクセス制御という目的にも合わない。\n\nポイント: データレイクの列/行レベルの集中ガバナンスは Lake Formation。LF-TBAC はタグでスケーラブルに権限管理でき、最小権限と低運用負荷を両立する。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32278,7 +32278,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n認証情報を定期ローテーションしつつ、ローテーションのたびにアプリのコードを変更したくない要件では AWS Secrets Manager が最適です。Secrets Manager はデータベース認証情報の自動ローテーションをマネージドで行い、アプリは API（GetSecretValue）で最新の認証情報を取得するため、コード変更が不要になります。\n\n- A: IAM ロールによる一時認証情報はネイティブに IAM 認証をサポートする AWS 上のマネージドDB（RDS/Aurora の IAM 認証等）向け。オンプレミスの MySQL には IAM ロールで直接アクセスできず要件に合わない。\n- B: KMS はキー管理・暗号化用で、DB 認証情報のローテーション機能は提供しない。DynamoDB への保存・ローテーション処理を自作する必要があり運用負荷が高い。\n- D: S3 ライフサイクルはオブジェクトの移行/失効の仕組みであり認証情報のローテーションには使えない。仕組み自体が要件に不適合。\n\nポイント: DB 認証情報の自動ローテーション＋アプリからの安全な取得は Secrets Manager が定番。KMS は暗号化キー管理であり認証情報ローテーションとは役割が異なる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32357,7 +32357,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n複数のダウンストリームチーム（別 AWS アカウント・RA3 ノード）へ中央データセットへの即時アクセスを、現行の Redshift パフォーマンスを保ったまま提供する要件では Amazon Redshift data sharing が最適です。RA3 ノードのプロデューサークラスターとコンシューマークラスター間でデータをコピーせずライブに共有でき、即時アクセスが可能で、データ複製によるパフォーマンス劣化やストレージ増加も生じません。\n\n- A: UNLOAD で S3 に出力し Spectrum 経由で共有する方式は実現可能だが、データを S3 にコピーする分だけ鮮度が落ち「即時アクセス」に劣り、Spectrum 経由のクエリは同等のパフォーマンスを保証しない。運用工程も増える。\n- B: 日次 ETL で各クラスターにコピーする方式はデータ複製・ストレージ増・鮮度低下を招き、即時アクセスにならない。\n- D: DataSync は S3/NFS/SMB 等のファイル/オブジェクト転送サービスであり、Redshift クラスター間のデータ共有には使えない。\n\nポイント: RA3 クラスター間のライブ共有は Redshift data sharing。コピー不要で即時・高性能。DataSync はファイル転送用途で用途違い。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32436,7 +32436,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nEmail 列の有効なメールアドレス割合が 90% 未満で失敗させる要件には、AWS Glue Data Quality の DQDL ルール ColumnValues を使い、正規表現/LIKE パターンにマッチする値の割合に対してしきい値を設定します。\"ColumnValues \\\"Email\\\" matches \\\"[%@%.%]\\\" with threshold > 0.9\" は、@ と . を含むパターンに一致する行の割合が 0.9 を超えることを要求し、90% 未満なら失敗するため要件に合致します。\n\n- A: Uniqueness は値の一意性を測る指標で、メール形式の妥当性割合とは無関係。\n- B: ルール種別 ColumnValues は正しいが、しきい値が > 0.1（10% 超）では 90% 未満で失敗させる要件を満たさない。\n- D: UniqueValueRatio は一意な値の比率を測る指標であり、形式一致の割合を評価しない。しきい値 0.1 も不適。\n\nポイント: 値のパターン一致割合を評価するのは ColumnValues + matches。Uniqueness/UniqueValueRatio は一意性の指標で形式検証には使わない。しきい値は「90%以上」を表す > 0.9 が正しい。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32523,7 +32523,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A と B。\n\nサーバーレスのマルチステップ ETL（S3 抽出 → Glue 変換 → Redshift ロード）をオーケストレーションする要件を、サーバーレスで満たせるのは次の 2 つです。\n- A: AWS Step Functions は Glue ジョブの呼び出し・順序制御・条件分岐・自動リトライ/エラーハンドリングをサーバーレスで実現でき、マルチステップワークフローの標準的なオーケストレーターです。\n- B: AWS Glue workflows は Glue ジョブ/クローラー間の依存関係とトリガーを 1 つのワークフローとして視覚的に定義でき、Glue ネイティブでサーバーレスに ETL をオーケストレーションできます。\n\n- C: 常時起動の EC2 + cron はサーバーレスではなく、インスタンス管理の運用負荷が生じるため不適。\n- D: EventBridge で S3 イベントから Glue ジョブを起動することは可能だが、EventBridge ルールでジョブを順に連鎖させて複雑な依存関係を管理する仕組みではなく、マルチステップのオーケストレーションには不向き。\n- E: CodePipeline は CI/CD（コード/インフラのデプロイ）向けであり、データ ETL ワークフローのオーケストレーションツールではない。\n\nポイント: サーバーレス ETL のオーケストレーションは Step Functions（汎用・分岐/リトライに強い）または Glue workflows（Glue ネイティブ）。EventBridge は起動トリガー、CodePipeline は CI/CD 用途で役割が異なる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32602,7 +32602,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n小論文を複数言語で処理し、教科書の特定の章節への正確な引用を含む、学生の選択言語でのフィードバックを、最小の運用負荷で返す要件です。マネージドサービスを組み合わせる C が最適です。Amazon Comprehend で言語とキートピックを検出し、Amazon Kendra で関連する教科書の一節を検索（章節などの出典情報を保持したまま取得）し、Lambda で整形します。いずれもマネージドで、モデルの構築・学習・運用が不要です。\n\n- A: OpenSearch Serverless でカスタムのベクトル DB を自作し埋め込みを管理する方式は、埋め込みパイプラインやインデックス構築を自前で運用する必要があり運用負荷が大きい。\n- B: Bedrock Knowledge Bases（RAG）は有力だが、生成 AI は章節への「正確な」引用が保証されにくく（ハルシネーションのリスク）、正確な出典参照という要件で C の Kendra による検索ベースの明示的な一節取得に劣る。\n- D: SageMaker でカスタム LLM をファインチューニング・ホストするのは学習・モデル運用の負荷が最も高く、最小運用負荷の要件に反する。\n\nポイント: 言語検出は Comprehend、ドキュメント検索（出典付き）は Kendra が定番のマネージド組合せ。カスタムベクトルDBやファインチューニングは運用負荷が高く、正確な引用にはセマンティック検索ベースが向く。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32681,7 +32681,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は D。\n\n半構造化データ、サーバーレス、書き込み少・読み取り多、ミリ秒単位の取得、最小運用負荷という要件には Amazon DynamoDB が最適です。DynamoDB はサーバーレスの NoSQL で半構造化データに適し、一桁ミリ秒のレイテンシを提供します。読み取り頻度が高い要件には DynamoDB Accelerator（DAX）キャッシュを併用することでマイクロ秒級の読み取りも可能になります。\n\n- A: S3 Standard はオブジェクトストレージで、トランザクションDB用途やミリ秒級のキー参照には設計されておらず、Transfer Acceleration は転送高速化機能で低レイテンシ取得の解決策ではない。\n- B: S3 上の Iceberg テーブルは分析用の大規模テーブル形式であり、低レイテンシのトランザクション読み取り用途には不向き。\n- C: RDS for MySQL はサーバーレスではなく（Aurora Serverless とは別物）、インスタンス管理の運用負荷が生じる。半構造化データにも DynamoDB ほど適さない。\n\nポイント: サーバーレス＋半構造化＋ミリ秒読み取りは DynamoDB（+DAX でさらに高速化）。S3 系はオブジェクト/分析向け、RDS for MySQL はサーバーレスではない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32740,7 +32740,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\n同一パラメータで繰り返し実行される Athena クエリのパフォーマンスとコストを両立して最適化するには、Athena ワークグループのクエリ結果再利用（query result reuse）を設定します。この機能を有効にすると、指定した有効期間内は以前のクエリ結果をキャッシュから返し、S3 の再スキャンが発生しないため、実行時間が短縮され、スキャン量に基づく課金も削減されます。\n\n- A: JSON への変換はむしろ非効率（行指向・非圧縮でスキャン量増）で、コスト・パフォーマンスともに悪化する。最適化なら Parquet 等の列指向形式に変換すべき。\n- B: EMR による前処理は繰り返しクエリの結果再利用という要件に直接寄与せず、追加のクラスター運用コストが発生する。\n- D: Redshift Spectrum への切り替えは同一結果の再利用によるコスト削減にはならず、別サービス導入で構成が複雑化する。\n\nポイント: 同一クエリの繰り返しには Athena の query result reuse が最も直接的。ファイル形式最適化（Parquet/パーティション化）はスキャン量削減の基本だが、選択肢では JSON 変換のため不適。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32799,7 +32799,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は A。\n\nカスタムの社内ライブラリに依存する複雑な PySpark 変換を日次実行し、変換後に Redshift へ保存、大規模ワークロードに高いスケーラビリティ、最小の運用負荷という要件では、サーバーレスの AWS Glue（Glue Studio）が最適です。Glue はクラスター管理不要で自動的にスケールし、ジョブのスケジューリングも組み込みで行え、カスタムライブラリ（追加の Python モジュールや .whl/.zip）を取り込んで Spark ジョブを実行できます。Redshift への書き込みも Glue のコネクタで対応できます。\n\n- B: EC2 Auto Scaling + カスタム AMI で PySpark を自前運用するのは、クラスタ/AMI/スケーリング設定の管理が必要で運用負荷が最も高い。\n- C: EMR + ブートストラップアクションはカスタムライブラリ導入も大規模処理も可能だが、クラスターのプロビジョニング/チューニング/運用が必要で、サーバーレスの Glue よりも運用負荷が高い。\n- D: SageMaker Processing は主に ML 前処理向けで、日次の汎用 ETL パイプライン（Redshift ロード込み）のオーケストレーション用途としては最適でなく、SageMaker ネイティブライブラリ前提の記述も要件（カスタム社内ライブラリ）に噛み合わない。\n\nポイント: サーバーレスで最小運用負荷の Spark ETL は Glue。EMR は柔軟だがクラスタ運用が必要、SageMaker Processing は ML 前処理向けで用途が異なる。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32889,7 +32889,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は B。\n\nアプリケーションログとシステムログでそれぞれ出力するログレベル（ERROR のみ／WARN のみ）を制御したい要件では、Lambda 関数のコード内でロギングのログレベルを設定するのが正しい方法です。ログの重大度によるフィルタリングはアプリケーションのロギング設定（ロガーのレベル設定）で行い、指定レベル以上のログのみが出力されます。\n\n- A: 実行ロールの権限追加は CloudWatch Logs への書き込み可否に関わるものであり、出力するログレベルの制御とは無関係。\n- C: JSON ログ形式の設定はログの構造化（解析しやすさ）に寄与するが、出力するログレベルを絞り込む機能ではない。\n- D: カスタムロググループへの送信は出力先の変更であり、レベルによるフィルタリングを実現しない。\n\nポイント: ログの重大度フィルタリングはコード側のログレベル設定で行う。権限・出力形式・出力先の変更は別の関心事で、レベル制御にはならない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
@@ -32968,7 +32968,7 @@
     },
     "explanation": {
       "en": null,
-      "ja": null
+      "ja": "正解は C。\n\nStep Functions のログレベルを FATAL に設定している場合、Step Functions 自身のログ（/aws/vendedlogs/states）には FATAL レベルの実行イベントしか出力されず、個々の Lambda 内部で発生したエラーの詳細は記録されません。preprocessing の前処理中に発生したエラーの詳細を確認するには、その Lambda 関数自身のログ、すなわち /aws/lambda/preprocessing ロググループ内の Lambda ログを確認します。\n\n- A: /aws/vendedlogs/states の TaskFailed イベントはタスク失敗の事実は示すが、ログレベルが FATAL のためエラーの詳細（スタックトレース等）は十分に得られず、Lambda 内部のエラー内容は分からない。\n- B: SendTaskFailure はコールバックパターン（waitForTaskToken）向けの API イベントで本シナリオに該当せず、示されたロググループ名も適切でない。\n- D: TaskSucceeded は成功イベントであり、エラー詳細の確認には無関係。\n\nポイント: Step Functions のログ（/aws/vendedlogs/states）はワークフローの状態遷移用で、設定レベル（ここでは FATAL）に依存する。Lambda 内部のエラー詳細は /aws/lambda/<関数名> の関数ログを確認するのが基本。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
