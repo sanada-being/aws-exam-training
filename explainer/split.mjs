@@ -10,7 +10,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA = path.resolve(__dirname, "..", "data");
+const EXAM = process.env.EXAM || "saa-c03";
+const DATA =
+  EXAM === "saa-c03"
+    ? path.resolve(__dirname, "..", "data")
+    : path.resolve(__dirname, "..", "data", EXAM);
 const IN = path.join(DATA, "expl-input");
 const QJSON = path.join(DATA, "questions.json");
 await mkdir(IN, { recursive: true });

@@ -13,8 +13,15 @@ const EXAMS = {
     missing: "missing-qnums-sap.json",
   },
 };
-const CFG = EXAMS[EXAM];
-if (!CFG) throw new Error(`unknown EXAM: ${EXAM}`);
+// 未登録の試験は自動導出（EXAM=<code> と EXAM_TOTAL=<総問数> で動く）
+const CFG =
+  EXAMS[EXAM] ??
+  {
+    total: Number(process.env.EXAM_TOTAL || 0),
+    re: new RegExp(EXAM, "i"),
+    dir: path.resolve("..", "data", EXAM),
+    missing: `missing-qnums-${EXAM}.json`,
+  };
 
 const TOTAL = CFG.total;
 const BATCH_DIR = path.join(CFG.dir, "url-batches");

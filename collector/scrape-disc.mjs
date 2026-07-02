@@ -31,8 +31,16 @@ const EXAMS = {
     failLog: "disc-failures-sap.json",
   },
 };
-const CFG = EXAMS[EXAM];
-if (!CFG) throw new Error(`unknown EXAM: ${EXAM}`);
+// 未登録の試験は自動導出（新試験は EXAM=<code> だけで動く）
+const CFG =
+  EXAMS[EXAM] ??
+  {
+    code: EXAM.toUpperCase(),
+    idPrefix: EXAM,
+    dir: path.resolve("..", "data", EXAM),
+    cache: path.resolve("cache", `disc-${EXAM}`),
+    failLog: `disc-failures-${EXAM}.json`,
+  };
 
 const EXAM_CODE = CFG.code;
 const UA =
