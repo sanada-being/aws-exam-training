@@ -71,4 +71,25 @@ describe("QuestionView", () => {
     await userEvent.click(screen.getByRole("button", { name: "ブックマーク" }));
     expect(onToggle).toHaveBeenCalled();
   });
+
+  it("採点後、下部のブックマークボタンが表示され機能する", async () => {
+    const onToggle = vi.fn();
+    render(
+      <QuestionView
+        question={single}
+        onResult={() => {}}
+        onNext={() => {}}
+        bookmarked={false}
+        onToggleBookmark={onToggle}
+      />,
+    );
+    // 採点前は下部ボタン(ラベル付き)は無い
+    expect(screen.queryByRole("button", { name: /この問題をブックマーク/ })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByText("選択肢B"));
+    await userEvent.click(screen.getByRole("button", { name: "採点する" }));
+    const wide = screen.getByRole("button", { name: /この問題をブックマーク/ });
+    expect(wide).toBeInTheDocument();
+    await userEvent.click(wide);
+    expect(onToggle).toHaveBeenCalled();
+  });
 });

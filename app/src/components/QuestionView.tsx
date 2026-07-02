@@ -75,7 +75,7 @@ export function QuestionView({
         {onToggleBookmark && (
           <button
             type="button"
-            className="btn ghost small"
+            className={`bookmark-btn${bookmarked ? " on" : ""}`}
             aria-pressed={!!bookmarked}
             aria-label="ブックマーク"
             onClick={onToggleBookmark}
@@ -120,6 +120,16 @@ export function QuestionView({
             {correct ? "正解！" : "不正解"} ・ 正解: {adopted.join(", ")}
           </p>
           {renderExplanation?.(!!correct)}
+          {onToggleBookmark && (
+            <button
+              type="button"
+              className={`btn bookmark-wide${bookmarked ? " on" : ""}`}
+              aria-pressed={!!bookmarked}
+              onClick={onToggleBookmark}
+            >
+              {bookmarked ? "★ ブックマーク中（タップで解除）" : "☆ この問題をブックマーク"}
+            </button>
+          )}
           <button type="button" className="btn primary" onClick={onNext}>
             次へ →
           </button>
