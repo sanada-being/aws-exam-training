@@ -12,6 +12,14 @@ const EXAMS = {
     dir: path.resolve("..", "data", "sap-c02"),
     missing: "missing-qnums-sap.json",
   },
+  // SOA-C02 はディスカッションURLに "soa-c02" を含まず slug が
+  // "aws-certified-sysops-administrator-associate" なので専用 re を登録。
+  "soa-c02": {
+    total: 478,
+    re: /sysops-administrator-associate/i,
+    dir: path.resolve("..", "data", "soa-c02"),
+    missing: "missing-qnums-soa.json",
+  },
 };
 // 未登録の試験は自動導出（EXAM=<code> と EXAM_TOTAL=<総問数> で動く）
 const CFG =
