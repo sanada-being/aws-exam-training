@@ -19,6 +19,8 @@ export function Quiz({
   const [idx, setIdx] = useState(initialIndex);
   const [correctCount, setCorrectCount] = useState(initialCorrect);
   const [wrongIds, setWrongIds] = useState<string[]>([]);
+  // 直後の誤答復習中は苦手状態を維持したいので、グローバル記録を更新しない
+  const [reviewMode, setReviewMode] = useState(false);
 
   const recordAnswer = useStore((s) => s.recordAnswer);
   const setSessionIndex = useStore((s) => s.setSessionIndex);
@@ -38,6 +40,7 @@ export function Quiz({
     setIdx(0);
     setCorrectCount(0);
     setWrongIds([]);
+    setReviewMode(true);
     startSession(wrongItems.map((x) => x.id));
   }
 
@@ -96,7 +99,8 @@ export function Quiz({
         bookmarked={!!bookmarks[q.id]}
         onToggleBookmark={() => toggleBookmark(q.id)}
         onResult={(c) => {
-          recordAnswer(q.id, c);
+          // 復習モード中は苦手状態を維持するため記録を更新しない
+          if (!reviewMode) recordAnswer(q.id, c);
           if (c) {
             setCorrectCount((n) => n + 1);
             bumpSessionCorrect();

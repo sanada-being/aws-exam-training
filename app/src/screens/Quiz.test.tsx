@@ -55,6 +55,18 @@ describe("Quiz 結果画面の誤答復習", () => {
     expect(screen.getByText("問題1")).toBeInTheDocument();
   });
 
+  it("直後の誤答復習で正解しても、苦手（未正解）状態は維持される", async () => {
+    render(<Quiz queue={queue} onExit={() => {}} />);
+    await answer("選択肢B(1)"); // Q1(正解A)を誤答 → 記録: lastCorrect=false
+    await answer("選択肢B(2)"); // Q2 正答
+    expect(useStore.getState().records.q1.lastCorrect).toBe(false);
+    // 誤答復習へ
+    await userEvent.click(screen.getByRole("button", { name: "間違えた問題を復習（1問）" }));
+    // 復習でQ1を正解しても、記録は更新されない（苦手のまま）
+    await answer("選択肢A(1)");
+    expect(useStore.getState().records.q1.lastCorrect).toBe(false);
+  });
+
   it("全問正解なら復習ボタンは出ない", async () => {
     render(<Quiz queue={queue} onExit={() => {}} />);
     await answer("選択肢A(1)"); // Q1 正答
