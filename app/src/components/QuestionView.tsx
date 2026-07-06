@@ -4,8 +4,8 @@ import { gradeAnswer, normalizeKeys, requiredCount } from "../domain/grading";
 
 export interface QuestionViewProps {
   question: Question;
-  /** 採点時に呼ばれる（正誤を通知）。 */
-  onResult: (correct: boolean) => void;
+  /** 採点時に呼ばれる（正誤と選択キーを通知）。 */
+  onResult: (correct: boolean, selected: string[]) => void;
   /** 「次へ」押下。 */
   onNext: () => void;
   /** 解説スロット（#6で投票分布などを差し込む）。 */
@@ -13,6 +13,10 @@ export interface QuestionViewProps {
   /** ブックマーク状態とトグル（任意）。 */
   bookmarked?: boolean;
   onToggleBookmark?: () => void;
+  /** 回答済みの問題に戻ったときの初回選択（読み取り専用表示用）。 */
+  initialSelected?: string[];
+  /** 回答済みとして採点表示から開始する（前へ戻った場合）。 */
+  initialGraded?: boolean;
 }
 
 export function QuestionView({
@@ -22,19 +26,23 @@ export function QuestionView({
   renderExplanation,
   bookmarked,
   onToggleBookmark,
+  initialSelected,
+  initialGraded,
 }: QuestionViewProps) {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [graded, setGraded] = useState(false);
+  const [selected, setSelected] = useState<string[]>(initialSelected ?? []);
+  const [graded, setGraded] = useState(!!initialGraded);
   const [showEn, setShowEn] = useState(false);
   const adopted = useMemo(() => normalizeKeys(question.adoptedAnswer), [question]);
   const multi = question.isMultipleAnswer || adopted.length > 1;
   const need = requiredCount(question.adoptedAnswer);
 
-  // 問題が変わったらリセット
+  // 問題が変わったら、その問題の初回回答状態（あれば）に合わせてリセット
   useEffect(() => {
-    setSelected([]);
-    setGraded(false);
+    setSelected(initialSelected ?? []);
+    setGraded(!!initialGraded);
     setShowEn(false);
+    // 初回状態は question.id に紐づく。id変化時のみリセットする。
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question.id]);
 
   const correct = graded ? gradeAnswer(selected, adopted) : null;
@@ -50,7 +58,7 @@ export function QuestionView({
     if (graded || selected.length === 0) return;
     const c = gradeAnswer(selected, adopted);
     setGraded(true);
-    onResult(c);
+    onResult(c, selected);
   }
 
   function optionClass(key: string): string {
@@ -119,6 +127,11 @@ export function QuestionView({
           <p className={correct ? "verdict ok" : "verdict ng"} data-testid="verdict">
             {correct ? "正解！" : "不正解"} ・ 正解: {adopted.join(", ")}
           </p>
+          {initialGraded && (
+            <p className="muted answered-note">
+              回答済みの問題です。集計・苦手・振り返りには初回の回答が使われます。
+            </p>
+          )}
           {renderExplanation?.(!!correct)}
           {onToggleBookmark && (
             <button

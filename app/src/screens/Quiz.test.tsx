@@ -75,3 +75,38 @@ describe("Quiz 結果画面の誤答復習", () => {
     expect(screen.queryByRole("button", { name: /間違えた問題を復習/ })).not.toBeInTheDocument();
   });
 });
+
+describe("Quiz 前へ戻る（初回回答のみ採用）", () => {
+  it("先頭では「前へ」が無効、回答して進むと有効になる", async () => {
+    render(<Quiz queue={queue} onExit={() => {}} />);
+    expect(screen.getByRole("button", { name: "前の問題へ" })).toBeDisabled();
+    await answer("選択肢B(1)"); // Q1回答→Q2へ
+    expect(screen.getByText("問題2")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "前の問題へ" })).toBeEnabled();
+  });
+
+  it("前へ戻ると初回回答が読み取り専用で表示され、再回答できない", async () => {
+    render(<Quiz queue={queue} onExit={() => {}} />);
+    await answer("選択肢B(1)"); // Q1(正解A)を誤答 → Q2へ
+    await userEvent.click(screen.getByRole("button", { name: "前の問題へ" }));
+    // Q1が採点済み(不正解)・注記つきで表示
+    expect(screen.getByText("問題1")).toBeInTheDocument();
+    expect(screen.getByTestId("verdict")).toHaveTextContent("不正解");
+    expect(screen.getByText(/初回の回答が使われます/)).toBeInTheDocument();
+    // 読み取り専用: 採点ボタンは無く、選択肢は無効
+    expect(screen.queryByRole("button", { name: "採点する" })).not.toBeInTheDocument();
+    expect(screen.getByText("選択肢A(1)").closest("button")).toBeDisabled();
+  });
+
+  it("戻っても苦手（未正解）記録は初回のまま維持される", async () => {
+    render(<Quiz queue={queue} onExit={() => {}} />);
+    await answer("選択肢B(1)"); // Q1 誤答 → 記録 lastCorrect=false
+    expect(useStore.getState().records.q1.lastCorrect).toBe(false);
+    await userEvent.click(screen.getByRole("button", { name: "前の問題へ" }));
+    // 戻っても記録は初回のまま（読み取り専用なので変更不可）
+    expect(useStore.getState().records.q1.lastCorrect).toBe(false);
+    // 前へ→次へで元に戻れる
+    await userEvent.click(screen.getByRole("button", { name: /次へ/ }));
+    expect(screen.getByText("問題2")).toBeInTheDocument();
+  });
+});
