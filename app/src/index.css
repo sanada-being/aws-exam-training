@@ -211,6 +211,9 @@ a { color: var(--accent); }
 }
 .bookmark-btn.on { color: #fbbf24; }
 
+/* 前へ戻って回答済み問題を開いたときの注記 */
+.answered-note { font-size: 0.85rem; margin: 4px 0 8px; }
+
 /* 採点後の下部ブックマークボタン */
 .bookmark-wide { width: 100%; margin-top: 12px; }
 .bookmark-wide.on { border-color: #fbbf24; color: #fbbf24; }

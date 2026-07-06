@@ -32,7 +32,7 @@ describe("QuestionView", () => {
     render(<QuestionView question={single} onResult={onResult} onNext={() => {}} />);
     await userEvent.click(screen.getByText("選択肢B"));
     await userEvent.click(screen.getByRole("button", { name: "採点する" }));
-    expect(onResult).toHaveBeenCalledWith(true);
+    expect(onResult).toHaveBeenCalledWith(true, ["B"]);
     expect(screen.getByTestId("verdict")).toHaveTextContent("正解");
   });
 
@@ -41,7 +41,7 @@ describe("QuestionView", () => {
     render(<QuestionView question={single} onResult={onResult} onNext={() => {}} />);
     await userEvent.click(screen.getByText("選択肢A"));
     await userEvent.click(screen.getByRole("button", { name: "採点する" }));
-    expect(onResult).toHaveBeenCalledWith(false);
+    expect(onResult).toHaveBeenCalledWith(false, ["A"]);
     expect(screen.getByTestId("verdict")).toHaveTextContent("不正解");
   });
 
@@ -70,6 +70,28 @@ describe("QuestionView", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: "ブックマーク" }));
     expect(onToggle).toHaveBeenCalled();
+  });
+
+  it("回答済み(initialGraded)で開くと採点表示・読み取り専用で注記が出る", () => {
+    const onResult = vi.fn();
+    render(
+      <QuestionView
+        question={single}
+        onResult={onResult}
+        onNext={() => {}}
+        initialSelected={["A"]}
+        initialGraded
+      />,
+    );
+    // 初回=Aは不正解。採点表示から開始
+    expect(screen.getByTestId("verdict")).toHaveTextContent("不正解");
+    expect(screen.getByText(/初回の回答が使われます/)).toBeInTheDocument();
+    // 採点ボタンは出ない（読み取り専用）
+    expect(screen.queryByRole("button", { name: "採点する" })).not.toBeInTheDocument();
+    // 選択肢は無効
+    expect(screen.getByText("選択肢B").closest("button")).toBeDisabled();
+    // onResult は呼ばれない（再記録しない）
+    expect(onResult).not.toHaveBeenCalled();
   });
 
   it("採点後、下部のブックマークボタンが表示され機能する", async () => {

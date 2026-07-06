@@ -3,6 +3,12 @@ import type { Question } from "../types";
 import { QuestionView } from "../components/QuestionView";
 import { Explanation } from "../components/Explanation";
 import { useStore } from "../store/useStore";
+import {
+  isAnswered,
+  recordFirst,
+  tally,
+  type SessionAnswers,
+} from "../domain/sessionAnswers";
 
 export function Quiz({
   queue,
@@ -13,12 +19,13 @@ export function Quiz({
   queue: Question[];
   onExit: () => void;
   initialIndex?: number;
+  /** 再開時の既回答分の正答数（中断前の集計を引き継ぐ）。 */
   initialCorrect?: number;
 }) {
   const [items, setItems] = useState<Question[]>(queue);
   const [idx, setIdx] = useState(initialIndex);
-  const [correctCount, setCorrectCount] = useState(initialCorrect);
-  const [wrongIds, setWrongIds] = useState<string[]>([]);
+  // セッション内の回答（初回回答のみを保持）。集計・苦手・振り返りの唯一の基準。
+  const [answers, setAnswers] = useState<SessionAnswers>({});
   // 直後の誤答復習中は苦手状態を維持したいので、グローバル記録を更新しない
   const [reviewMode, setReviewMode] = useState(false);
 
@@ -34,18 +41,29 @@ export function Quiz({
 
   // 間違えた問題だけで再スタート
   function reviewWrong() {
+    const { wrongIds } = tally(answers);
     const wrongItems = items.filter((it) => wrongIds.includes(it.id));
     if (wrongItems.length === 0) return;
     setItems(wrongItems);
     setIdx(0);
-    setCorrectCount(0);
-    setWrongIds([]);
+    setAnswers({});
     setReviewMode(true);
     startSession(wrongItems.map((x) => x.id));
   }
 
+  function goPrev() {
+    if (idx === 0) return;
+    const p = idx - 1;
+    setIdx(p);
+    setSessionIndex(p);
+  }
+
   if (!q) {
     const total = items.length;
+    const t = tally(answers);
+    // 再開時は中断前の正答数(initialCorrect)を引き継ぐ
+    const correctCount = initialCorrect + t.correct;
+    const wrongIds = t.wrongIds;
     const wrongCount = wrongIds.length;
     return (
       <div className="done">
@@ -80,11 +98,22 @@ export function Quiz({
     );
   }
 
+  const current = answers[q.id];
+
   return (
     <div>
       <header className="quizbar">
         <button type="button" className="btn ghost" onClick={onExit} aria-label="中断">
-          ← 中断
+          中断
+        </button>
+        <button
+          type="button"
+          className="btn ghost"
+          onClick={goPrev}
+          disabled={idx === 0}
+          aria-label="前の問題へ"
+        >
+          ← 前へ
         </button>
         <span className="progress" data-testid="progress">
           {idx + 1} / {items.length}
@@ -98,14 +127,15 @@ export function Quiz({
         question={q}
         bookmarked={!!bookmarks[q.id]}
         onToggleBookmark={() => toggleBookmark(q.id)}
-        onResult={(c) => {
-          // 復習モード中は苦手状態を維持するため記録を更新しない
-          if (!reviewMode) recordAnswer(q.id, c);
-          if (c) {
-            setCorrectCount((n) => n + 1);
-            bumpSessionCorrect();
-          } else {
-            setWrongIds((w) => (w.includes(q.id) ? w : [...w, q.id]));
+        initialSelected={current?.selected}
+        initialGraded={!!current}
+        onResult={(c, selected) => {
+          const first = !isAnswered(answers, q.id);
+          setAnswers((a) => recordFirst(a, q.id, c, selected));
+          // 初回回答のみ集計・苦手収集に反映する
+          if (first) {
+            if (!reviewMode) recordAnswer(q.id, c);
+            if (c) bumpSessionCorrect();
           }
         }}
         onNext={() => {
