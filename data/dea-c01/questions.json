@@ -9695,8 +9695,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/135424-exam-aws-certified-data-engineer-associate-dea-c01-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A company receives .csv files that contain physical address data. The data is in columns that have the following names: Door_No, Street_Name, City, and Zip_Code. The company wants to create a single column to store these values in the following format:\n\nWhich solution will meet this requirement with the LEAST coding effort?",
-      "ja": "ある企業は、物理的な住所データを含む.csvファイルを受け取ります。データは、Door_No、Street_Name、City、Zip_Codeという名前の列に格納されています。企業は、これらの値を次の形式で1つの列に格納したいと考えています。\n\nこの要件を最小のコーディング作業量で満たすソリューションはどれですか。"
+      "en": "A company receives .csv files that contain physical address data. The data is in columns that have the following names: Door_No, Street_Name, City, and Zip_Code. The company wants to create a single column to store these values in the following format:\n\n```json\n{\n    \"Door_No\": \"24\",\n    \"Street_Name\": \"AAA street\",\n    \"City\": \"BBB\",\n    \"Zip_Code\": \"111111\"\n}\n```\n\nWhich solution will meet this requirement with the LEAST coding effort?",
+      "ja": "ある企業は、物理的な住所データを含む.csvファイルを受け取ります。データは、Door_No、Street_Name、City、Zip_Codeという名前の列に格納されています。企業は、これらの値を次の形式で1つの列に格納したいと考えています。\n\n```json\n{\n    \"Door_No\": \"24\",\n    \"Street_Name\": \"AAA street\",\n    \"City\": \"BBB\",\n    \"Zip_Code\": \"111111\"\n}\n```\n\nこの要件を最小のコーディング作業量で満たすソリューションはどれですか。"
     },
     "options": [
       {
@@ -30259,8 +30259,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/315505-exam-aws-certified-data-engineer-associate-dea-c01-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A company adds new data to a large CSV file in an Amazon S3 bucket every day. The file contains company sales data from the previous 5 years. The file currently includes more than 5,000 rows. The CSV file structure is shown below with sample data:\n\n\n\nThe company needs to use Amazon Athena to run queries on the CSV file to fetch data from a specific time period.\n\nWhich solution will meet this requirement MOST cost-effectively?",
-      "ja": "ある企業は、Amazon S3 バケット内の大きな CSV ファイルに毎日新しいデータを追加しています。このファイルには過去5年分の会社の売上データが含まれています。現在このファイルには5,000行以上が含まれています。CSV ファイルの構造は以下のサンプルデータに示されています。\n\n（表省略）\n\nこの企業は、特定期間のデータを取得するために、この CSV ファイルに対して Amazon Athena でクエリを実行する必要があります。\n\nこの要件を最もコスト効率よく満たす解決策はどれですか？"
+      "en": "A company adds new data to a large CSV file in an Amazon S3 bucket every day. The file contains company sales data from the previous 5 years. The file currently includes more than 5,000 rows. The CSV file structure is shown below with sample data:\n\n```\n[ERROR: 画像ファイルが見つかりません。指定パス C:/Users/sanada/AppData/Local/Temp/claude/C--Users-sanada-Desktop-ripository-aws-exam/c7725f78-b5be-4d9e-a91c-3577dbab824d/scratchpad/imgs/dea-c01/dea-c01-0253/body-1.png は存在せず、対象ディレクトリは空でした。書き起こしできません。]\n```\n\nThe company needs to use Amazon Athena to run queries on the CSV file to fetch data from a specific time period.\n\nWhich solution will meet this requirement MOST cost-effectively?",
+      "ja": "ある企業は、Amazon S3 バケット内の大きな CSV ファイルに毎日新しいデータを追加しています。このファイルには過去5年分の会社の売上データが含まれています。現在このファイルには5,000行以上が含まれています。CSV ファイルの構造は以下のサンプルデータに示されています。\n\n```\n[ERROR: 画像ファイルが見つかりません。指定パス C:/Users/sanada/AppData/Local/Temp/claude/C--Users-sanada-Desktop-ripository-aws-exam/c7725f78-b5be-4d9e-a91c-3577dbab824d/scratchpad/imgs/dea-c01/dea-c01-0253/body-1.png は存在せず、対象ディレクトリは空でした。書き起こしできません。]\n```\n\n（表省略）\n\nこの企業は、特定期間のデータを取得するために、この CSV ファイルに対して Amazon Athena でクエリを実行する必要があります。\n\nこの要件を最もコスト効率よく満たす解決策はどれですか？"
     },
     "options": [
       {

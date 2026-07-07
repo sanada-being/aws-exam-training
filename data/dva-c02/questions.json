@@ -4623,8 +4623,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/102903-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": true,
     "question": {
-      "en": "An application is processing clickstream data using Amazon Kinesis. The clickstream data feed into Kinesis experiences periodic spikes. The PutRecords API call occasionally fails and the logs show that the failed call returns the response shown below:\n\nWhich techniques will help mitigate this exception? (Choose two.)",
-      "ja": "あるアプリケーションが、Amazon Kinesisを使用してクリックストリームデータを処理しています。Kinesisへのクリックストリームデータフィードには周期的なスパイクが発生します。PutRecords API呼び出しが時折失敗し、ログには失敗した呼び出しが以下のレスポンスを返していることが示されています。\n\nこの例外を緩和するのに役立つ技術はどれですか。(2つ選択してください)"
+      "en": "An application is processing clickstream data using Amazon Kinesis. The clickstream data feed into Kinesis experiences periodic spikes. The PutRecords API call occasionally fails and the logs show that the failed call returns the response shown below:\n\n```json\n{\n    \"FailedRecordCount\": 1,\n    \"Records\": [\n        {\n            \"SequenceNumber\": \"21269319989900637946712965403778482371\",\n            \"ShardId\": \"shardId-000000000001\"\n        },\n        {\n            \"ErrorCode\":\"ProvisionedThroughputExceededException\",\n            \"ErrorMessage\": \"Rate exceeded for shard shardId-000000000001 in\n\n                stream exampleStreamName under account 123456789.\"\n        },\n        {\n            \"SeguenceNumber\": \"21269319989999637946712965403778482985\",\n            \"ShardId\": \"shardId-000000000002\"\n        }\n    ]\n}\n```\n\nWhich techniques will help mitigate this exception? (Choose two.)",
+      "ja": "あるアプリケーションが、Amazon Kinesisを使用してクリックストリームデータを処理しています。Kinesisへのクリックストリームデータフィードには周期的なスパイクが発生します。PutRecords API呼び出しが時折失敗し、ログには失敗した呼び出しが以下のレスポンスを返していることが示されています。\n\n```json\n{\n    \"FailedRecordCount\": 1,\n    \"Records\": [\n        {\n            \"SequenceNumber\": \"21269319989900637946712965403778482371\",\n            \"ShardId\": \"shardId-000000000001\"\n        },\n        {\n            \"ErrorCode\":\"ProvisionedThroughputExceededException\",\n            \"ErrorMessage\": \"Rate exceeded for shard shardId-000000000001 in\n\n                stream exampleStreamName under account 123456789.\"\n        },\n        {\n            \"SeguenceNumber\": \"21269319989999637946712965403778482985\",\n            \"ShardId\": \"shardId-000000000002\"\n        }\n    ]\n}\n```\n\nこの例外を緩和するのに役立つ技術はどれですか。(2つ選択してください)"
     },
     "options": [
       {
@@ -7124,8 +7124,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/103708-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A developer is writing an AWS Lambda function. The developer wants to log key events that occur while the Lambda function runs. The developer wants to include a unique identifier to associate the events with a specific function invocation. The developer adds the following code to the Lambda function:\n\nWhich solution will meet this requirement?",
-      "ja": "あるデベロッパーが AWS Lambda 関数を作成しています。デベロッパーは、Lambda 関数の実行中に発生する主要なイベントをログに記録したいと考えています。また、そのイベントを特定の関数呼び出しに関連付けるための一意の識別子を含めたいと考えています。デベロッパーは、Lambda 関数に次のコードを追加します。\n\nこの要件を満たす解決策はどれですか。"
+      "en": "A developer is writing an AWS Lambda function. The developer wants to log key events that occur while the Lambda function runs. The developer wants to include a unique identifier to associate the events with a specific function invocation. The developer adds the following code to the Lambda function:\n\n```\nfunction handler(event, context) {\n\n}\n```\n\nWhich solution will meet this requirement?",
+      "ja": "あるデベロッパーが AWS Lambda 関数を作成しています。デベロッパーは、Lambda 関数の実行中に発生する主要なイベントをログに記録したいと考えています。また、そのイベントを特定の関数呼び出しに関連付けるための一意の識別子を含めたいと考えています。デベロッパーは、Lambda 関数に次のコードを追加します。\n\n```\nfunction handler(event, context) {\n\n}\n```\n\nこの要件を満たす解決策はどれですか。"
     },
     "options": [
       {
@@ -7879,8 +7879,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/103919-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A developer has written the following IAM policy to provide access to an Amazon S3 bucket:\n\nWhich access does the policy allow regarding the s3:GetObject and s3:PutObject actions?",
-      "ja": "あるデベロッパーが、Amazon S3 バケットへのアクセスを提供するために次の IAM ポリシーを作成しました。\n\ns3:GetObject および s3:PutObject アクションに関して、このポリシーはどのアクセスを許可していますか。"
+      "en": "A developer has written the following IAM policy to provide access to an Amazon S3 bucket:\n\n```json\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"s3:GetObject\",\n                \"s3:PutObject\"\n            ],\n            \"Resource\": \"arn:aws:s3:::DOC-EXAMPLE-BUCKET/*\"\n        },\n        {\n            \"Effect\": \"Deny\",\n            \"Action\": \"s3:*\",\n            \"Resource\": \"arn:aws:s3:::DOC-EXAMPLE-BUCKET/secrets*\"\n        }\n    ]\n}\n```\n\nWhich access does the policy allow regarding the s3:GetObject and s3:PutObject actions?",
+      "ja": "あるデベロッパーが、Amazon S3 バケットへのアクセスを提供するために次の IAM ポリシーを作成しました。\n\n```json\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"s3:GetObject\",\n                \"s3:PutObject\"\n            ],\n            \"Resource\": \"arn:aws:s3:::DOC-EXAMPLE-BUCKET/*\"\n        },\n        {\n            \"Effect\": \"Deny\",\n            \"Action\": \"s3:*\",\n            \"Resource\": \"arn:aws:s3:::DOC-EXAMPLE-BUCKET/secrets*\"\n        }\n    ]\n}\n```\n\ns3:GetObject および s3:PutObject アクションに関して、このポリシーはどのアクセスを許可していますか。"
     },
     "options": [
       {
@@ -25742,8 +25742,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/122581-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A developer is troubleshooting an application that uses Amazon DynamoDB in the us-west-2 Region. The application is deployed to an Amazon EC2 instance. The application requires read-only permissions to a table that is named Cars. The EC2 instance has an attached IAM role that contains the following IAM policy:\n\n\n\nWhen the application tries to read from the Cars table, an Access Denied error occurs.\n\nHow can the developer resolve this error?",
-      "ja": "ある開発者が、us-west-2リージョンでAmazon DynamoDBを使用するアプリケーションのトラブルシューティングを行っています。このアプリケーションはAmazon EC2インスタンスにデプロイされています。アプリケーションは、Carsという名前のテーブルに対して読み取り専用の権限を必要としています。EC2インスタンスには、次のIAMポリシーを含むIAMロールがアタッチされています。\n\n（ポリシーの内容は省略）\n\nアプリケーションがCarsテーブルから読み取りを試みると、Access Deniedエラーが発生します。\n\n開発者はこのエラーをどのように解決できますか。"
+      "en": "A developer is troubleshooting an application that uses Amazon DynamoDB in the us-west-2 Region. The application is deployed to an Amazon EC2 instance. The application requires read-only permissions to a table that is named Cars. The EC2 instance has an attached IAM role that contains the following IAM policy:\n\n```json\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"ReadOnlyAPIActions\",\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"dynamodb:GetItem\",\n                \"dynamodb:BatchGetItem\",\n                \"dynamodb:Scan\",\n                \"dynamodb:Query\",\n                \"dynamodb:ConditionCheckItem\"\n            ],\n            \"Resource\": \"arn:aws:dynamodb:us-west-2:account-id:table/Cars\"\n        }\n    ]\n}\n```\n\nWhen the application tries to read from the Cars table, an Access Denied error occurs.\n\nHow can the developer resolve this error?",
+      "ja": "ある開発者が、us-west-2リージョンでAmazon DynamoDBを使用するアプリケーションのトラブルシューティングを行っています。このアプリケーションはAmazon EC2インスタンスにデプロイされています。アプリケーションは、Carsという名前のテーブルに対して読み取り専用の権限を必要としています。EC2インスタンスには、次のIAMポリシーを含むIAMロールがアタッチされています。\n\n```json\n{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"ReadOnlyAPIActions\",\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"dynamodb:GetItem\",\n                \"dynamodb:BatchGetItem\",\n                \"dynamodb:Scan\",\n                \"dynamodb:Query\",\n                \"dynamodb:ConditionCheckItem\"\n            ],\n            \"Resource\": \"arn:aws:dynamodb:us-west-2:account-id:table/Cars\"\n        }\n    ]\n}\n```\n\n（ポリシーの内容は省略）\n\nアプリケーションがCarsテーブルから読み取りを試みると、Access Deniedエラーが発生します。\n\n開発者はこのエラーをどのように解決できますか。"
     },
     "options": [
       {
@@ -27230,8 +27230,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/122594-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A developer accesses AWS CodeCommit over SSH. The SSH keys configured to access AWS CodeCommit are tied to a user with the following permissions:\n\n\n\nThe developer needs to create/delete branches.\n\nWhich specific IAM permissions need to be added, based on the principle of least privilege?",
-      "ja": "ある開発者が SSH 経由で AWS CodeCommit にアクセスしている。AWS CodeCommit にアクセスするために構成された SSH 鍵は、以下の権限を持つユーザーに紐づいている。\n\nこの開発者はブランチを作成/削除する必要がある。\n\n最小権限の原則に基づき、追加する必要がある具体的な IAM 権限はどれか。"
+      "en": "A developer accesses AWS CodeCommit over SSH. The SSH keys configured to access AWS CodeCommit are tied to a user with the following permissions:\n\n```json\n{\n\"Version\": \"2012-10-17\",\n\"Statement\": [\n  {\n    \"Effect\": \"Allow\",\n    \"Action\": [\n    \"codecommit:BatchGetRepositories\",\n    \"codecommit:Get*\",\n    \"codecommit:List*\",\n    \"codecommit:GitPull\"\n    ],\n    \"Resource\": \"*\"\n  }\n]\n}\n```\n\nThe developer needs to create/delete branches.\n\nWhich specific IAM permissions need to be added, based on the principle of least privilege?",
+      "ja": "ある開発者が SSH 経由で AWS CodeCommit にアクセスしている。AWS CodeCommit にアクセスするために構成された SSH 鍵は、以下の権限を持つユーザーに紐づいている。\n\n```json\n{\n\"Version\": \"2012-10-17\",\n\"Statement\": [\n  {\n    \"Effect\": \"Allow\",\n    \"Action\": [\n    \"codecommit:BatchGetRepositories\",\n    \"codecommit:Get*\",\n    \"codecommit:List*\",\n    \"codecommit:GitPull\"\n    ],\n    \"Resource\": \"*\"\n  }\n]\n}\n```\n\nこの開発者はブランチを作成/削除する必要がある。\n\n最小権限の原則に基づき、追加する必要がある具体的な IAM 権限はどれか。"
     },
     "options": [
       {
@@ -34713,8 +34713,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/124817-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "Given the following AWS CloudFormation template:\n\n\n\nWhat is the MOST efficient way to reference the new Amazon S3 bucket from another AWS CloudFormation template?",
-      "ja": "以下の AWS CloudFormation テンプレートが与えられています。\n\n\n\n別の AWS CloudFormation テンプレートから新しい Amazon S3 バケットを参照する最も効率的な方法は何ですか。"
+      "en": "Given the following AWS CloudFormation template:\n\n```\nDescription: Creates a new Amazon S3 bucket for shared content. Uses a random bucket name to avoid conflicts.\n\nResources:\n\n    ContentBucket:\n        Type: AWS::S3::Bucket\n    Outputs:\n\n        ContentBucketName:\n            Value: !Ref ContentBucket\n```\n\nWhat is the MOST efficient way to reference the new Amazon S3 bucket from another AWS CloudFormation template?",
+      "ja": "以下の AWS CloudFormation テンプレートが与えられています。\n\n```\nDescription: Creates a new Amazon S3 bucket for shared content. Uses a random bucket name to avoid conflicts.\n\nResources:\n\n    ContentBucket:\n        Type: AWS::S3::Bucket\n    Outputs:\n\n        ContentBucketName:\n            Value: !Ref ContentBucket\n```\n\n別の AWS CloudFormation テンプレートから新しい Amazon S3 バケットを参照する最も効率的な方法は何ですか。"
     },
     "options": [
       {
@@ -61328,8 +61328,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/152922-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A developer is using AWS CloudFormation to deploy an AWS Lambda function. The developer needs to set the Lambda function's timeout value based on the environment parameter of the template. The template contains mappings of EnvironmentData for each environment's timeout value. The environment parameter and EnvironmentData mappings are as follows:\n\nEnvironment parameter:\n\n\n\nEnvironmentData mappings:\n\n\n\nWhich statement will meet these requirements?",
-      "ja": "開発者が、AWS CloudFormation を使用して AWS Lambda 関数をデプロイしています。この開発者は、テンプレートの environment パラメータに基づいて Lambda 関数のタイムアウト値を設定する必要があります。このテンプレートには、各環境のタイムアウト値に関する EnvironmentData のマッピングが含まれています。environment パラメータと EnvironmentData のマッピングは以下のとおりです。\n\nEnvironment パラメータ：\n\n\n\nEnvironmentData マッピング：\n\n\n\nこの要件を満たす記述はどれですか？"
+      "en": "A developer is using AWS CloudFormation to deploy an AWS Lambda function. The developer needs to set the Lambda function's timeout value based on the environment parameter of the template. The template contains mappings of EnvironmentData for each environment's timeout value. The environment parameter and EnvironmentData mappings are as follows:\n\n```\nParameters:\n    Environment:\n        Type: String\n        Default: dev\n        AllowedValues:\n            -dev\n            -test\n            -prod\n        Description: The name of the deployment environment.\n```\n\n```\nMappings:\n    EnvironmentData:\n        dev:\n            Timeout: 30\n        test:\n            Timeout: 60\n        prod:\n            Timeout: 90\n```\n\nEnvironment parameter:\n\n\n\nEnvironmentData mappings:\n\n\n\nWhich statement will meet these requirements?",
+      "ja": "開発者が、AWS CloudFormation を使用して AWS Lambda 関数をデプロイしています。この開発者は、テンプレートの environment パラメータに基づいて Lambda 関数のタイムアウト値を設定する必要があります。このテンプレートには、各環境のタイムアウト値に関する EnvironmentData のマッピングが含まれています。environment パラメータと EnvironmentData のマッピングは以下のとおりです。\n\n```\nParameters:\n    Environment:\n        Type: String\n        Default: dev\n        AllowedValues:\n            -dev\n            -test\n            -prod\n        Description: The name of the deployment environment.\n```\n\n```\nMappings:\n    EnvironmentData:\n        dev:\n            Timeout: 30\n        test:\n            Timeout: 60\n        prod:\n            Timeout: 90\n```\n\nEnvironment パラメータ：\n\n\n\nEnvironmentData マッピング：\n\n\n\nこの要件を満たす記述はどれですか？"
     },
     "options": [
       {
@@ -61513,8 +61513,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/156645-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": true,
     "question": {
-      "en": "A developer compiles an AWS Lambda function and packages the result as a .zip file. The developer uses the Functions page on the Lambda console to attempt to upload the local packaged .zip file. When pushing the package ta Lambda, the console returns the following error:\n\n\n\nWhich solutions can the developer use to publish the code? (Choose two.)",
-      "ja": "あるデベロッパーがAWS Lambda関数をコンパイルし、その結果を.zipファイルとしてパッケージ化した。デベロッパーはLambdaコンソールのFunctionsページを使用して、ローカルにパッケージ化した.zipファイルをアップロードしようとしている。パッケージをLambdaにプッシュすると、コンソールは次のエラーを返す。\n\n\n\nデベロッパーがコードを公開するために使用できる解決策はどれですか？（2つ選択してください）"
+      "en": "A developer compiles an AWS Lambda function and packages the result as a .zip file. The developer uses the Functions page on the Lambda console to attempt to upload the local packaged .zip file. When pushing the package ta Lambda, the console returns the following error:\n\n```\nAn error occurred (RequestEntityTooLargeException)\nwhen calling the UpdateFunctionCode operation\n```\n\nWhich solutions can the developer use to publish the code? (Choose two.)",
+      "ja": "あるデベロッパーがAWS Lambda関数をコンパイルし、その結果を.zipファイルとしてパッケージ化した。デベロッパーはLambdaコンソールのFunctionsページを使用して、ローカルにパッケージ化した.zipファイルをアップロードしようとしている。パッケージをLambdaにプッシュすると、コンソールは次のエラーを返す。\n\n```\nAn error occurred (RequestEntityTooLargeException)\nwhen calling the UpdateFunctionCode operation\n```\n\nデベロッパーがコードを公開するために使用できる解決策はどれですか？（2つ選択してください）"
     },
     "options": [
       {
@@ -63945,8 +63945,8 @@
     "sourceUrl": "https://www.examtopics.com/discussions/amazon/view/156018-exam-aws-certified-developer-associate-dva-c02-topic-1/",
     "isMultipleAnswer": false,
     "question": {
-      "en": "A developer has implemented an AWS Lambda function that inserts new customers into an Amazon RDS database. The function is expected to run hundreds of times each hour. The function and RDS database are in the same VPC. The function is configured to use 512 MB of RAM and is based on the following pseudo code:\n\n\n\nAfter successfully testing the function multiple times, the developer notices that the execution time is longer than expected.\n\nWhat should the developer do to improve performance?",
-      "ja": "開発者が、新規顧客を Amazon RDS データベースに挿入する AWS Lambda 関数を実装しました。この関数は1時間に数百回実行されると想定されています。関数と RDS データベースは同じ VPC 内にあります。関数は512 MB の RAM を使用するように設定されており、次の疑似コードに基づいています。\n\n（疑似コードは省略）\n\n複数回のテストに成功した後、開発者は実行時間が想定より長いことに気づきました。\n\n開発者はパフォーマンスを改善するために何をすべきですか。"
+      "en": "A developer has implemented an AWS Lambda function that inserts new customers into an Amazon RDS database. The function is expected to run hundreds of times each hour. The function and RDS database are in the same VPC. The function is configured to use 512 MB of RAM and is based on the following pseudo code:\n\n```\ndef lambda_handler (event, context):\n\n    db = database.connect()\n    db.statement('INSERT INTO Customers (CustomerName) VALUES (event.name)')\n    db.execute()\n    db.close()\n```\n\nAfter successfully testing the function multiple times, the developer notices that the execution time is longer than expected.\n\nWhat should the developer do to improve performance?",
+      "ja": "開発者が、新規顧客を Amazon RDS データベースに挿入する AWS Lambda 関数を実装しました。この関数は1時間に数百回実行されると想定されています。関数と RDS データベースは同じ VPC 内にあります。関数は512 MB の RAM を使用するように設定されており、次の疑似コードに基づいています。\n\n```\ndef lambda_handler (event, context):\n\n    db = database.connect()\n    db.statement('INSERT INTO Customers (CustomerName) VALUES (event.name)')\n    db.execute()\n    db.close()\n```\n\n（疑似コードは省略）\n\n複数回のテストに成功した後、開発者は実行時間が想定より長いことに気づきました。\n\n開発者はパフォーマンスを改善するために何をすべきですか。"
     },
     "options": [
       {
