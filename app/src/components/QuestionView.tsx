@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Question } from "../types";
 import { gradeAnswer, normalizeKeys, requiredCount } from "../domain/grading";
+import { RichText } from "./RichText";
 
 export interface QuestionViewProps {
   question: Question;
@@ -92,9 +93,9 @@ export function QuestionView({
           </button>
         )}
       </div>
-      <p className="qtext">
-        {showEn ? question.question.en : (question.question.ja ?? question.question.en)}
-      </p>
+      <div className="qtext">
+        <RichText text={showEn ? question.question.en : (question.question.ja ?? question.question.en)} />
+      </div>
 
       <div role="list">
         {question.options.map((o) => (
@@ -108,7 +109,9 @@ export function QuestionView({
             disabled={graded}
           >
             <span className="optkey">{o.key}</span>
-            <span className="opttext">{showEn ? o.en : (o.ja ?? o.en)}</span>
+            <span className="opttext">
+              <RichText text={showEn ? o.en : (o.ja ?? o.en)} />
+            </span>
           </button>
         ))}
       </div>

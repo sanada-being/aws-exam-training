@@ -156,6 +156,25 @@ a { color: var(--accent); }
 .qtext { font-size: 1.05rem; white-space: pre-wrap; }
 .hint { color: var(--accent); font-size: 0.9rem; margin-top: -4px; }
 
+/* 画像だったJSON/表をテキスト再構築したコードブロック（等幅・改行保持・横スクロール） */
+.codeblock {
+  display: block;
+  white-space: pre;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  background: #0b1220;
+  border: 1px solid var(--border, #22304a);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  color: #d6e2f5;
+  -webkit-overflow-scrolling: touch;
+}
+/* 選択肢内のコードブロックは少し小さめ・詰める */
+.opttext .codeblock { font-size: 0.78rem; margin: 4px 0; }
+
 .option {
   display: flex;
   align-items: flex-start;
