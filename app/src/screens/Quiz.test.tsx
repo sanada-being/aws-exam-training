@@ -89,10 +89,10 @@ describe("Quiz 前へ戻る（初回回答のみ採用）", () => {
     render(<Quiz queue={queue} onExit={() => {}} />);
     await answer("選択肢B(1)"); // Q1(正解A)を誤答 → Q2へ
     await userEvent.click(screen.getByRole("button", { name: "前の問題へ" }));
-    // Q1が採点済み(不正解)・注記つきで表示
+    // Q1が採点済み(不正解)で表示（注記メッセージは出さない）
     expect(screen.getByText("問題1")).toBeInTheDocument();
     expect(screen.getByTestId("verdict")).toHaveTextContent("不正解");
-    expect(screen.getByText(/初回の回答が使われます/)).toBeInTheDocument();
+    expect(screen.queryByText(/初回の回答が使われます/)).not.toBeInTheDocument();
     // 読み取り専用: 採点ボタンは無く、選択肢は無効
     expect(screen.queryByRole("button", { name: "採点する" })).not.toBeInTheDocument();
     expect(screen.getByText("選択肢A(1)").closest("button")).toBeDisabled();
