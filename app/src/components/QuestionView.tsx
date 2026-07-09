@@ -130,11 +130,6 @@ export function QuestionView({
           <p className={correct ? "verdict ok" : "verdict ng"} data-testid="verdict">
             {correct ? "正解！" : "不正解"} ・ 正解: {adopted.join(", ")}
           </p>
-          {initialGraded && (
-            <p className="muted answered-note">
-              回答済みの問題です。集計・苦手・振り返りには初回の回答が使われます。
-            </p>
-          )}
           {renderExplanation?.(!!correct)}
           {onToggleBookmark && (
             <button

@@ -72,7 +72,7 @@ describe("QuestionView", () => {
     expect(onToggle).toHaveBeenCalled();
   });
 
-  it("回答済み(initialGraded)で開くと採点表示・読み取り専用で注記が出る", () => {
+  it("回答済み(initialGraded)で開くと採点表示・読み取り専用（注記は出さない）", () => {
     const onResult = vi.fn();
     render(
       <QuestionView
@@ -85,7 +85,8 @@ describe("QuestionView", () => {
     );
     // 初回=Aは不正解。採点表示から開始
     expect(screen.getByTestId("verdict")).toHaveTextContent("不正解");
-    expect(screen.getByText(/初回の回答が使われます/)).toBeInTheDocument();
+    // 注記メッセージは表示しない（内部的に初回回答のみ採用する仕組みは維持）
+    expect(screen.queryByText(/初回の回答が使われます/)).not.toBeInTheDocument();
     // 採点ボタンは出ない（読み取り専用）
     expect(screen.queryByRole("button", { name: "採点する" })).not.toBeInTheDocument();
     // 選択肢は無効
