@@ -45,7 +45,7 @@ const CFG =
 const EXAM_CODE = CFG.code;
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
-const THROTTLE_MS = 2500;
+const THROTTLE_MS = Number(process.env.THROTTLE_MS || 2500);
 const REFRESH = !!process.env.REFRESH;
 const MAX_COMMENTS = 12; // 1問あたり保存する上位コメント数
 const COLLECTED_AT = "2026-06-30";
