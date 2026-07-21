@@ -20,6 +20,21 @@ const EXAMS = {
     dir: path.resolve("..", "data", "soa-c02"),
     missing: "missing-qnums-soa.json",
   },
+  // MLS-C01 は bare slug "aws-certified-machine-learning-specialty"（URLに mls-c01 なし）。
+  // MLA(machine-learning-engineer-associate) と誤マッチしないよう specialty まで含める。
+  "mls-c01": {
+    total: 369,
+    re: /machine-learning-specialty/i,
+    dir: path.resolve("..", "data", "mls-c01"),
+    missing: "missing-qnums-mls-c01.json",
+  },
+  // MLA-C01 は slug 末尾が "-mla"（-c01 なし）。
+  "mla-c01": {
+    total: 152,
+    re: /machine-learning-engineer-associate/i,
+    dir: path.resolve("..", "data", "mla-c01"),
+    missing: "missing-qnums-mla-c01.json",
+  },
 };
 // 未登録の試験は自動導出（EXAM=<code> と EXAM_TOTAL=<総問数> で動く）
 const CFG =
