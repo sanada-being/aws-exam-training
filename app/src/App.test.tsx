@@ -122,4 +122,25 @@ describe("Home", () => {
     renderHome({ count: 10 }); // sample=2問なので min(10,2)=2
     expect(screen.getByText(/2問出題/)).toBeInTheDocument();
   });
+
+  it("65問チップで onCountChange が呼ばれる", async () => {
+    const onCountChange = vi.fn();
+    renderHome({ onCountChange });
+    await userEvent.click(screen.getByRole("button", { name: "65問" }));
+    expect(onCountChange).toHaveBeenCalledWith(65);
+  });
+
+  it("本番モードのボタンを表示し、クリックで onStart('exam') が呼ばれる", async () => {
+    const onStart = vi.fn();
+    renderHome({ onStart });
+    const btn = screen.getByRole("button", { name: /本番モード/ });
+    expect(btn).toBeInTheDocument();
+    await userEvent.click(btn);
+    expect(onStart).toHaveBeenCalledWith("exam");
+  });
+
+  it("本番モードは対象が0問なら無効", () => {
+    renderHome({ filter: { ...emptyFilter, bookmarkedOnly: true } }); // ★なし=0問
+    expect(screen.getByRole("button", { name: /本番モード/ })).toBeDisabled();
+  });
 });

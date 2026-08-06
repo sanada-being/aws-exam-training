@@ -1,6 +1,6 @@
 import type { Question, Confidence } from "../types";
 import type { QuizMode } from "../domain/selection";
-import { modeCount } from "../domain/selection";
+import { modeCount, EXAM_COUNT } from "../domain/selection";
 import { computeStats } from "../domain/stats";
 import { applyFilters, isFilterActive, emptyFilter, type Filter } from "../domain/filter";
 import { useStore } from "../store/useStore";
@@ -21,7 +21,7 @@ const TOGGLES: { key: "bookmarkedOnly" | "needsReviewOnly" | "excludeMastered"; 
     { key: "excludeMastered", label: "未正解のみ" },
   ];
 
-const COUNTS: (number | null)[] = [10, 20, 30, 40, 50, null];
+const COUNTS: (number | null)[] = [10, 20, 30, 40, 50, EXAM_COUNT, null];
 
 export function Home({
   questions,
@@ -51,6 +51,7 @@ export function Home({
   const pool = applyFilters(questions, filter, bookmarks, records);
   const wrong = modeCount(pool, "wrong", records);
   const unanswered = modeCount(pool, "unanswered", records);
+  const exam = modeCount(pool, "exam", records);
   const poolEmpty = pool.length === 0;
 
   const dashboard = [
@@ -65,6 +66,12 @@ export function Home({
     { mode: "random", label: "ランダム出題", disabled: poolEmpty },
     { mode: "wrong", label: "苦手を復習", badge: wrong, disabled: wrong === 0 },
     { mode: "unanswered", label: "未回答のみ", badge: unanswered, disabled: unanswered === 0 },
+    {
+      mode: "exam",
+      label: `本番モード（${EXAM_COUNT}問）`,
+      badge: exam,
+      disabled: exam === 0,
+    },
   ];
 
   const toggleConf = (c: Confidence) =>
@@ -162,7 +169,7 @@ export function Home({
           <button
             key={m.mode}
             type="button"
-            className="btn big"
+            className={m.mode === "exam" ? "btn big exam" : "btn big"}
             onClick={() => onStart(m.mode)}
             disabled={m.disabled}
           >
