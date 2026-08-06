@@ -64,6 +64,9 @@ a { color: var(--accent); }
 .btn.primary { background: var(--accent); color: #06283d; border-color: transparent; }
 .btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
 .btn.big { width: 100%; padding: 16px; font-size: 1.05rem; }
+/* 本番モード（65問）は他の出題モードと区別する */
+.btn.exam { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.btn.exam:disabled { border-color: var(--border); color: var(--text); }
 
 /* ホーム */
 .home h1 { margin-bottom: 4px; }
