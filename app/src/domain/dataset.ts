@@ -7,6 +7,19 @@ export interface DatasetSummary {
   multipleAnswer: number;
 }
 
+/**
+ * 本番試験で廃止された出題形式か（選択肢6つから3つ選ぶ形式）。
+ * 正解が3つ以上の問題が該当する。
+ */
+export function isRetiredFormat(q: Question): boolean {
+  return q.adoptedAnswer.length >= 3;
+}
+
+/** 廃止された出題形式を除いた問題集を返す（非破壊）。 */
+export function excludeRetiredFormats(questions: Question[]): Question[] {
+  return questions.filter((q) => !isRetiredFormat(q));
+}
+
 /** 問題集全体の集計（ホーム画面の概要表示などに使う純粋関数）。 */
 export function summarize(questions: Question[]): DatasetSummary {
   const byTopic: Record<number, number> = {};
