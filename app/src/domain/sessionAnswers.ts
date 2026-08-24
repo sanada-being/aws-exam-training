@@ -27,17 +27,24 @@ export function recordFirst(
   return { ...a, [id]: { selected: [...selected], correct } };
 }
 
-/** 初回回答基準で正答数・誤答id（挿入順）を集計する。 */
-export function tally(a: SessionAnswers): {
-  answered: number;
-  correct: number;
-  wrongIds: string[];
-} {
+/**
+ * 初回回答基準で正答数・誤答idを集計する。集計はこの関数に集約する。
+ * `ids` を渡すとその範囲・その順序だけを対象にする（現在の出題に含まれない
+ * 回答を数えないため。省略時は記録済みの全件を回答順で集計）。
+ */
+export function tally(
+  a: SessionAnswers,
+  ids: readonly string[] = Object.keys(a),
+): { answered: number; correct: number; wrongIds: string[] } {
+  let answered = 0;
   let correct = 0;
   const wrongIds: string[] = [];
-  for (const id of Object.keys(a)) {
-    if (a[id].correct) correct += 1;
+  for (const id of ids) {
+    const r = a[id];
+    if (!r) continue;
+    answered += 1;
+    if (r.correct) correct += 1;
     else wrongIds.push(id);
   }
-  return { answered: Object.keys(a).length, correct, wrongIds };
+  return { answered, correct, wrongIds };
 }

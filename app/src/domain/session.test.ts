@@ -31,34 +31,59 @@ describe("isResumable", () => {
   });
 });
 
-describe("sessionResult", () => {
+describe("sessionResult（現在の出題に含まれる回答だけを集計する）", () => {
+  const answers = {
+    a: { selected: ["A"], correct: true },
+    b: { selected: ["B"], correct: false },
+    c: { selected: ["C"], correct: true },
+  };
+
   it("正答数・誤答idは answers だけから導出する（カウンタを持たない）", () => {
-    const r = sessionResult(
-      s({
-        answers: {
-          a: { selected: ["A"], correct: true },
-          b: { selected: ["B"], correct: false },
-          c: { selected: ["C"], correct: true },
-        },
-      }),
-      3,
-    );
+    const r = sessionResult(s({ answers }), ["a", "b", "c"]);
     expect(r).toEqual({ total: 3, correct: 2, wrongIds: ["b"], accuracy: 67 });
   });
 
   it("未回答があっても分母は出題数、正答率は 100% を超えない", () => {
-    const r = sessionResult(s({ answers: { a: { selected: ["A"], correct: true } } }), 3);
-    expect(r.total).toBe(3);
-    expect(r.correct).toBe(1);
-    expect(r.accuracy).toBe(33);
+    const r = sessionResult(s({ answers: { a: answers.a } }), ["a", "b", "c"]);
+    expect(r).toEqual({ total: 3, correct: 1, wrongIds: [], accuracy: 33 });
+  });
+
+  it("問題集から消えた問題の回答は集計に含めない（正答数が出題数を超えない）", () => {
+    // a,b,c を解いた後、データ更新で a,c が消え、未回答の d だけが残った状況
+    const r = sessionResult(s({ answers }), ["d"]);
+    expect(r).toEqual({ total: 1, correct: 0, wrongIds: [], accuracy: 0 });
+  });
+
+  it("消えた問題の誤答は振り返りに含めない", () => {
+    // b(誤答) が消え、a,c だけが残った
+    const r = sessionResult(s({ answers }), ["a", "c"]);
+    expect(r).toEqual({ total: 2, correct: 2, wrongIds: [], accuracy: 100 });
+  });
+
+  it("誤答idは出題順で返す（回答した順ではない）", () => {
+    const r = sessionResult(
+      s({
+        answers: {
+          c: { selected: ["C"], correct: false },
+          a: { selected: ["A"], correct: false },
+        },
+      }),
+      ["a", "b", "c"],
+    );
+    expect(r.wrongIds).toEqual(["a", "c"]);
   });
 
   it("セッションが無ければ 0 件として扱う", () => {
-    expect(sessionResult(null, 5)).toEqual({ total: 5, correct: 0, wrongIds: [], accuracy: 0 });
+    expect(sessionResult(null, ["a", "b"])).toEqual({
+      total: 2,
+      correct: 0,
+      wrongIds: [],
+      accuracy: 0,
+    });
   });
 
   it("出題数 0 なら正答率は 0", () => {
-    expect(sessionResult(s(), 0).accuracy).toBe(0);
+    expect(sessionResult(s(), []).accuracy).toBe(0);
   });
 });
 

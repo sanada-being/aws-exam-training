@@ -198,4 +198,54 @@ describe("App: 中断中にデータが更新されても再開できる", () =>
     await waitFor(() => screen.getByRole("button", { name: "順番に学習" }));
     expect(screen.queryByRole("button", { name: /続きから/ })).not.toBeInTheDocument();
   });
+
+  it("正解済みの問題が消えても、その正解を数えず正答率が100%を超えない", async () => {
+    const first = render(<App />);
+    await startSequential();
+    await pick(1, "A"); // 正答
+    await pick(2, "A"); // 正答
+    await pick(3, "A"); // 正答 → 問題4を表示中に中断
+    first.unmount();
+
+    // 正解済みの3問がデータ更新で消え、未回答の問題4だけが残った
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve([raw(4)]) })),
+    );
+    render(<App />);
+    await userEvent.click(await waitFor(() => screen.getByRole("button", { name: /続きから/ })));
+    await waitFor(() => screen.getByText("問題4"));
+    await pick(4, "B"); // 誤答
+
+    // 消えた3問の正解を数えないので 1問中0問正解
+    expect(screen.getByText(/問中/).textContent).toMatch(/1 問中\s*0 問正解（0%）/);
+    expect(screen.getByText("間違い 1 問")).toBeInTheDocument();
+  });
+
+  it("消えた問題の誤答は振り返りの件数に含めない", async () => {
+    const first = render(<App />);
+    await startSequential();
+    await pick(1, "B"); // 誤答
+    await pick(2, "B"); // 誤答 → 問題3を表示中に中断
+    first.unmount();
+
+    // 誤答した問題1が消えた
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve([raw(2), raw(3), raw(4)]) })),
+    );
+    render(<App />);
+    await userEvent.click(await waitFor(() => screen.getByRole("button", { name: /続きから/ })));
+    await waitFor(() => screen.getByText("問題3"));
+    await pick(3, "A");
+    await pick(4, "A");
+
+    // 残っている誤答は問題2だけ。ボタンの件数と実際の出題数が一致する
+    expect(screen.getByText(/問中/).textContent).toMatch(/3 問中\s*2 問正解（67%）/);
+    const btn = screen.getByRole("button", { name: /間違えた問題を復習/ });
+    expect(btn).toHaveAccessibleName("間違えた問題を復習（1問）");
+    await userEvent.click(btn);
+    expect(screen.getByTestId("progress")).toHaveTextContent("1 / 1");
+    expect(screen.getByText("問題2")).toBeInTheDocument();
+  });
 });

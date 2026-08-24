@@ -60,15 +60,21 @@ export interface SessionResult {
   accuracy: number;
 }
 
-/** セッションの成績を回答明細から導出する。total は出題数を渡す。 */
-export function sessionResult(session: Session | null, total: number): SessionResult {
-  const { correct, wrongIds } = session
-    ? tally(session.answers)
-    : { correct: 0, wrongIds: [] as string[] };
+/**
+ * セッションの成績を回答明細から導出する。
+ * `itemIds` は「今この画面で出題している問題のid（出題順）」。
+ * 分子・分母をこの同一集合から出すので、正答数が出題数を超えることはない。
+ * データ更新で問題集から消えた問題の回答は自動的に除外される。
+ */
+export function sessionResult(
+  session: Session | null,
+  itemIds: readonly string[],
+): SessionResult {
+  const { correct, wrongIds } = tally(session?.answers ?? {}, itemIds);
   return {
-    total,
+    total: itemIds.length,
     correct,
     wrongIds,
-    accuracy: total ? Math.round((correct / total) * 100) : 0,
+    accuracy: itemIds.length ? Math.round((correct / itemIds.length) * 100) : 0,
   };
 }
