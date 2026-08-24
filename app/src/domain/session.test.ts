@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isResumable, sessionResult, type Session } from "./session";
+import { isResumable, resolveResume, sessionResult, type Session } from "./session";
 
 function s(over: Partial<Session> = {}): Session {
   return { queueIds: ["a", "b", "c"], index: 0, answers: {}, reviewMode: false, ...over };
@@ -59,5 +59,57 @@ describe("sessionResult", () => {
 
   it("出題数 0 なら正答率は 0", () => {
     expect(sessionResult(s(), 0).accuracy).toBe(0);
+  });
+});
+
+describe("resolveResume（問題集が変わっても再開位置を id で解決する）", () => {
+  const q = (id: string) => ({ id });
+  const map = (ids: string[]) => new Map(ids.map((id) => [id, q(id)]));
+
+  it("問題集が変わっていなければ session の位置のまま", () => {
+    const s0 = s({ queueIds: ["a", "b", "c"], index: 2 });
+    expect(resolveResume(s0, map(["a", "b", "c"]))).toEqual({
+      items: [q("a"), q("b"), q("c")],
+      index: 2,
+    });
+  });
+
+  it("前方の問題が問題集から消えても、再開位置がずれない", () => {
+    // b を解いている途中で、a がデータ更新で消えた
+    const s0 = s({ queueIds: ["a", "b", "c"], index: 1 });
+    expect(resolveResume(s0, map(["b", "c"]))).toEqual({
+      items: [q("b"), q("c")],
+      index: 0, // b は新しい items の先頭
+    });
+  });
+
+  it("中断していた問題自体が消えたら、未回答の先頭から続ける", () => {
+    const s0 = s({
+      queueIds: ["a", "b", "c"],
+      index: 1,
+      answers: { a: { selected: ["A"], correct: true } },
+    });
+    expect(resolveResume(s0, map(["a", "c"]))).toEqual({
+      items: [q("a"), q("c")],
+      index: 1, // a は回答済みなので c から
+    });
+  });
+
+  it("残った問題が全て回答済みなら結果画面の位置を返す", () => {
+    const s0 = s({
+      queueIds: ["a", "b"],
+      index: 1,
+      answers: { a: { selected: ["A"], correct: true } },
+    });
+    expect(resolveResume(s0, map(["a"]))).toEqual({ items: [q("a")], index: 1 });
+  });
+
+  it("問題が全て消えていれば再開しない", () => {
+    expect(resolveResume(s({ index: 1 }), map([]))).toBeNull();
+  });
+
+  it("再開不可なセッション（旧形式・完了済み）では null", () => {
+    expect(resolveResume(null, map(["a"]))).toBeNull();
+    expect(resolveResume(s({ index: 3 }), map(["a", "b", "c"]))).toBeNull();
   });
 });
