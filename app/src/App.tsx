@@ -7,12 +7,12 @@ import { Home } from "./screens/Home";
 import { Quiz } from "./screens/Quiz";
 import { Settings } from "./screens/Settings";
 import { useStore } from "./store/useStore";
+import { isResumable } from "./domain/session";
 import { useAutoSync } from "./hooks/useAutoSync";
 
 interface ActiveQueue {
   items: Question[];
   index: number;
-  correct: number;
 }
 
 export default function App() {
@@ -46,7 +46,6 @@ export default function App() {
       <Quiz
         queue={queue.items}
         initialIndex={queue.index}
-        initialCorrect={queue.correct}
         onExit={() => setQueue(null)}
       />
     );
@@ -57,7 +56,7 @@ export default function App() {
     const items = buildQueue(pool, mode, records, Math.random, count ?? undefined);
     if (items.length === 0) return;
     startSession(items.map((q) => q.id));
-    setQueue({ items, index: 0, correct: 0 });
+    setQueue({ items, index: 0 });
   };
 
   const resume = () => {
@@ -66,10 +65,11 @@ export default function App() {
     const items = session.queueIds
       .map((id) => map.get(id))
       .filter((q): q is Question => Boolean(q));
-    setQueue({ items, index: session.index, correct: session.correct });
+    setQueue({ items, index: session.index });
   };
 
-  const canResume = !!session && session.index < session.queueIds.length;
+  // 回答明細を持たない旧形式のセッションは再開不可（明細を復元できないため）
+  const canResume = isResumable(session);
 
   return (
     <Home
