@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Question } from "./types";
 import { loadQuestions } from "./data/loader";
 import { buildQueue, type QuizMode } from "./domain/selection";
@@ -7,7 +7,7 @@ import { Home } from "./screens/Home";
 import { Quiz } from "./screens/Quiz";
 import { Settings } from "./screens/Settings";
 import { useStore } from "./store/useStore";
-import { isResumable } from "./domain/session";
+import { resolveResume } from "./domain/session";
 import { useAutoSync } from "./hooks/useAutoSync";
 
 interface ActiveQueue {
@@ -29,6 +29,10 @@ export default function App() {
   const bookmarks = useStore((s) => s.bookmarks);
   const session = useStore((s) => s.session);
   const startSession = useStore((s) => s.startSession);
+
+  const byId = useMemo(() => new Map((questions ?? []).map((q) => [q.id, q])), [questions]);
+  // 中断していたセッションを現在の問題集に突き合わせて解決する（問題idベース）
+  const resumable = resolveResume(session, byId);
 
   useEffect(() => {
     loadQuestions()
@@ -59,24 +63,13 @@ export default function App() {
     setQueue({ items, index: 0 });
   };
 
-  const resume = () => {
-    if (!session) return;
-    const map = new Map(questions.map((q) => [q.id, q]));
-    const items = session.queueIds
-      .map((id) => map.get(id))
-      .filter((q): q is Question => Boolean(q));
-    setQueue({ items, index: session.index });
-  };
-
-  // 回答明細を持たない旧形式のセッションは再開不可（明細を復元できないため）
-  const canResume = isResumable(session);
-
   return (
     <Home
       questions={questions}
       onStart={start}
-      onResume={canResume ? resume : undefined}
-      resumeInfo={canResume ? { index: session!.index, total: session!.queueIds.length } : undefined}
+      // resumable が null のとき（旧形式のセッション・問題が全て消えた場合）は再開不可
+      onResume={resumable ? () => setQueue(resumable) : undefined}
+      resumeInfo={resumable ? { index: resumable.index, total: resumable.items.length } : undefined}
       filter={filter}
       onFilterChange={setFilter}
       onOpenSettings={() => setShowSettings(true)}
