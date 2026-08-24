@@ -3,7 +3,7 @@ import type { Question } from "../types";
 import { QuestionView } from "../components/QuestionView";
 import { Explanation } from "../components/Explanation";
 import { useStore } from "../store/useStore";
-import { isAnswered, tally, type SessionAnswers } from "../domain/sessionAnswers";
+import { isAnswered, type SessionAnswers } from "../domain/sessionAnswers";
 import { sessionResult } from "../domain/session";
 
 /** session が無いときの回答明細。毎レンダーで新しい object を作らないよう定数化。 */
@@ -36,11 +36,16 @@ export function Quiz({
   const toggleBookmark = useStore((s) => s.toggleBookmark);
 
   const q = items[idx];
+  // 結果表示・振り返りは同じ集計結果を使う（分子・分母・誤答リストの食い違いを防ぐ）
+  const result = sessionResult(
+    session,
+    items.map((it) => it.id),
+  );
 
   // 間違えた問題だけで再スタート
   function reviewWrong() {
-    const { wrongIds } = tally(answers);
-    const wrongItems = items.filter((it) => wrongIds.includes(it.id));
+    const wrong = new Set(result.wrongIds);
+    const wrongItems = items.filter((it) => wrong.has(it.id));
     if (wrongItems.length === 0) return;
     setItems(wrongItems);
     setIdx(0);
@@ -59,14 +64,12 @@ export function Quiz({
   }
 
   if (!q) {
-    // 分子・分母をどちらも同じ回答集合から導出する（カウンタを足さない）
-    const r = sessionResult(session, items.length);
-    const wrongCount = r.wrongIds.length;
+    const wrongCount = result.wrongIds.length;
     return (
       <div className="done">
         <h2>お疲れさまでした！</h2>
         <p>
-          {r.total} 問中 <strong>{r.correct}</strong> 問正解（{r.accuracy}%）
+          {result.total} 問中 <strong>{result.correct}</strong> 問正解（{result.accuracy}%）
         </p>
         {wrongCount > 0 ? (
           <p className="muted">間違い {wrongCount} 問</p>
