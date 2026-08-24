@@ -2,12 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { applyAnswer, type Records } from "../domain/progress";
 import { mergeProgress, type ProgressSnapshot } from "../domain/merge";
+import { recordFirst } from "../domain/sessionAnswers";
+import type { Session } from "../domain/session";
 
-export interface Session {
-  queueIds: string[];
-  index: number;
-  correct: number;
-}
+export type { Session };
 
 interface State {
   records: Records;
@@ -19,9 +17,10 @@ interface State {
   /** リモート進捗を取り込みマージする（同期用）。 */
   mergeRemote: (remote: ProgressSnapshot) => void;
   // セッション（中断/再開）
-  startSession: (queueIds: string[]) => void;
+  startSession: (queueIds: string[], reviewMode?: boolean) => void;
   setSessionIndex: (index: number) => void;
-  bumpSessionCorrect: () => void;
+  /** セッション内の初回回答を記録する（再回答では上書きしない）。 */
+  recordSessionAnswer: (id: string, correct: boolean, selected: string[]) => void;
   endSession: () => void;
 }
 
@@ -57,11 +56,18 @@ export const useStore = create<State>()(
           );
           return { records: merged.records, bookmarks: merged.bookmarks };
         }),
-      startSession: (queueIds) => set({ session: { queueIds, index: 0, correct: 0 } }),
+      startSession: (queueIds, reviewMode = false) =>
+        set({ session: { queueIds, index: 0, answers: {}, reviewMode } }),
       setSessionIndex: (index) =>
         set((s) => (s.session ? { session: { ...s.session, index } } : {})),
-      bumpSessionCorrect: () =>
-        set((s) => (s.session ? { session: { ...s.session, correct: s.session.correct + 1 } } : {})),
+      recordSessionAnswer: (id, correct, selected) =>
+        set((s) => {
+          if (!s.session) return {};
+          const answers = recordFirst(s.session.answers, id, correct, selected);
+          // 初回回答が既にある場合は同一参照が返るので、無駄な更新を避ける
+          if (answers === s.session.answers) return {};
+          return { session: { ...s.session, answers } };
+        }),
       endSession: () => set({ session: null }),
     }),
     { name: "saa-progress-v1", version: 1 },

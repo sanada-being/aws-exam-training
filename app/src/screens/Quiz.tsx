@@ -3,35 +3,33 @@ import type { Question } from "../types";
 import { QuestionView } from "../components/QuestionView";
 import { Explanation } from "../components/Explanation";
 import { useStore } from "../store/useStore";
-import {
-  isAnswered,
-  recordFirst,
-  tally,
-  type SessionAnswers,
-} from "../domain/sessionAnswers";
+import { isAnswered, tally, type SessionAnswers } from "../domain/sessionAnswers";
+import { sessionResult } from "../domain/session";
+
+/** session が無いときの回答明細。毎レンダーで新しい object を作らないよう定数化。 */
+const NO_ANSWERS: SessionAnswers = {};
 
 export function Quiz({
   queue,
   onExit,
   initialIndex = 0,
-  initialCorrect = 0,
 }: {
   queue: Question[];
   onExit: () => void;
   initialIndex?: number;
-  /** 再開時の既回答分の正答数（中断前の集計を引き継ぐ）。 */
-  initialCorrect?: number;
 }) {
   const [items, setItems] = useState<Question[]>(queue);
   const [idx, setIdx] = useState(initialIndex);
-  // セッション内の回答（初回回答のみを保持）。集計・苦手・振り返りの唯一の基準。
-  const [answers, setAnswers] = useState<SessionAnswers>({});
-  // 直後の誤答復習中は苦手状態を維持したいので、グローバル記録を更新しない
-  const [reviewMode, setReviewMode] = useState(false);
+
+  const session = useStore((s) => s.session);
+  // 回答明細と復習フラグは session（永続化）が唯一の持ち主。
+  // ローカル state に持つと中断（アンマウント）で失われ、正答数だけが残って集計が壊れる。
+  const answers = session?.answers ?? NO_ANSWERS;
+  const reviewMode = session?.reviewMode ?? false;
 
   const recordAnswer = useStore((s) => s.recordAnswer);
+  const recordSessionAnswer = useStore((s) => s.recordSessionAnswer);
   const setSessionIndex = useStore((s) => s.setSessionIndex);
-  const bumpSessionCorrect = useStore((s) => s.bumpSessionCorrect);
   const endSession = useStore((s) => s.endSession);
   const startSession = useStore((s) => s.startSession);
   const bookmarks = useStore((s) => s.bookmarks);
@@ -46,9 +44,11 @@ export function Quiz({
     if (wrongItems.length === 0) return;
     setItems(wrongItems);
     setIdx(0);
-    setAnswers({});
-    setReviewMode(true);
-    startSession(wrongItems.map((x) => x.id));
+    // 復習は独立した新セッション。前ラウンドの正答数を持ち込まないので100%を超えない。
+    startSession(
+      wrongItems.map((x) => x.id),
+      true,
+    );
   }
 
   function goPrev() {
@@ -59,18 +59,14 @@ export function Quiz({
   }
 
   if (!q) {
-    const total = items.length;
-    const t = tally(answers);
-    // 再開時は中断前の正答数(initialCorrect)を引き継ぐ
-    const correctCount = initialCorrect + t.correct;
-    const wrongIds = t.wrongIds;
-    const wrongCount = wrongIds.length;
+    // 分子・分母をどちらも同じ回答集合から導出する（カウンタを足さない）
+    const r = sessionResult(session, items.length);
+    const wrongCount = r.wrongIds.length;
     return (
       <div className="done">
         <h2>お疲れさまでした！</h2>
         <p>
-          {total} 問中 <strong>{correctCount}</strong> 問正解（
-          {total ? Math.round((correctCount / total) * 100) : 0}%）
+          {r.total} 問中 <strong>{r.correct}</strong> 問正解（{r.accuracy}%）
         </p>
         {wrongCount > 0 ? (
           <p className="muted">間違い {wrongCount} 問</p>
@@ -131,12 +127,9 @@ export function Quiz({
         initialGraded={!!current}
         onResult={(c, selected) => {
           const first = !isAnswered(answers, q.id);
-          setAnswers((a) => recordFirst(a, q.id, c, selected));
-          // 初回回答のみ集計・苦手収集に反映する
-          if (first) {
-            if (!reviewMode) recordAnswer(q.id, c);
-            if (c) bumpSessionCorrect();
-          }
+          recordSessionAnswer(q.id, c, selected);
+          // 初回回答のみ苦手収集に反映する（復習ラウンド中は苦手状態を維持）
+          if (first && !reviewMode) recordAnswer(q.id, c);
         }}
         onNext={() => {
           const next = idx + 1;
