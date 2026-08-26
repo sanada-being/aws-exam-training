@@ -9,6 +9,8 @@ collector/.profile/
 
 # enumeration intermediates (URLは data/disc-urls.json に集約済み)
 data/url-batches/
+# 収集URLの突き合わせ結果(生成手段が残っておらず内容も不正確なため追跡しない)
+data/*/missing-urls.json
 
 # translation intermediates (訳文は data/questions.json に集約)
 data/ja-input/
