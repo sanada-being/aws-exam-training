@@ -245,6 +245,17 @@ a { color: var(--accent); }
 .expl-text { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
 .expl-text p { margin: 4px 0; line-height: 1.7; }
 .expl-text p:first-of-type { font-weight: 600; }
+/* 出典元データの不備に関する注記 */
+.source-note {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border: 1px solid #b45309;
+  border-radius: 10px;
+  background: rgba(180, 83, 9, 0.12);
+  color: #fbbf24;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
 .votebar { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
 .votekey { flex: 0 0 auto; width: 44px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .votetrack { flex: 1 1 auto; height: 14px; background: var(--panel2); border-radius: 999px; overflow: hidden; }

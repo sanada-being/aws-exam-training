@@ -31,4 +31,6 @@ export interface Question {
   answerConfidence: Confidence;
   needsReview: boolean;
   explanation?: string | null; // 日本語解説
+  /** 出典元(ExamTopics)の不備に関する注記。選択肢の欠落・結合の説明を学習者に見せる */
+  sourceNote?: string | null;
 }
