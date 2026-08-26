@@ -20,6 +20,11 @@ export function Explanation({ question }: { question: Question }) {
           ))}
         </div>
       )}
+      {question.sourceNote && (
+        <p className="source-note" data-testid="source-note">
+          ⚠ {question.sourceNote}
+        </p>
+      )}
       <h3>コミュニティ投票分布</h3>
       {question.communityVote.length === 0 ? (
         <p className="muted">投票データなし</p>

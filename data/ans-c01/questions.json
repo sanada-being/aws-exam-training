@@ -35868,8 +35868,15 @@
       {
         "key": "E",
         "text": {
-          "en": "Create an AWSControlTowerBiueprintAccess role in the shared services account.F Create an AWSControlTowerBiueprintAccess role in each member account.",
-          "ja": "共有サービスアカウントにAWSControlTowerBiueprintAccessロールを作成する。各メンバーアカウントにもAWSControlTowerBiueprintAccessロールを作成する。"
+          "en": "Create an AWSControlTowerBiueprintAccess role in the shared services account.",
+          "ja": "共有サービスアカウントにAWSControlTowerBiueprintAccessロールを作成する。"
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Create an AWSControlTowerBiueprintAccess role in each member account.",
+          "ja": "各メンバーアカウントにAWSControlTowerBiueprintAccessロールを作成する。"
         }
       }
     ],
@@ -36005,11 +36012,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は B、C、E。\n\nControl Tower ベースのマルチアカウント環境で、新規・既存の全メンバーアカウントに共通ネットワーク(VPC を TGW にアタッチ)を最小運用で展開する。まず作成すべきインフラを CloudFormation テンプレート化し、共有サービスアカウントに Service Catalog 製品として登録する(C)。Control Tower の Account Factory Customization(AFC)は、この Service Catalog ブループリントを使ってアカウントのプロビジョニング時・既存アカウント更新時にリソースを一貫適用できる(B)。AFC のブループリント適用には、共有サービスアカウントと各メンバーアカウントに AWSControlTowerBlueprintAccess ロールが必要(E)。これらでカスタムコードを最小化して自動展開できる。\n\n- A: 共有サービスアカウントの Lambda が各アカウントのロールを引き受けて自前プロビジョニングする方式は、独自コードの開発・保守が重く、Control Tower のネイティブな AFC/Service Catalog(B/C/E)より運用オーバーヘッドが大きい。\n- D: CreateManagedAccount ライフサイクルイベント + EventBridge + Lambda はイベント駆動で新規アカウントに対応できるが、既存アカウントへの適用や冪等な一貫展開は AFC の方が容易で、カスタム Lambda 実装の保守も不要。AFC ブループリント(B/C/E)が最小運用。得票が割れるのはこの自前実装 vs AFC の設計思想差。"
+      "ja": "正解は B、C、E。\n\nControl Tower ベースのマルチアカウント環境で、新規・既存の全メンバーアカウントに共通ネットワーク(VPC を TGW にアタッチ)を最小運用で展開する。まず作成すべきインフラを CloudFormation テンプレート化し、共有サービスアカウントに Service Catalog 製品として登録する(C)。Control Tower の Account Factory Customization(AFC)は、この Service Catalog ブループリントを使ってアカウントのプロビジョニング時・既存アカウント更新時にリソースを一貫適用できる(B)。AFC のブループリント適用には、ブループリントを保持する共有サービスアカウントに AWSControlTowerBlueprintAccess ロールが必要(E)。これらでカスタムコードを最小化して自動展開できる。\n\n- A: 共有サービスアカウントの Lambda が各アカウントのロールを引き受けて自前プロビジョニングする方式は、独自コードの開発・保守が重く、Control Tower のネイティブな AFC/Service Catalog(B/C/E)より運用オーバーヘッドが大きい。\n- D: CreateManagedAccount ライフサイクルイベント + EventBridge + Lambda はイベント駆動で新規アカウントに対応できるが、既存アカウントへの適用や冪等な一貫展開は AFC の方が容易で、カスタム Lambda 実装の保守も不要。AFC ブループリント(B/C/E)が最小運用。得票が割れるのはこの自前実装 vs AFC の設計思想差。\n- F: AWSControlTowerBlueprintAccess ロールを作るのはブループリントを保持する共有サービスアカウント側で、各メンバーアカウントに同名ロールを用意する必要はない。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 E に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "ans-c01-0208",
@@ -39928,8 +39936,8 @@
       {
         "key": "D",
         "text": {
-          "en": "Create an association to EC2 instance subnets on the financial application VPC transit gateway attachment under the transit gateway multicast domain.D. Add an inbound rule to the security groups that are attached to the multicast receiver instances. Configure the rule as follows:Protocol: IGMP Version 2. Port: All, and Source: 0 0.0.0/32",
-          "ja": "トランジットゲートウェイのマルチキャストドメイン配下にある、金融アプリケーションVPCのトランジットゲートウェイアタッチメントに対して、EC2インスタンスのサブネットへの関連付けを作成する。マルチキャストレシーバーインスタンスにアタッチされているセキュリティグループにインバウンドルールを追加する。ルールを以下のように構成する。プロトコル: IGMP バージョン2、ポート: すべて、送信元: 0.0.0.0/32。"
+          "en": "Create an association to EC2 instance subnets on the financial application VPC transit gateway attachment under the transit gateway multicast domain.",
+          "ja": "トランジットゲートウェイのマルチキャストドメイン配下にある、金融アプリケーションVPCのトランジットゲートウェイアタッチメントに対して、EC2インスタンスのサブネットへの関連付けを作成する。"
         }
       },
       {
@@ -39937,6 +39945,13 @@
         "text": {
           "en": "Add an inbound rule to the security groups that are attached to the multicast receiver instances. Configure the rule as follows.Protocol: UDP, Port: 5102, and Source: 10.128.10.2/32",
           "ja": "マルチキャストレシーバーインスタンスにアタッチされているセキュリティグループにインバウンドルールを追加する。ルールを以下のように構成する。プロトコル: UDP、ポート: 5102、送信元: 10.128.10.2/32。"
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Add an inbound rule to the security groups that are attached to the multicast receiver instances. Configure the rule as follows:Protocol: IGMP Version 2. Port: All, and Source: 0 0.0.0/32",
+          "ja": "マルチキャストレシーバーインスタンスにアタッチされているセキュリティグループにインバウンドルールを追加する。ルールを以下のように構成する。プロトコル: IGMP バージョン2、ポート: すべて、送信元: 0.0.0.0/32。"
         }
       }
     ],
@@ -40033,11 +40048,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は A、D。\n\nTransit Gateway マルチキャストで新しい受信インスタンスを株式取引のマルチキャストグループ(239.10.10.10)に参加させる。まず、2 つの新しい受信インスタンスの ENI を、グループ IP 239.10.10.10 のマルチキャストグループメンバーとして追加する(A)。次に、金融アプリ VPC の TGW アタッチメントを TGW マルチキャストドメインに関連付け(サブネットの関連付け)、受信側のセキュリティグループで IGMP を許可する(D)。IGMP による参加とサブネット関連付けにより、受信インスタンスがマルチキャストトラフィックを受け取れる。\n\n- B: 受信側 SG のインバウンドで許可すべきは、実データの UDP:5102(送信元 10.128.10.2)であり、IGMP の送信元を 239.10.10.10/32 のマルチキャストアドレスに限定する構成は誤り。IGMP 許可は D の形が適切。\n- C: マルチキャストドメインへの関連付けは「インスタンス ID」単位ではなく「サブネット」単位で行う(D)。インスタンス ID への関連付けという記述は誤り。\n- E: UDP:5102 を送信元 10.128.10.2 で許可するルール自体は妥当だが、正解の 3 択(設問は 3 つ選択だが採用は A/D の 2 つ)には含まれず、参加に必須なのは IGMP 許可(D)とグループメンバー追加(A)、サブネット関連付け。得票では AD が主流。"
+      "ja": "正解は A、D。\n\nTransit Gateway マルチキャストで新しい受信インスタンスを株式取引のマルチキャストグループ(239.10.10.10)に参加させる。まず、2 つの新しい受信インスタンスの ENI を、グループ IP 239.10.10.10 のマルチキャストグループメンバーとして追加する(A)。次に、金融アプリ VPC の TGW アタッチメントを TGW マルチキャストドメインに、インスタンス ID ではなくサブネット単位で関連付ける(D)。IGMP による参加とサブネット関連付けにより、受信インスタンスがマルチキャストトラフィックを受け取れる。\n\n- B: 受信側 SG のインバウンドで許可すべきは、実データの UDP:5102(送信元 10.128.10.2)であり、IGMP の送信元を 239.10.10.10/32 のマルチキャストアドレスに限定する構成は誤り。IGMP 許可は D の形が適切。\n- C: マルチキャストドメインへの関連付けは「インスタンス ID」単位ではなく「サブネット」単位で行う(D)。インスタンス ID への関連付けという記述は誤り。\n- E: UDP:5102 を送信元 10.128.10.2 で許可するルール自体は妥当だが、正解の 3 択(設問は 3 つ選択だが採用は A/D の 2 つ)には含まれず、参加に必須なのは IGMP 許可(D)とグループメンバー追加(A)、サブネット関連付け。得票では AD が主流。\n- F: IGMP をポート「すべて」・送信元 0.0.0.0/32 で許可するルールは、送信元指定が /32 のホスト指定として意味を成さず構成として誤り。IGMP を許可するなら適切な送信元・ポートを指定する必要がある。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 D に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "ans-c01-0240",

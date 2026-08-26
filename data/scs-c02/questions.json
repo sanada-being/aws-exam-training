@@ -3038,8 +3038,15 @@
       {
         "key": "E",
         "text": {
-          "en": "Update each stack to use the service role.F Add a policy to each member role to allow the iam:PassRole action. Set the policy's resource field to the ARN of the service role.",
-          "ja": "各スタックを更新してサービスロールを使用するようにする。各メンバーのロールに、iam:PassRoleアクションを許可するポリシーを追加する。ポリシーのリソースフィールドをサービスロールのARNに設定する。"
+          "en": "Update each stack to use the service role.",
+          "ja": "各スタックを更新してサービスロールを使用するようにする。"
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Add a policy to each member role to allow the iam:PassRole action. Set the policy's resource field to the ARN of the service role.",
+          "ja": "各メンバーのロールに、iam:PassRoleアクションを許可するポリシーを追加する。ポリシーのリソースフィールドをサービスロールのARNに設定する。"
         }
       }
     ],
@@ -3213,11 +3220,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は B、D、E。\n\n一部メンバーだけデプロイが権限エラーで失敗するのは、各自のロール権限に差があり CloudFormation が「操作するメンバーの権限」でリソースを作成しようとするため。これを一貫させるには、CloudFormation 自身が引き受けるサービスロールを使う。B で cloudformation.amazonaws.com をサービスプリンシパルとするサービスロールを作成し、D で必要な権限ポリシーを（対象サービスの ARN をリソースに指定して）そのロールに付与、E で各スタックがこのサービスロールを使うよう更新し、全メンバーのロールに iam:PassRole を許可する。これで誰がデプロイしても同一のサービスロール権限で実行され、結果が一貫し安全になる。\n\n- A: 「複数サービスの複合プリンシパル」を持つロールという構成は本件のサービスロールの作り方として不自然で、CloudFormation 用サービスロールは cloudformation.amazonaws.com を信頼させる（B）のが正しい。\n- C: ポリシーのリソースを「CloudFormation スタックの ARN」にしても、スタックが作成する実リソース（EC2 等）への権限にはならない。権限が必要なのは対象サービス（D のように各サービスの ARN 指定）。\n\nBDE:45% を筆頭に BE/BD/BCE と票が大きく割れる難問。分かれ目は「D をどう解釈するか（リソースをスタック ARN にするか対象サービス ARN にするか）」と「PassRole（E）の要否」。サービスロール方式では PassRole が必須であり、権限は実リソース側に付与する必要があるため BDE が最も整合的。"
+      "ja": "正解は B、D、E。\n\n一部メンバーだけデプロイが権限エラーで失敗するのは、各自のロール権限に差があり CloudFormation が「操作するメンバーの権限」でリソースを作成しようとするため。これを一貫させるには、CloudFormation 自身が引き受けるサービスロールを使う。B で cloudformation.amazonaws.com をサービスプリンシパルとするサービスロールを作成し、D で必要な権限ポリシーを（対象サービスの ARN をリソースに指定して）そのロールに付与、E で各スタックがこのサービスロールを使うよう更新する。加えて、サービスロールを CloudFormation に渡すために各メンバーのロールへ iam:PassRole を許可する必要がある(F)。これで誰がデプロイしても同一のサービスロール権限で実行され、結果が一貫し安全になる。\n\n- A: 「複数サービスの複合プリンシパル」を持つロールという構成は本件のサービスロールの作り方として不自然で、CloudFormation 用サービスロールは cloudformation.amazonaws.com を信頼させる（B）のが正しい。\n- C: ポリシーのリソースを「CloudFormation スタックの ARN」にしても、スタックが作成する実リソース（EC2 等）への権限にはならない。権限が必要なのは対象サービス（D のように各サービスの ARN 指定）。\n\nBDE:45% を筆頭に BE/BD/BCE と票が大きく割れる難問。分かれ目は「D をどう解釈するか（リソースをスタック ARN にするか対象サービス ARN にするか）」と「PassRole（E）の要否」。サービスロール方式では PassRole が必須であり、権限は実リソース側に付与する必要があるため BDE が最も整合的。\n- F: iam:PassRole の許可はサービスロール方式に必須の要素。出典元ページではこの本文が選択肢 E に結合されていたため、コミュニティ投票の「E」はこの内容を含んだ状態で行われている。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 E に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "scs-c02-0019",

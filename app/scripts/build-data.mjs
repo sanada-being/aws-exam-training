@@ -25,6 +25,9 @@ const slim = all
     answerConfidence: q.answerConfidence,
     needsReview: q.needsReview,
     explanation: q.explanation?.ja ?? null,
+    // 出典元(ExamTopics)の不備に関する注記。無い問題では省略する。
+    ...(q.sourceNote ? { sourceNote: q.sourceNote } : {}),
+    ...(q.auditWaivers ? { auditWaivers: q.auditWaivers } : {}),
   }))
   .sort((a, b) => a.questionNumber - b.questionNumber);
 

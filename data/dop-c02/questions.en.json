@@ -34228,6 +34228,13 @@
         }
       },
       {
+        "key": "E",
+        "text": {
+          "en": "Refactor the Lambda functions. Move the code blocks that initialize database connections outside the function handlers.",
+          "ja": null
+        }
+      },
+      {
         "key": "F",
         "text": {
           "en": "Use Amazon RDS Proxy to create a proxy for the Aurora database. Update the Lambda functions to use the proxy endpoints for database connections.",
@@ -34414,7 +34421,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 E の本文が欠落していたため、ディスカッションのコメントに投稿された原文から復元しています。"
   },
   {
     "id": "dop-c02-0202",
@@ -45455,7 +45463,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "dop-c02-0283",
@@ -50074,7 +50086,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "dop-c02-0338",
@@ -52656,7 +52672,14 @@
       {
         "key": "A",
         "text": {
-          "en": "Create an IAM service role to allow access to the resources that are required to run the tests.B Create a pipeline in AWS CodePipeline that has a test stage. Create a trigger to run the pipeline when pull requests are created or updated. Add a source action to report test results.",
+          "en": "Create an IAM service role to allow access to the resources that are required to run the tests.",
+          "ja": null
+        }
+      },
+      {
+        "key": "B",
+        "text": {
+          "en": "Create a pipeline in AWS CodePipeline that has a test stage. Create a trigger to run the pipeline when pull requests are created or updated. Add a source action to report test results.",
           "ja": null
         }
       },
@@ -52765,7 +52788,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 B の本文が選択肢 A に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "dop-c02-0368",

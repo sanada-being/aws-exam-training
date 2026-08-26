@@ -37132,8 +37132,8 @@
       {
         "key": "B",
         "text": {
-          "en": "The IAM roles created for the federated users' or federated groups' trust policy have set the SAML provider as the principal.B. Test users are not in the AWSFederatedUsers group in the company's IdP.",
-          "ja": "フェデレーションユーザーまたはフェデレーショングループ用に作成された IAM ロールの信頼ポリシーで SAML プロバイダーがプリンシパルとして設定されている。テストユーザーが会社の IdP 内の AWSFederatedUsers グループに属していない。"
+          "en": "The IAM roles created for the federated users' or federated groups' trust policy have set the SAML provider as the principal.",
+          "ja": "フェデレーションユーザーまたはフェデレーショングループ用に作成された IAM ロールの信頼ポリシーで SAML プロバイダーがプリンシパルとして設定されている。"
         }
       },
       {
@@ -37155,6 +37155,13 @@
         "text": {
           "en": "The company's IdP defines SAML assertions that properly map users or groups. In the company to IAM roles with appropriate permissions.",
           "ja": "会社の IdP が、会社内のユーザーまたはグループを適切なアクセス許可を持つ IAM ロールに適切にマッピングする SAML アサーションを定義している。"
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Test users are not in the AWSFederatedUsers group in the company's IdP.",
+          "ja": "テストユーザーが会社の IdP 内の AWSFederatedUsers グループに属していない。"
         }
       }
     ],
@@ -37323,11 +37330,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は B, C, E。\n\n管理者はフェデレーションで入れるが一般テストユーザーが入れない＝SAML の信頼/アサーション/ロールマッピングの設定を確認する。\n- B（IAM ロールの信頼ポリシーに SAML プロバイダーがプリンシパルとして設定され、テストユーザーが IdP 側の想定グループに属しているか）: ロールを assume できる信頼関係と、ユーザーの IdP 上のグループ所属を確認するのは妥当な調査項目。\n- C（Web ポータルが AssumeRoleWithSAML を、SAML プロバイダー ARN・ロール ARN・SAML アサーションを渡して呼んでいるか）: SAML フェデレーションでの認証フローの中核 API。ここの引数不整合はログイン失敗の典型原因。\n- E（IdP がユーザー/グループを適切な権限を持つ IAM ロールへマッピングする SAML アサーションを定義しているか）: 特定ユーザーだけ入れない事象は、アサーション内の Role/RoleSessionName 属性のマッピング不備が有力。確認すべき正解。\n\n各誤答:\n- A（IAM ユーザーの権限ポリシーで SAML フェデレーション使用を許可）: フェデレーションユーザーは IAM ユーザーではなくロールを assume する。個別 IAM ユーザーのポリシーは関係せず誤り。\n- D（IdP の DNS が VPC から到達可能か）: SAML はブラウザ経由の IdP↔STS のやり取りで完結し、VPC から IdP への到達性は認証成否に無関係。的外れな確認項目。\n\nポイント: SAML 2.0 フェデレーションの三要素＝『ロールの信頼ポリシーで SAML provider を信頼』『AssumeRoleWithSAML を正しい ARN/アサーションで呼ぶ』『IdP のアサーションで user/group→IAM role をマッピング』。IAM ユーザー権限や VPC 到達性は無関係。"
+      "ja": "正解は B, C, E。\n\n管理者はフェデレーションで入れるが一般テストユーザーが入れない＝SAML の信頼/アサーション/ロールマッピングの設定を確認する。\n- B（フェデレーションユーザー/グループ用に作成した IAM ロールの信頼ポリシーで、SAML プロバイダーがプリンシパルとして設定されているか）: ロールを assume できる信頼関係の確認は、フェデレーションが機能しない場合の第一の調査項目。\n- C（Web ポータルが AssumeRoleWithSAML を、SAML プロバイダー ARN・ロール ARN・SAML アサーションを渡して呼んでいるか）: SAML フェデレーションでの認証フローの中核 API。ここの引数不整合はログイン失敗の典型原因。\n- E（IdP がユーザー/グループを適切な権限を持つ IAM ロールへマッピングする SAML アサーションを定義しているか）: 特定ユーザーだけ入れない事象は、アサーション内の Role/RoleSessionName 属性のマッピング不備が有力。確認すべき正解。\n\n各誤答:\n- A（IAM ユーザーの権限ポリシーで SAML フェデレーション使用を許可）: フェデレーションユーザーは IAM ユーザーではなくロールを assume する。個別 IAM ユーザーのポリシーは関係せず誤り。\n- D（IdP の DNS が VPC から到達可能か）: SAML はブラウザ経由の IdP↔STS のやり取りで完結し、VPC から IdP への到達性は認証成否に無関係。的外れな確認項目。\n\nポイント: SAML 2.0 フェデレーションの三要素＝『ロールの信頼ポリシーで SAML provider を信頼』『AssumeRoleWithSAML を正しい ARN/アサーションで呼ぶ』『IdP のアサーションで user/group→IAM role をマッピング』。IAM ユーザー権限や VPC 到達性は無関係。\n- F（テストユーザーが IdP の AWSFederatedUsers グループに属していないか）: 出典元ページではこの本文が選択肢 B に結合されていた。IdP 側のグループ所属も実務では確認対象になり得るが、コミュニティ投票は結合された B を選んでいるため、採用正解は B・C・E としている。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 B に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "sap-c02-0201",
@@ -63394,8 +63402,8 @@
       {
         "key": "C",
         "text": {
-          "en": "Implement AWS Backup Vault Lock in compliance mode.C. Implement least privilege access for the IAM service role that is assigned to AWS Backup.",
-          "ja": "コンプライアンスモードで AWS Backup Vault Lock を実装する。AWS Backup に割り当てられた IAM サービスロールに最小権限アクセスを実装する。"
+          "en": "Implement AWS Backup Vault Lock in compliance mode.",
+          "ja": "コンプライアンスモードで AWS Backup Vault Lock を実装する。"
         }
       },
       {
@@ -63410,6 +63418,13 @@
         "text": {
           "en": "Configure AWS Backup to write all backups to an Amazon S3 bucket in a designated non-production account. Ensure that the S3 bucket has S3 Object Lock enabled.",
           "ja": "指定された非本番アカウントの Amazon S3 バケットにすべてのバックアップを書き込むように AWS Backup を設定する。S3 バケットで S3 Object Lock が有効になっていることを確認する。"
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Implement least privilege access for the IAM service role that is assigned to AWS Backup.",
+          "ja": "AWS Backup に割り当てられた IAM サービスロールに最小権限アクセスを実装する。"
         }
       }
     ],
@@ -63583,11 +63598,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は A、B、C。\n\n『本番アカウントの特権ユーザー資格情報が侵害されてもバックアップが破壊されない』ランサムウェア耐性を、AWS Backup 中心の構成で実現する。分離(別アカウント)・変更禁止(SCP)・不変性(Vault Lock)+最小権限の三層で守る。\n\n【アーキテクチャ上のポイント】\n- A(クロスアカウントバックアップ): 指定した非本番アカウントの Backup ボールトへコピーする。本番アカウントの特権ユーザーが侵害されても、別アカウントに隔離されたバックアップには手が届かない(権限境界による分離)。\n- B(SCP でボールト変更を制限): Organizations の SCP で Backup ボールトの削除/変更系アクションを禁止する。ルートや特権ユーザーであっても SCP は上書きできないため、削除操作そのものをブロックできる。\n- C(Compliance モードの Vault Lock + 最小権限ロール): Vault Lock の Compliance モードはロック確定後、ルートユーザーや AWS でさえ保持期間中の削除/短縮を不可能にする(WORM/不変)。加えて Backup サービスロールを最小権限にして攻撃対象面を縮小する。この不変性がランサムウェア耐性の核心。\n\n【誤答の検討】\n- D: コールドティアに常に 1 つ以上バックアップを残すライフサイクル設定。コストや保持の話であって、特権資格情報侵害に対する耐性(不変性/分離)を提供しない。要件の主眼から外れる。\n- E: すべてを非本番アカウントの S3 バケットに書き、Object Lock を有効化する案。方向性(分離 + WORM)は近いが、AWS Backup はバックアップを任意の S3 バケットへ直接書き込む設計ではなく Backup ボールトを使う。Backup の Vault Lock(C)で不変性を担保するのが正しく、S3 Object Lock への書き出しは AWS Backup の運用モデルと合わない。\n\n【使い分け】\n- 資格情報侵害に対する分離: クロスアカウント + 集中バックアップアカウント。\n- 削除操作の抑止(ポリシー境界): SCP。\n- 保持期間中の不変性(誰も消せない): Backup Vault Lock(Compliance モード、確定後は取り消し不可なので設定は慎重に)。"
+      "ja": "正解は A、B、C。\n\n『本番アカウントの特権ユーザー資格情報が侵害されてもバックアップが破壊されない』ランサムウェア耐性を、AWS Backup 中心の構成で実現する。分離(別アカウント)・変更禁止(SCP)・不変性(Vault Lock)+最小権限の三層で守る。\n\n【アーキテクチャ上のポイント】\n- A(クロスアカウントバックアップ): 指定した非本番アカウントの Backup ボールトへコピーする。本番アカウントの特権ユーザーが侵害されても、別アカウントに隔離されたバックアップには手が届かない(権限境界による分離)。\n- B(SCP でボールト変更を制限): Organizations の SCP で Backup ボールトの削除/変更系アクションを禁止する。ルートや特権ユーザーであっても SCP は上書きできないため、削除操作そのものをブロックできる。\n- C(Compliance モードの Vault Lock): Vault Lock の Compliance モードはロック確定後、ルートユーザーや AWS でさえ保持期間中の削除/短縮を不可能にする(WORM/不変)。この不変性がランサムウェア耐性の核心。\n\n【誤答の検討】\n- D: コールドティアに常に 1 つ以上バックアップを残すライフサイクル設定。コストや保持の話であって、特権資格情報侵害に対する耐性(不変性/分離)を提供しない。要件の主眼から外れる。\n- E: すべてを非本番アカウントの S3 バケットに書き、Object Lock を有効化する案。方向性(分離 + WORM)は近いが、AWS Backup はバックアップを任意の S3 バケットへ直接書き込む設計ではなく Backup ボールトを使う。Backup の Vault Lock(C)で不変性を担保するのが正しく、S3 Object Lock への書き出しは AWS Backup の運用モデルと合わない。\n\n【使い分け】\n- 資格情報侵害に対する分離: クロスアカウント + 集中バックアップアカウント。\n- 削除操作の抑止(ポリシー境界): SCP。\n- 保持期間中の不変性(誰も消せない): Backup Vault Lock(Compliance モード、確定後は取り消し不可なので設定は慎重に)。\n- F: Backup サービスロールの最小権限化は一般的なベストプラクティスだが、特権ユーザーの資格情報が侵害された場合にバックアップを守るのは不変性(C)と分離(A)・操作の禁止(B)であり、この選択肢単体では要件を満たさない。出典元ページではこの本文が選択肢 C に結合されていた。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 C に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "sap-c02-0338",
@@ -79790,7 +79806,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "sap-c02-0440",
@@ -93022,7 +93042,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 C に別案の本文が続けて掲載されています。どちらが本来の C かを判別できないため、原文のまま掲載しています。",
+    "auditWaivers": [
+      "embedded-label"
+    ]
   },
   {
     "id": "sap-c02-0516",

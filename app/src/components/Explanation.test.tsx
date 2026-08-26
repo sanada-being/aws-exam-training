@@ -46,4 +46,18 @@ describe("Explanation", () => {
     render(<Explanation question={{ ...q, explanation: null }} />);
     expect(screen.queryByTestId("explanation")).not.toBeInTheDocument();
   });
+
+  it("出典元の不備に関する注記があれば表示する", () => {
+    render(
+      <Explanation
+        question={{ ...q, sourceNote: "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。" }}
+      />,
+    );
+    expect(screen.getByTestId("source-note")).toHaveTextContent("選択肢 E の本文が存在せず");
+  });
+
+  it("注記が無ければ注記は出ない", () => {
+    render(<Explanation question={q} />);
+    expect(screen.queryByTestId("source-note")).not.toBeInTheDocument();
+  });
 });

@@ -35868,7 +35868,14 @@
       {
         "key": "E",
         "text": {
-          "en": "Create an AWSControlTowerBiueprintAccess role in the shared services account.F Create an AWSControlTowerBiueprintAccess role in each member account.",
+          "en": "Create an AWSControlTowerBiueprintAccess role in the shared services account.",
+          "ja": null
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Create an AWSControlTowerBiueprintAccess role in each member account.",
           "ja": null
         }
       }
@@ -36009,7 +36016,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 E に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "ans-c01-0208",
@@ -39928,7 +39936,7 @@
       {
         "key": "D",
         "text": {
-          "en": "Create an association to EC2 instance subnets on the financial application VPC transit gateway attachment under the transit gateway multicast domain.D. Add an inbound rule to the security groups that are attached to the multicast receiver instances. Configure the rule as follows:Protocol: IGMP Version 2. Port: All, and Source: 0 0.0.0/32",
+          "en": "Create an association to EC2 instance subnets on the financial application VPC transit gateway attachment under the transit gateway multicast domain.",
           "ja": null
         }
       },
@@ -39936,6 +39944,13 @@
         "key": "E",
         "text": {
           "en": "Add an inbound rule to the security groups that are attached to the multicast receiver instances. Configure the rule as follows.Protocol: UDP, Port: 5102, and Source: 10.128.10.2/32",
+          "ja": null
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Add an inbound rule to the security groups that are attached to the multicast receiver instances. Configure the rule as follows:Protocol: IGMP Version 2. Port: All, and Source: 0 0.0.0/32",
           "ja": null
         }
       }
@@ -40037,7 +40052,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 D に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "ans-c01-0240",
