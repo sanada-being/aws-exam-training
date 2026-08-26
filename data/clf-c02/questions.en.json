@@ -57736,7 +57736,14 @@
       {
         "key": "C",
         "text": {
-          "en": "Detailed Billing Reports -D AWS Cost Explorer reports",
+          "en": "Detailed Billing Reports",
+          "ja": null
+        }
+      },
+      {
+        "key": "D",
+        "text": {
+          "en": "AWS Cost Explorer reports",
           "ja": null
         }
       }
@@ -57777,7 +57784,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 D の本文が選択肢 C に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "clf-c02-0393",
@@ -57808,7 +57816,14 @@
       {
         "key": "C",
         "text": {
-          "en": "Amazon Detective -D Amazon GuardDuty",
+          "en": "Amazon Detective",
+          "ja": null
+        }
+      },
+      {
+        "key": "D",
+        "text": {
+          "en": "Amazon GuardDuty",
           "ja": null
         }
       }
@@ -57970,7 +57985,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 D の本文が選択肢 C に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "clf-c02-0394",

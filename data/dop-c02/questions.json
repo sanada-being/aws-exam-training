@@ -34228,6 +34228,13 @@
         }
       },
       {
+        "key": "E",
+        "text": {
+          "en": "Refactor the Lambda functions. Move the code blocks that initialize database connections outside the function handlers.",
+          "ja": "Lambda関数をリファクタリングします。データベース接続を初期化するコードブロックを関数ハンドラーの外に移動します。"
+        }
+      },
+      {
         "key": "F",
         "text": {
           "en": "Use Amazon RDS Proxy to create a proxy for the Aurora database. Update the Lambda functions to use the proxy endpoints for database connections.",
@@ -34410,11 +34417,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は B、C、F。\n\nボトルネックは「初期バースト時のレイテンシー」と「呼び出し時間の大半を占めるデータベース接続確立」。B のプロビジョニング済み同時実行数はコールドスタートを解消し、バースト時の遅延を抑える。F の RDS Proxy は接続をプールして再利用するため、接続確立のオーバーヘッドを大幅に削減する。C は読み取りが大半であることを踏まえ、Aurora グローバルデータベース＋顧客所在地に近いリージョンのリードレプリカで読み取りスループットをスケールさせる。\n\n- A: 予約済み同時実行数は上限の確保・分離であり、コールドスタートやレイテンシー改善には直結しない。\n- D: DB 接続の初期化をハンドラー『内』に移すのはアンチパターン。接続はハンドラー外（グローバルスコープ）で初期化して呼び出し間で再利用すべきで、ハンドラー内に入れると毎回張り直して悪化する。投票 BDF:32% はこの取り違え。\n- 判断の分かれ目は C（読み取りスケール）と D（接続初期化位置）で、D が誤りなので残りは C。"
+      "ja": "正解は B、C、F。\n\nボトルネックは「初期バースト時のレイテンシー」と「呼び出し時間の大半を占めるデータベース接続確立」。B のプロビジョニング済み同時実行数はコールドスタートを解消し、バースト時の遅延を抑える。F の RDS Proxy は接続をプールして再利用するため、接続確立のオーバーヘッドを大幅に削減する。C は読み取りが大半であることを踏まえ、Aurora グローバルデータベース＋顧客所在地に近いリージョンのリードレプリカで読み取りスループットをスケールさせる。\n\n- A: 予約済み同時実行数は上限の確保・分離であり、コールドスタートやレイテンシー改善には直結しない。\n- D: DB 接続の初期化をハンドラー『内』に移すのはアンチパターン。接続はハンドラー外（グローバルスコープ）で初期化して呼び出し間で再利用すべきで、ハンドラー内に入れると毎回張り直して悪化する。投票 BDF:32% はこの取り違え。\n- 判断の分かれ目は C（読み取りスケール）と D（接続初期化位置）で、D が誤りなので残りは C。\n- E: DB 接続の初期化をハンドラー『外』（グローバルスコープ）へ移す、D とは逆向きの正しい選択肢。出典元ページではこの本文が欠落しており、ディスカッションのコメントから復元した。BDF に投票した層はこの E を意図していた可能性が高い点に注意。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 E の本文が欠落していたため、ディスカッションのコメントに投稿された原文から復元しています。"
   },
   {
     "id": "dop-c02-0202",
@@ -45455,7 +45463,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "dop-c02-0283",
@@ -50074,7 +50086,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "dop-c02-0338",
@@ -52656,8 +52672,15 @@
       {
         "key": "A",
         "text": {
-          "en": "Create an IAM service role to allow access to the resources that are required to run the tests.B Create a pipeline in AWS CodePipeline that has a test stage. Create a trigger to run the pipeline when pull requests are created or updated. Add a source action to report test results.",
-          "ja": "テストの実行に必要なリソースへのアクセスを許可するIAMサービスロールを作成する。テストステージを持つAWS CodePipeline内のパイプラインを作成する。プルリクエストが作成または更新された際にパイプラインを実行するトリガーを作成する。テスト結果を報告するソースアクションを追加する。"
+          "en": "Create an IAM service role to allow access to the resources that are required to run the tests.",
+          "ja": "テストの実行に必要なリソースへのアクセスを許可するIAMサービスロールを作成する。"
+        }
+      },
+      {
+        "key": "B",
+        "text": {
+          "en": "Create a pipeline in AWS CodePipeline that has a test stage. Create a trigger to run the pipeline when pull requests are created or updated. Add a source action to report test results.",
+          "ja": "テストステージを持つパイプラインをAWS CodePipelineに作成する。プルリクエストが作成または更新された際にパイプラインを実行するトリガーを作成する。テスト結果を報告するソースアクションを追加する。"
         }
       },
       {
@@ -52761,11 +52784,12 @@
     },
     "explanation": {
       "en": null,
-      "ja": "正解は A、C、D。\n\nプルリクエスト時にユニットテストを実行し、PR にステータスを表示し、出力データファイルを S3 に保存する要件です。テスト実行には CodeBuild プロジェクトを作り、PR の作成/更新で走る Webhook トリガーを有効化し、ビルドステータス報告を有効にすれば PR にテスト結果が表示されます(C)。テスト実行に必要な権限を持つ IAM サービスロールを用意し、PR トリガーで動くパイプライン/ビルドを構成します(A)。テストの出力データファイルは buildspec.yml の reports セクションでアップロードします(D)。\n\n- E: artifacts セクションはビルド成果物(デプロイ対象など)の保存用で、本問の「テストが生成する出力データファイル」を扱うのはテストレポート用の reports セクション(D)が適切です。投票が ACE と割れるのは artifacts と reports の使い分けの解釈差です。\n- F: appspec.yml は CodeDeploy 用の設定ファイルで、CodeBuild のテスト出力アップロードには使いません。files セクションも CodeDeploy の概念です。"
+      "ja": "正解は A、C、D。\n\nプルリクエスト時にユニットテストを実行し、PR にステータスを表示し、出力データファイルを S3 に保存する要件です。テスト実行には CodeBuild プロジェクトを作り、PR の作成/更新で走る Webhook トリガーを有効化し、ビルドステータス報告を有効にすれば PR にテスト結果が表示されます(C)。テスト実行に必要な権限を持つ IAM サービスロールを用意します(A)。テストの出力データファイルは buildspec.yml の reports セクションでアップロードします(D)。\n\n- E: artifacts セクションはビルド成果物(デプロイ対象など)の保存用で、本問の「テストが生成する出力データファイル」を扱うのはテストレポート用の reports セクション(D)が適切です。投票が ACE と割れるのは artifacts と reports の使い分けの解釈差です。\n- F: appspec.yml は CodeDeploy 用の設定ファイルで、CodeBuild のテスト出力アップロードには使いません。files セクションも CodeDeploy の概念です。\n- B: CodePipeline のテストステージを挟む構成でもテスト自体は実行できるが、PR にテスト結果のステータスを表示する仕組みは CodeBuild の Webhook + ビルドステータス報告(C)が担う。パイプラインを追加するのは本問の要件に対して遠回り。"
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": "2026-06-30"
+    "translatedAt": "2026-06-30",
+    "sourceNote": "出典元ページでは選択肢 B の本文が選択肢 A に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "dop-c02-0368",

@@ -23247,7 +23247,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "saa-c03-0126",
@@ -108766,7 +108770,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "saa-c03-0590",
@@ -134767,7 +134775,14 @@
       {
         "key": "B",
         "text": {
-          "en": "Create a batch process on an Amazon EC2 instance that regularly reads all new files, redacts the PII from the files, and writes the redacted files to a different S3 bucket. Instruct the external service provider to access the bucket that does not contain the PII.B. Create a web application on an Amazon EC2 instance that presents a list of the files, redacts the PII from the files, and allows the external service provider to download new versions of the files that have the PII redacted.",
+          "en": "Create a batch process on an Amazon EC2 instance that regularly reads all new files, redacts the PII from the files, and writes the redacted files to a different S3 bucket. Instruct the external service provider to access the bucket that does not contain the PII.",
+          "ja": null
+        }
+      },
+      {
+        "key": "C",
+        "text": {
+          "en": "Create a web application on an Amazon EC2 instance that presents a list of the files, redacts the PII from the files, and allows the external service provider to download new versions of the files that have the PII redacted.",
           "ja": null
         }
       },
@@ -134897,7 +134912,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 C の本文が選択肢 B に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "saa-c03-0757",
@@ -152037,6 +152053,13 @@
     },
     "options": [
       {
+        "key": "A",
+        "text": {
+          "en": "Set up an AWS CloudTrail event that has a rule to identify all S3 buckets that are not versioning-enabled across Regions.",
+          "ja": null
+        }
+      },
+      {
         "key": "B",
         "text": {
           "en": "Use Amazon S3 Storage Lens to identify all S3 buckets that are not versioning-enabled across Regions.",
@@ -152182,7 +152205,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 A の本文が欠落していたため、ディスカッションのコメントに投稿された原文から復元しています。"
   },
   {
     "id": "saa-c03-0869",

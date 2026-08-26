@@ -37132,7 +37132,7 @@
       {
         "key": "B",
         "text": {
-          "en": "The IAM roles created for the federated users' or federated groups' trust policy have set the SAML provider as the principal.B. Test users are not in the AWSFederatedUsers group in the company's IdP.",
+          "en": "The IAM roles created for the federated users' or federated groups' trust policy have set the SAML provider as the principal.",
           "ja": null
         }
       },
@@ -37154,6 +37154,13 @@
         "key": "E",
         "text": {
           "en": "The company's IdP defines SAML assertions that properly map users or groups. In the company to IAM roles with appropriate permissions.",
+          "ja": null
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Test users are not in the AWSFederatedUsers group in the company's IdP.",
           "ja": null
         }
       }
@@ -37327,7 +37334,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 B に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "sap-c02-0201",
@@ -63394,7 +63402,7 @@
       {
         "key": "C",
         "text": {
-          "en": "Implement AWS Backup Vault Lock in compliance mode.C. Implement least privilege access for the IAM service role that is assigned to AWS Backup.",
+          "en": "Implement AWS Backup Vault Lock in compliance mode.",
           "ja": null
         }
       },
@@ -63409,6 +63417,13 @@
         "key": "E",
         "text": {
           "en": "Configure AWS Backup to write all backups to an Amazon S3 bucket in a designated non-production account. Ensure that the S3 bucket has S3 Object Lock enabled.",
+          "ja": null
+        }
+      },
+      {
+        "key": "F",
+        "text": {
+          "en": "Implement least privilege access for the IAM service role that is assigned to AWS Backup.",
           "ja": null
         }
       }
@@ -63587,7 +63602,8 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 F の本文が選択肢 C に結合されていたため、分離して復元しています。コミュニティ投票は結合された状態で行われている点に注意してください。"
   },
   {
     "id": "sap-c02-0338",
@@ -79790,7 +79806,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページに選択肢 E の本文が存在せず復元できないため、この問題は本来より1つ少ない選択肢で出題しています。採用正解は残っている選択肢から選べます。",
+    "auditWaivers": [
+      "missing-option"
+    ]
   },
   {
     "id": "sap-c02-0440",
@@ -93022,7 +93042,11 @@
     },
     "tags": [],
     "collectedAt": "2026-06-30",
-    "translatedAt": null
+    "translatedAt": null,
+    "sourceNote": "出典元ページでは選択肢 C に別案の本文が続けて掲載されています。どちらが本来の C かを判別できないため、原文のまま掲載しています。",
+    "auditWaivers": [
+      "embedded-label"
+    ]
   },
   {
     "id": "sap-c02-0516",
