@@ -1,8 +1,18 @@
 import type { QRecord, Records } from "./progress";
+import {
+  activeBookmarks,
+  mergeMarks,
+  snapshotMarks,
+  type BookmarkMarks,
+  type LegacyBookmarks,
+} from "./bookmarks";
 
 export interface ProgressSnapshot {
   records: Records;
-  bookmarks: Record<string, true>;
+  /** on の★(旧形式・表示用)。常に bookmarkMarks と整合させる。 */
+  bookmarks: LegacyBookmarks;
+  /** 時刻付きの★状態(解除の墓標を含む)。旧データには無い。 */
+  bookmarkMarks?: BookmarkMarks;
 }
 
 /** 1問分のレコードを統合。lastAtが新しい方の正誤を採用し、回数系は最大値を保持。 */
@@ -26,10 +36,15 @@ export function mergeRecords(a: Records, b: Records): Records {
   return out;
 }
 
-/** 2端末分の進捗スナップショットを統合（★は和集合）。 */
-export function mergeProgress(a: ProgressSnapshot, b: ProgressSnapshot): ProgressSnapshot {
+/** 2端末分の進捗スナップショットを統合。★は id ごとに操作時刻が新しい方を採用(LWW)。 */
+export function mergeProgress(
+  a: ProgressSnapshot,
+  b: ProgressSnapshot,
+): Required<ProgressSnapshot> {
+  const bookmarkMarks = mergeMarks(snapshotMarks(a), snapshotMarks(b));
   return {
     records: mergeRecords(a.records ?? {}, b.records ?? {}),
-    bookmarks: { ...(a.bookmarks ?? {}), ...(b.bookmarks ?? {}) },
+    bookmarks: activeBookmarks(bookmarkMarks),
+    bookmarkMarks,
   };
 }
