@@ -4,7 +4,8 @@ const API = "https://api.github.com/gists";
 const FILE = "saa-progress.json";
 
 export interface SyncPayload extends ProgressSnapshot {
-  version: 1;
+  /** 1: ★は bookmarks のみ / 2: bookmarkMarks(時刻付き・解除の墓標込み)を併記 */
+  version: 1 | 2;
   updatedAt: number;
 }
 
@@ -17,7 +18,13 @@ function headers(token: string): HeadersInit {
 }
 
 export function buildPayload(snapshot: ProgressSnapshot, at: number): SyncPayload {
-  return { version: 1, updatedAt: at, records: snapshot.records, bookmarks: snapshot.bookmarks };
+  return {
+    version: 2,
+    updatedAt: at,
+    records: snapshot.records,
+    bookmarks: snapshot.bookmarks,
+    bookmarkMarks: snapshot.bookmarkMarks ?? {},
+  };
 }
 
 /** 非公開Gistを新規作成し gistId を返す。 */

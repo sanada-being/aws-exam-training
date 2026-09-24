@@ -41,7 +41,10 @@ export function useAutoSync() {
         updateGist(
           token,
           gistId,
-          buildPayload({ records: s.records, bookmarks: s.bookmarks }, Date.now()),
+          buildPayload(
+            { records: s.records, bookmarks: s.bookmarks, bookmarkMarks: s.bookmarkMarks },
+            Date.now(),
+          ),
         )
           .then(() => useSync.getState().markSynced(Date.now()))
           .catch((e) => useSync.getState().setStatus("error", String(e?.message ?? e)));
