@@ -1,13 +1,9 @@
 import type { Question } from "../types";
-import { excludeRetiredFormats } from "../domain/dataset";
 
-/**
- * 生データ(JSON)を Question[] に正規化する純粋関数（テスト容易）。
- * 本番で廃止された「6肢から3つ選ぶ」形式はここで一律に除外する。
- */
+/** 生データ(JSON)を Question[] に正規化する純粋関数（テスト容易）。 */
 export function toQuestions(raw: unknown): Question[] {
   if (!Array.isArray(raw)) throw new Error("questions data must be an array");
-  return excludeRetiredFormats(raw as Question[]);
+  return raw as Question[];
 }
 
 /** public/questions.slim.json を読み込む。 */

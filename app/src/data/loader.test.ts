@@ -23,12 +23,8 @@ describe("toQuestions", () => {
     expect(() => toQuestions(null)).toThrow();
   });
 
-  it("廃止された「3つ選ぶ」形式を除外する", () => {
+  it("「6肢から3つ選ぶ」問題も除外せず全件返す（本番で出題されるため）", () => {
     const out = toQuestions([q("single", ["A"]), q("three", ["A", "C", "E"]), q("two", ["A", "B"])]);
-    expect(out.map((x) => x.id)).toEqual(["single", "two"]);
-  });
-
-  it("該当が無ければ全件そのまま返す", () => {
-    expect(toQuestions([q("a", ["A"]), q("b", ["A", "B"])])).toHaveLength(2);
+    expect(out.map((x) => x.id)).toEqual(["single", "three", "two"]);
   });
 });
