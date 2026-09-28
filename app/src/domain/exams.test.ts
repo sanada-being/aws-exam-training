@@ -10,11 +10,10 @@ const rec = (lastCorrect: boolean, lastAt: number) => ({
 });
 
 describe("試験の一覧情報", () => {
-  it("SOA-C02 と MLA-C01 は載せない", () => {
+  it("旧版・終了した試験（SOA-C02・SCS-C02・MLS-C01）と MLA-C01 は載せない", () => {
     const ids = EXAM_CATALOG.map((e) => e.id);
-    expect(ids).not.toContain("soa-c02");
-    expect(ids).not.toContain("mla-c01");
-    expect(ids).toHaveLength(10);
+    for (const id of ["soa-c02", "mla-c01", "scs-c02", "mls-c01"]) expect(ids).not.toContain(id);
+    expect(ids).toHaveLength(8);
   });
 
   it("本番モードの問題数は試験ごと（プロフェッショナルは75問）", () => {

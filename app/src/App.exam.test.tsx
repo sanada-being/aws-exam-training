@@ -120,4 +120,11 @@ describe("App: 試験の選択", () => {
     await userEvent.click(screen.getByRole("button", { name: "試験一覧へ" }));
     await waitFor(() => screen.getByRole("button", { name: /SAP-C02/ }));
   });
+
+  it("一覧から外した試験を選んでいた場合は、試験一覧から選び直してもらう", async () => {
+    useStore.setState({ currentExam: "scs-c02" });
+    render(<App />);
+    await waitFor(() => screen.getByText("解く試験を選んでください"));
+    expect(screen.queryByRole("button", { name: "戻る" })).not.toBeInTheDocument();
+  });
 });

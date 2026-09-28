@@ -70,7 +70,7 @@ test.describe("スマホ幅(360px)で見切れ・押せない箇所が無い", (
 
     const cards = page.locator(".examcard");
     const n = await cards.count();
-    expect(n).toBe(10);
+    expect(n).toBe(8);
     for (let i = 0; i < n; i++) {
       const card = cards.nth(i);
       const box = (await card.boundingBox())!;

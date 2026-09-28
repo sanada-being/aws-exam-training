@@ -24,7 +24,8 @@ export const LEVELS: { level: ExamLevel; label: string }[] = [
 
 /**
  * 一覧に載せる試験。問題数・時間は AWS 公式の試験ガイドによる（2026-09 確認）。
- * SOA-C02（旧版。現行は SOA-C03）と MLA-C01（収録が57問と少ない）は載せない。
+ * 次の試験は載せない: SOA-C02（旧版。現行は SOA-C03）、SCS-C02（2025-12 終了。現行は SCS-C03）、
+ * MLS-C01（2026-03 終了）、MLA-C01（収録が57問と少ない）。
  * データは data/ に残してあるので、ここに足せば一覧に戻せる。
  */
 export const EXAM_CATALOG: ExamInfo[] = [
@@ -35,9 +36,7 @@ export const EXAM_CATALOG: ExamInfo[] = [
   { id: "dea-c01", code: "DEA-C01", name: "データエンジニア – アソシエイト", level: "associate", examCount: 65, minutes: 130 },
   { id: "sap-c02", code: "SAP-C02", name: "ソリューションアーキテクト – プロフェッショナル", level: "professional", examCount: 75, minutes: 180 },
   { id: "dop-c02", code: "DOP-C02", name: "DevOps エンジニア – プロフェッショナル", level: "professional", examCount: 75, minutes: 180 },
-  { id: "scs-c02", code: "SCS-C02", name: "セキュリティ – 専門知識", level: "specialty", examCount: 65, minutes: 170 },
   { id: "ans-c01", code: "ANS-C01", name: "高度なネットワーキング – 専門知識", level: "specialty", examCount: 65, minutes: 170 },
-  { id: "mls-c01", code: "MLS-C01", name: "機械学習 – 専門知識", level: "specialty", examCount: 65, minutes: 170 },
 ];
 
 /** 既存の利用者（SAA のみだった頃の記録を持つ人）が引き継ぐ試験。 */
