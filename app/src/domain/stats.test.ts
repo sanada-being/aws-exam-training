@@ -38,4 +38,9 @@ describe("computeStats", () => {
     expect(s.accuracy).toBe(67); // 2/3
     expect(s.bookmarks).toBe(1);
   });
+
+  it("問題集に含まれない(除外された)問題の★は数えない", () => {
+    const s = computeStats([q(1), q(2)], {}, { q1: true, q99: true });
+    expect(s.bookmarks).toBe(1);
+  });
 });
