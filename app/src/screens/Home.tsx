@@ -1,6 +1,7 @@
 import type { Question, Confidence } from "../types";
 import type { QuizMode } from "../domain/selection";
-import { modeCount, EXAM_COUNT } from "../domain/selection";
+import { modeCount } from "../domain/selection";
+import type { ExamInfo } from "../domain/exams";
 import { computeStats } from "../domain/stats";
 import { applyFilters, isFilterActive, emptyFilter, type Filter } from "../domain/filter";
 import { useStore } from "../store/useStore";
@@ -21,9 +22,9 @@ const TOGGLES: { key: "bookmarkedOnly" | "needsReviewOnly" | "excludeMastered"; 
     { key: "excludeMastered", label: "未正解のみ" },
   ];
 
-const COUNTS: (number | null)[] = [10, 20, 30, 40, 50, EXAM_COUNT, null];
-
 export function Home({
+  exam,
+  onSwitchExam,
   questions,
   onStart,
   onResume,
@@ -34,6 +35,9 @@ export function Home({
   count,
   onCountChange,
 }: {
+  exam: ExamInfo;
+  /** 試験一覧を開く。 */
+  onSwitchExam?: () => void;
   questions: Question[];
   onStart: (mode: QuizMode) => void;
   onResume?: () => void;
@@ -46,12 +50,14 @@ export function Home({
 }) {
   const records = useStore((s) => s.records);
   const bookmarks = useStore((s) => s.bookmarks);
+  // 出題数の選択肢。本番と同じ問題数も選べるようにする（null = 全問）
+  const counts: (number | null)[] = [10, 20, 30, 40, 50, exam.examCount, null];
   const stats = computeStats(questions, records, bookmarks);
 
   const pool = applyFilters(questions, filter, bookmarks, records);
   const wrong = modeCount(pool, "wrong", records);
   const unanswered = modeCount(pool, "unanswered", records);
-  const exam = modeCount(pool, "exam", records);
+  const examN = modeCount(pool, "exam", records, exam.examCount);
   const poolEmpty = pool.length === 0;
 
   const dashboard = [
@@ -68,9 +74,9 @@ export function Home({
     { mode: "unanswered", label: "未回答のみ", badge: unanswered, disabled: unanswered === 0 },
     {
       mode: "exam",
-      label: `本番モード（${EXAM_COUNT}問）`,
-      badge: exam,
-      disabled: exam === 0,
+      label: `本番モード（${Math.min(exam.examCount, questions.length)}問）`,
+      badge: examN,
+      disabled: examN === 0,
     },
   ];
 
@@ -85,7 +91,15 @@ export function Home({
   return (
     <div className="home">
       <div className="topbar">
-        <h1>AWS SAA 問題集</h1>
+        <button
+          type="button"
+          className="examswitch"
+          onClick={onSwitchExam}
+          aria-label={`試験を切り替える（${exam.code}）`}
+        >
+          <span aria-hidden>‹</span>
+          <b>{exam.code}</b>
+        </button>
         <div className="topbar-right">
           <SyncIndicator />
           {onOpenSettings && (
@@ -100,6 +114,8 @@ export function Home({
           )}
         </div>
       </div>
+
+      <h1 className="home-examname">{exam.name}</h1>
 
       <section className="dashboard" aria-label="学習状況">
         {dashboard.map((d, i) => (
@@ -135,7 +151,7 @@ export function Home({
           ))}
         </div>
         <div className="chips countchips">
-          {COUNTS.map((c) => (
+          {counts.map((c) => (
             <Chip
               key={c ?? "all"}
               label={c === null ? "全問" : `${c}問`}

@@ -28,6 +28,8 @@ const DATA = [raw(1), raw(2), raw(3), raw(4)];
 
 beforeEach(() => {
   useStore.getState().resetProgress();
+  // 前回 SAA を選んでいた利用者として開く（試験一覧は出ない）
+  useStore.setState({ currentExam: "saa-c03", session: null, sessions: {} });
   vi.stubGlobal(
     "fetch",
     vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(DATA) })),

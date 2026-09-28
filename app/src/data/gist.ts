@@ -33,7 +33,7 @@ export async function createGist(token: string, payload: SyncPayload): Promise<s
     method: "POST",
     headers: headers(token),
     body: JSON.stringify({
-      description: "AWS SAA 問題集 進捗データ",
+      description: "AWS 認定 問題集 進捗データ",
       public: false,
       files: { [FILE]: { content: JSON.stringify(payload) } },
     }),

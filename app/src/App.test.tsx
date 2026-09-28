@@ -5,6 +5,7 @@ import { Home } from "./screens/Home";
 import { useStore } from "./store/useStore";
 import { emptyFilter, type Filter } from "./domain/filter";
 import type { Question } from "./types";
+import { findExam } from "./domain/exams";
 
 const sample: Question[] = [
   {
@@ -36,6 +37,7 @@ const sample: Question[] = [
 function renderHome(props: Partial<Parameters<typeof Home>[0]> = {}) {
   return render(
     <Home
+      exam={findExam("saa-c03")!}
       questions={sample}
       onStart={() => {}}
       filter={emptyFilter}
