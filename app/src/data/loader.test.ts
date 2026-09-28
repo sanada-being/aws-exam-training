@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { toQuestions } from "./loader";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { toQuestions, loadQuestions, loadExamIndex } from "./loader";
 import type { Question } from "../types";
 
 function q(id: string, adoptedAnswer: string[]): Question {
@@ -26,5 +26,34 @@ describe("toQuestions", () => {
   it("「6肢から3つ選ぶ」問題も除外せず全件返す（本番で出題されるため）", () => {
     const out = toQuestions([q("single", ["A"]), q("three", ["A", "C", "E"]), q("two", ["A", "B"])]);
     expect(out.map((x) => x.id)).toEqual(["single", "three", "two"]);
+  });
+});
+
+describe("loadQuestions / loadExamIndex", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  function stubFetch(body: unknown, ok = true) {
+    const fetch = vi.fn(() => Promise.resolve({ ok, status: ok ? 200 : 404, json: () => Promise.resolve(body) }));
+    vi.stubGlobal("fetch", fetch);
+    return fetch;
+  }
+
+  it("指定した試験のデータを読み込む", async () => {
+    const fetch = stubFetch([q("sap-c02-0001", ["A"])]);
+    const out = await loadQuestions("sap-c02");
+    expect(fetch).toHaveBeenCalledWith("/data/sap-c02.json");
+    expect(out.map((x) => x.id)).toEqual(["sap-c02-0001"]);
+  });
+
+  it("試験一覧を読み込む", async () => {
+    const fetch = stubFetch([{ id: "saa-c03", count: 1, ids: ["saa-c03-0001"] }]);
+    expect(await loadExamIndex()).toEqual([{ id: "saa-c03", count: 1, ids: ["saa-c03-0001"] }]);
+    expect(fetch).toHaveBeenCalledWith("/data/index.json");
+  });
+
+  it("読み込みに失敗したら例外", async () => {
+    stubFetch(null, false);
+    await expect(loadQuestions("xxx-c01")).rejects.toThrow(/404/);
+    await expect(loadExamIndex()).rejects.toThrow(/404/);
   });
 });

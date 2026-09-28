@@ -58,7 +58,7 @@ npm run check    # 品質ゲート(typecheck+lint+test+build)
 npm test         # テストのみ
 npm run build    # ビルド
 ```
-データ更新: `node app/scripts/build-data.mjs`（questions.json → public/questions.slim.json 生成）
+データ生成: `node app/scripts/build-data.mjs`（各試験の questions.json → `app/public/data/<試験id>.json` と `index.json`。`npm run dev` / `build` の前に自動実行され、生成物はリポジトリに入れない）
 
 ## コミット規約
 - 末尾に必ず付与:

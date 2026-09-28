@@ -30,3 +30,6 @@ data/*/expl-output/
 
 # build
 app/dist/
+
+# アプリの配信データ(ビルド時に scripts/build-data.mjs で生成)
+app/public/data/
