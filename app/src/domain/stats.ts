@@ -10,7 +10,7 @@ export interface Stats {
   bookmarks: number;
 }
 
-/** 学習成績の集計（純粋関数）。正答率は直近の正誤で算出。 */
+/** 学習成績の集計（純粋関数）。正答率は直近の正誤で算出。問題集に含まれる問題だけを数える。 */
 export function computeStats(
   questions: Question[],
   records: Records,
@@ -19,7 +19,9 @@ export function computeStats(
   let answered = 0;
   let correct = 0;
   let weak = 0;
+  let marked = 0;
   for (const q of questions) {
+    if (bookmarks[q.id]) marked += 1;
     const r = records[q.id];
     if (!r) continue;
     answered += 1;
@@ -32,6 +34,6 @@ export function computeStats(
     correct,
     weak,
     accuracy: answered ? Math.round((correct / answered) * 100) : 0,
-    bookmarks: Object.keys(bookmarks).length,
+    bookmarks: marked, // 除外された問題の★は数えない
   };
 }
