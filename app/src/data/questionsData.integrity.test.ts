@@ -1,9 +1,10 @@
-// 実データ（data/*/questions.json と配信用 questions.slim.json）の構造検査。
+// 実データ（data/*/questions.json と、そこから生成する配信用データ）の構造検査。
 // 収集元由来の「選択肢欠落 / ラベル埋め込み」の再発をここで止める。
 import { describe, it, expect } from "vitest";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import process from "node:process";
 import { auditQuestion, type AuditTarget, type Issue } from "../domain/integrity";
+import { toSlim } from "../../scripts/slim.mjs";
 
 // vitest は app/ を作業ディレクトリとして実行される。
 const ROOT = `${process.cwd()}/..`;
@@ -65,29 +66,22 @@ describe("収集データの構造検査", () => {
     });
   }
 
-  it("配信用 questions.slim.json も同じ検査を満たす", () => {
-    const file = `${ROOT}/app/public/questions.slim.json`;
-    const all = JSON.parse(readFileSync(file, "utf8")) as {
-      id: string;
-      question: { en: string };
-      options: { key: string; en: string }[];
-      adoptedAnswer: string[];
-      sourceNote?: string | null;
-      auditWaivers?: ("missing-option" | "embedded-label" | "orphan-answer")[] | null;
-    }[];
-    const found: string[] = [];
-    for (const q of all) {
-      found.push(
-        ...format("slim", q.id, auditQuestion({
-          id: q.id,
-          questionEn: q.question?.en ?? "",
-          options: q.options ?? [],
-          adoptedAnswer: q.adoptedAnswer ?? [],
-          sourceNote: q.sourceNote ?? null,
-          auditWaivers: q.auditWaivers ?? null,
-        })),
-      );
-    }
-    expect(found).toEqual([]);
-  });
+  for (const { name, file } of datasets()) {
+    it(`${name}: 配信用データ(生成処理の出力)も同じ検査を満たす`, () => {
+      const found: string[] = [];
+      for (const q of toSlim(JSON.parse(readFileSync(file, "utf8")))) {
+        found.push(
+          ...format(`${name}(配信用)`, q.id, auditQuestion({
+            id: q.id,
+            questionEn: q.question?.en ?? "",
+            options: q.options ?? [],
+            adoptedAnswer: q.adoptedAnswer ?? [],
+            sourceNote: q.sourceNote ?? null,
+            auditWaivers: q.auditWaivers ?? null,
+          })),
+        );
+      }
+      expect(found).toEqual([]);
+    });
+  }
 });

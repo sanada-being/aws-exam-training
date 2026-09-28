@@ -24,8 +24,19 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,png,json}"],
-        // 2.6MBのデータJSONをオフラインキャッシュ対象に含める
-        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        // 問題データ(全試験で約16MB)は事前保存せず、開いた試験だけを保存する
+        globIgnores: ["**/data/**"],
+        runtimeCaching: [
+          {
+            // 保存済みがあればすぐ使い(オフライン可)、裏で最新に更新する
+            urlPattern: ({ url }) => /\/data\/[^/]+\.json$/.test(url.pathname),
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "exam-data",
+              cacheableResponse: { statuses: [200] },
+            },
+          },
+        ],
       },
     }),
   ],
