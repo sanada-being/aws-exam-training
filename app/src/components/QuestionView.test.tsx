@@ -20,6 +20,14 @@ const single: Question = {
   needsReview: false,
 };
 
+const chooseThree: Question = {
+  ...single,
+  id: "q3",
+  isMultipleAnswer: true,
+  options: ["A", "B", "C", "D", "E", "F"].map((k) => ({ key: k, en: k, ja: `選択肢${k}` })),
+  adoptedAnswer: ["B", "D", "F"],
+};
+
 describe("QuestionView", () => {
   it("日本語の問題文と選択肢を表示する", () => {
     render(<QuestionView question={single} onResult={() => {}} onNext={() => {}} />);
@@ -43,6 +51,16 @@ describe("QuestionView", () => {
     await userEvent.click(screen.getByRole("button", { name: "採点する" }));
     expect(onResult).toHaveBeenCalledWith(false, ["A"]);
     expect(screen.getByTestId("verdict")).toHaveTextContent("不正解");
+  });
+
+  it("6肢から3つ選ぶ問題: 「3つ選択」と表示し、3つ正しく選べば正解", async () => {
+    const onResult = vi.fn();
+    render(<QuestionView question={chooseThree} onResult={onResult} onNext={() => {}} />);
+    expect(screen.getByText("（3つ選択）")).toBeInTheDocument();
+    for (const k of ["F", "B", "D"]) await userEvent.click(screen.getByText(`選択肢${k}`));
+    await userEvent.click(screen.getByRole("button", { name: "採点する" }));
+    expect(onResult).toHaveBeenCalledWith(true, ["F", "B", "D"]);
+    expect(screen.getByTestId("verdict")).toHaveTextContent("正解");
   });
 
   it("採点前は採点ボタンが無効", () => {
