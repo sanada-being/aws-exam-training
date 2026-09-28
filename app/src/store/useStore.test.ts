@@ -82,8 +82,19 @@ describe("useStore 永続データの移行", () => {
     expect(migrated.bookmarkMarks).toEqual({ q1: { on: true, at: 0 } });
     expect(migrated.bookmarks).toEqual({ q1: true });
   });
-  it("v2 の保存データはそのまま", () => {
+  it("v2 の★(解除の墓標を含む)はそのまま残る", () => {
     const p = { records: {}, bookmarks: {}, bookmarkMarks: { q1: { on: false, at: 5 } } };
-    expect(migrateProgress(p, 2)).toEqual(p);
+    expect(migrateProgress(p, 2)).toMatchObject(p);
+  });
+
+  it("v3 の保存データはそのまま", () => {
+    const p = {
+      records: {},
+      bookmarks: {},
+      bookmarkMarks: { q1: { on: false, at: 5 } },
+      sessions: {},
+      currentExam: "sap-c02",
+    };
+    expect(migrateProgress(p, 3)).toEqual(p);
   });
 });

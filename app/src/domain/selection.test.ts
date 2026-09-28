@@ -140,3 +140,14 @@ describe("buildQueue: exam", () => {
     expect(items.every((x) => x.answerConfidence === "high")).toBe(true);
   });
 });
+
+describe("本番モードの問題数（試験ごと）", () => {
+  const many = Array.from({ length: 80 }, (_, i) => q(i + 1));
+  it("examCount を渡すとその数だけ出題する", () => {
+    expect(buildQueue(many, "exam", {}, Math.random, undefined, 75)).toHaveLength(75);
+    expect(modeCount(many, "exam", {}, 75)).toBe(75);
+  });
+  it("省略時は65問", () => {
+    expect(buildQueue(many, "exam", {})).toHaveLength(EXAM_COUNT);
+  });
+});

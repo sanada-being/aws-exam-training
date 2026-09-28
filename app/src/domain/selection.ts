@@ -3,7 +3,7 @@ import { isWeak, type Records } from "./progress";
 
 export type QuizMode = "sequential" | "random" | "wrong" | "unanswered" | "exam";
 
-/** 本番試験の問題数。 */
+/** 本番試験の問題数の既定値（試験ごとの値は exams.ts の examCount）。 */
 export const EXAM_COUNT = 65;
 
 /** 出題の優先順位（確信度の高い＝正解が信頼できる問題から出す）。 */
@@ -54,14 +54,19 @@ export function selectByMode(questions: Question[], mode: QuizMode, records: Rec
 }
 
 /** モード別の対象数（ホームのバッジ表示に使用）。exam は本番問題数で頭打ち。 */
-export function modeCount(questions: Question[], mode: QuizMode, records: Records): number {
+export function modeCount(
+  questions: Question[],
+  mode: QuizMode,
+  records: Records,
+  examCount: number = EXAM_COUNT,
+): number {
   const n = selectByMode(questions, mode, records).length;
-  return mode === "exam" ? Math.min(n, EXAM_COUNT) : n;
+  return mode === "exam" ? Math.min(n, examCount) : n;
 }
 
 /**
  * 出題キューを構築（抽出→並べ替え→任意で先頭N問に制限）。random以外は問題番号順。
- * exam は limit によらず常に本番問題数（65問・確信度優先のランダム）。
+ * exam は limit によらず常に本番問題数（examCount 問・確信度優先のランダム）。
  */
 export function buildQueue(
   questions: Question[],
@@ -69,8 +74,9 @@ export function buildQueue(
   records: Records,
   rng: () => number = Math.random,
   limit?: number,
+  examCount: number = EXAM_COUNT,
 ): Question[] {
-  if (mode === "exam") return selectExam(questions, rng);
+  if (mode === "exam") return selectExam(questions, rng, examCount);
   const subset = selectByMode(questions, mode, records);
   const ordered =
     mode === "random"
