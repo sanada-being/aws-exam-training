@@ -77,6 +77,80 @@ a { color: var(--accent); }
 .syncind.error { color: var(--wrong); }
 .syncind.syncing { color: var(--accent); }
 
+/* ホーム左上の試験名（押すと試験一覧へ） */
+.examswitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 6px 14px 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+}
+.examswitch:hover { border-color: var(--accent); }
+.examswitch b { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; letter-spacing: 0.02em; }
+.home .home-examname { font-size: 1.05rem; font-weight: 600; margin: 10px 0 0; line-height: 1.4; }
+
+/* 試験一覧 */
+.picker { display: flex; flex-direction: column; gap: 4px; padding-bottom: 8px; }
+.picker h1 { margin: 12px 0 0; font-size: 1.5rem; }
+.picker-lead { margin: 0 0 8px; }
+.examgroup { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.examgroup h2 { margin: 0; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); }
+.examlist { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+@media (min-width: 640px) {
+  .examlist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.examcard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 12px;
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+}
+.examcard:hover { border-color: var(--accent); }
+.examcard:focus-visible, .examswitch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.examcard.learning { border-color: #1f6f93; background: #16263d; }
+.examcard[aria-current="true"] { border-color: var(--accent); }
+.examcard-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.examcode {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.examtag {
+  font-family: system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0 6px;
+  border-radius: 6px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+.examname { font-size: 0.88rem; line-height: 1.45; overflow-wrap: anywhere; }
+.exammeta { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.examside { display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.examside strong { font-size: 1.1rem; color: var(--accent); }
+.examside small { font-size: 0.7rem; color: var(--muted); }
+.examside.chev { font-size: 1.4rem; color: var(--muted); }
+.exambar { grid-column: 1 / -1; height: 4px; margin-top: 6px; border-radius: 4px; background: var(--panel2); overflow: hidden; }
+.exambar span { display: block; height: 100%; background: var(--accent); }
+.center.column { flex-direction: column; gap: 12px; text-align: center; }
+
 /* 設定・同期 */
 .settings h2 { font-size: 1.1rem; margin: 12px 0 8px; }
 .settings .small { font-size: 0.85rem; }

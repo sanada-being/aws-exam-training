@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg"],
       manifest: {
-        name: "AWS SAA 問題集",
-        short_name: "SAA問題集",
-        description: "AWS SAA-C03 学習用問題集",
+        name: "AWS 認定 問題集",
+        short_name: "AWS問題集",
+        description: "AWS 認定試験の学習用問題集",
         theme_color: "#0f172a",
         background_color: "#0f172a",
         display: "standalone",
